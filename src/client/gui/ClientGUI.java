@@ -35,6 +35,14 @@ public class ClientGUI extends JPanel {
 		
 	}
 	
+	public void append(String entry) {
+		//Uppdatera chatflödet
+	}
+	
+	public void setUsers() {
+		//Uppdatera listan med användare
+	}
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -47,5 +55,4 @@ public class ClientGUI extends JPanel {
 			}
 		});
 	}
-	
 }
