@@ -13,7 +13,7 @@ public class ClientGUI extends JPanel {
 	
 	private JTextArea chatBox = new JTextArea();
 	private JList<String> users;
-	
+		
 	public ClientGUI() {
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
