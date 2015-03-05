@@ -24,9 +24,9 @@ public class ClientGUI extends JPanel {
 		add(chatBox, BorderLayout.CENTER);
 		
 		DefaultListModel<String> listModel = new DefaultListModel<String>();
-		listModel.addElement("Anv‰ndare 1");
-		listModel.addElement("Anv‰ndare 2");
-		listModel.addElement("Anv‰ndare 3");
+		listModel.addElement("Anv√§ndare 1");
+		listModel.addElement("Anv√§ndare 2");
+		listModel.addElement("Anv√§ndare 3");
 		
 		users = new JList<String>(listModel);
 		
