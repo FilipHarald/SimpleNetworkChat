@@ -87,7 +87,7 @@ public class ClientGUI extends JPanel {
 							"[14:00:32] <Filip> Hej Andreas!\n" + 
 							"[14:00:58] <Klein> *mumlar på danska*\n" + 
 							"[14:00:12] <Andreas> Hej chatten!\n" +
-							"[14:00:32] <Filip> Hej Andreas!";
+							"[14:00:32] <Filip> Hej Andreas!\n";
 		chatBox.setText(testchat);
 		
 	}
@@ -112,6 +112,18 @@ public class ClientGUI extends JPanel {
 		append(obj.toString());
 	}
 	
+	public void append(Object obj, ImageIcon icon) {
+		append(obj.toString() + "\n");
+		chatBox.insertIcon(icon);
+	}
+	
+	public boolean hasImage() {
+		if (imageToSend == null) {
+			return false;
+		}
+		return true;
+	}
+	
 	public ImageIcon getImageToSend() throws NullPointerException {
 		return imageToSend;
 	}
@@ -133,7 +145,8 @@ public class ClientGUI extends JPanel {
 	
 	private class SendMessage implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			cc.sendMessage();
+			String message = chatTF.getText();
+			cc.sendMessage(message);
 		}
 	}
 	

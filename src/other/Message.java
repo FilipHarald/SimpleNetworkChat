@@ -9,8 +9,16 @@ public class Message implements Serializable {
 	private String [] recipients;
 	private long timeReceived;
 	private long timeDelivered;
-	private String textMessage;
+	private String textMessage = "";
 	private ImageIcon image;
+	
+	public Message(String sender, String[] recipients, String textMessage) throws NullPointerException {
+		this(sender, recipients, textMessage, null);
+	}
+	
+	public Message(String sender, String[] recipients, ImageIcon image) throws NullPointerException {
+		this(sender, recipients, null, image);
+	}
 	
 	public Message(String sender, String[] recipients, String textMessage, ImageIcon image) {
 		this.sender = sender;

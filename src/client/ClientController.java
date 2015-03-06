@@ -1,5 +1,7 @@
 package client;
 
+import javax.swing.ImageIcon;
+
 import other.Message;
 import client.gui.*;
 
@@ -19,26 +21,30 @@ public class ClientController {
 	
 	public void setClient(Client client) {
 		this.client = client;
-		client.addListener(new ClientListener() {
-			public void onConnected() {
-				
-			}
+		this.client.addListener(new ClientListener() {
+			public void onConnected() {}
 
 			public void onClientsUpdated(String[] clients) {
 				cgui.setUsers(clients);
 			}
 
 			public void onMessageReceived(Message message) {
-				cgui.append(message);
+				if (message.hasImage()) {
+					cgui.append(message, message.getImage());
+				} else {
+					cgui.append(message);
+				}
 			}
 
-			public void onDisconnected() {
-				
-			}
+			public void onDisconnected() {}
 		});
 	}
 	
-	public void sendMessage() {
-		
+	public void sendMessage(String textMessage) {
+		if (cgui.hasImage()) {
+			client.sendMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
+		} else {
+			client.sendMessage(cgui.getRecipients(), textMessage, null);
+		}
 	}
 }
