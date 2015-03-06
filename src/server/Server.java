@@ -87,10 +87,15 @@ public class Server extends Thread {
 	
 	public String getClientsAsString(){
 		String temp = "";
-		for(String s : getClients()){
-			temp += s + ",";
+		String[] clients = getClients();
+		if (clients.length > 0) {
+			for(String s : clients){
+				temp += s + ",";
+			}
+			
+			temp = temp.substring(0, temp.length()-1);
 		}
-		temp = temp.substring(0, temp.length()-1);
+		
 		return temp;
 	}
 
@@ -99,6 +104,9 @@ public class Server extends Thread {
 		Log.write(Log.INFO, String.format(
 				"Added client %s (with ClientHandler %s)", clientName,
 				clientHandler));
+		String[] clients = getClients();
+		String list = getClientsAsString();
+		System.out.println(list);
 		addMessage(new Message(null, getClients(), getClientsAsString(), null));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
@@ -109,7 +117,12 @@ public class Server extends Thread {
 
 	public void removeClientHandler(String clientName) {
 		clientMap.remove(clientName);
-		addMessage(new Message(null, getClients(), getClientsAsString(), null));
+		
+		String clientList = getClientsAsString();
+		if (clientList.length() > 0) {
+			addMessage(new Message(null, getClients(), clientList, null));
+		}
+		
 		Log.write(Log.INFO, String.format("Removed client %s", clientName));
 	}
 
