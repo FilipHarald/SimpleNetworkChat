@@ -70,18 +70,7 @@ public class ClientController {
 			public void onDisconnected() {}
 		});
 	}
-	
-	public void showGUI(String hostname, int port, String username) {
-		JFrame clientFrame = new JFrame("SimpleNetworkChat");
-		clientFrame.add(new ClientGUI(this));
-		clientFrame.pack();
-		clientFrame.setLocationRelativeTo(null);
-		clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		clientFrame.setVisible(true);
-		
-		
-		setClient(new Client(hostname, port, username));
-	}
+
 	
 	public void sendMessage(String textMessage) {
 		if (cgui.hasImage()) {
