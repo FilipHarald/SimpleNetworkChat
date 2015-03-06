@@ -51,7 +51,16 @@ public class Message {
 		return image;
 	}
 	
+	public boolean hasImage() {
+		if (image == null) {
+			return false;
+		}
+		return true;
+	}
 	
+	public String toString() {
+		return "[" + timeReceived + "] <" + sender + ">" + "textMessage";
+	}
 	
 
 }

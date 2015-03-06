@@ -7,13 +7,12 @@ import javax.swing.filechooser.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.io.*;
 
 import client.*;
+
 /**
  * 
  * @author Andreas
- *
  */
 
 public class ClientGUI extends JPanel {
@@ -23,21 +22,30 @@ public class ClientGUI extends JPanel {
 	private JButton sendBtn = new JButton("Send");
 	private JButton addImageBtn = new JButton("Send image...");
 	private ImageIcon imageToSend;
+
 	private ClientController cc;
 	
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> users;
 		
-	public ClientGUI() {
+	public ClientGUI(ClientController cc) {
+		this.cc = cc;
+		
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
-		chatBox.setPreferredSize(new Dimension(650, 500));
 		chatBox.setAutoscrolls(true);
 		chatBox.setLineWrap(true);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
-		chatBox.setBorder(new MatteBorder(0, 0, 1, 1, Color.BLACK));
-		add(chatBox, BorderLayout.CENTER);
+		chatBox.setBounds(0, 0, 650, 500);
+		
+		JScrollPane scroll = new JScrollPane(chatBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroll.setPreferredSize(new Dimension(650, 500));
+		scroll.setViewportView(chatBox);
+		scroll.setBorder(new MatteBorder(0, 0, 1, 1, Color.BLACK));
+		add(scroll, BorderLayout.CENTER);
+
+		//		add(chatBox, BorderLayout.CENTER);
 		
 		
 		listModel.addElement("Jimmy");
@@ -60,10 +68,12 @@ public class ClientGUI extends JPanel {
 		
 		chatTF.setPreferredSize(new Dimension(595, 24));
 		chatTF.setFont(new Font("Consolas", Font.PLAIN, 12));
+		chatTF.addActionListener(new SendMessage());
 		southPanel.add(chatTF);
 		
 		sendBtn.setPreferredSize(new Dimension(70, 24));
 		sendBtn.setFont(new Font("Consolas", Font.BOLD, 12));
+		sendBtn.addActionListener(new SendMessage());
 		southPanel.add(sendBtn);
 		
 		addImageBtn.setPreferredSize(new Dimension(130, 24));
@@ -73,8 +83,15 @@ public class ClientGUI extends JPanel {
 		
 		String testchat = 	"[14:00:12] <Andreas> Hej chatten!\n" +
 							"[14:00:32] <Filip> Hej Andreas!\n" + 
-							"[14:00:58] <Klein> *mumlar på danska*";
-		
+							"[14:00:58] <Klein> *mumlar på danska*\n" + 
+							"[14:00:12] <Andreas> Hej chatten!\n" +
+							"[14:00:32] <Filip> Hej Andreas!\n" + 
+							"[14:00:58] <Klein> *mumlar på danska*\n" + 
+							"[14:00:12] <Andreas> Hej chatten!\n" +
+							"[14:00:32] <Filip> Hej Andreas!\n" + 
+							"[14:00:58] <Klein> *mumlar på danska*\n" + 
+							"[14:00:12] <Andreas> Hej chatten!\n" +
+							"[14:00:32] <Filip> Hej Andreas!";
 		chatBox.setText(testchat);
 		
 	}
@@ -95,23 +112,32 @@ public class ClientGUI extends JPanel {
 		}
 	}
 	
+	public void append(Object obj) {
+		append(obj.toString());
+	}
+	
 	public ImageIcon getImageToSend() throws NullPointerException {
 		return imageToSend;
 	}
 	
-	public ArrayList<String> getRecipients() throws NullPointerException {
+	public String[] getRecipients() throws ClassCastException {
 		ArrayList<String> recipients;
 		recipients = (ArrayList<String>) users.getSelectedValuesList();
-		return recipients;
+		String[] stringReps = (String[]) recipients.toArray();
+		return stringReps;
 	}
 	
-	public void setUsers() {
-		//Uppdatera listan med användare
+	public void setUsers(String[] users) {
+		listModel.clear();
+		for (int i = 0, len = users.length; i < len; i++) {
+			listModel.addElement(users[i]);
+		}
+		this.users = new JList<String>(listModel);
 	}
 	
 	private class SendMessage implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			
+			cc.sendMessage();
 		}
 	}
 	
@@ -131,16 +157,16 @@ public class ClientGUI extends JPanel {
 		}
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame("SimpleNetworkChat");
-				frame.add(new ClientGUI());
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.pack();
-				frame.setResizable(false);
-				frame.setVisible(true);
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//			public void run() {
+//				JFrame frame = new JFrame("SimpleNetworkChat");
+//				frame.add(new ClientGUI());
+//				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//				frame.pack();
+//				frame.setResizable(false);
+//				frame.setVisible(true);
+//			}
+//		});
+//	}
 }
