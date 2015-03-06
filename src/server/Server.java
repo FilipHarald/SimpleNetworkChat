@@ -142,6 +142,7 @@ public class Server extends Thread {
 			if (clientExists(recipient)) {
 				message.setTimeDelivered(System.currentTimeMillis());
 				clientMap.get(recipient).sendToClient(message);
+				Log.write(Log.INFO, String.format("Delivered message to %s from %s", recipient, message.getSender()));
 			} else {
 				if (!undeliveredMessageMap.containsKey(recipient)) {
 					undeliveredMessageMap.put(recipient, new LinkedList<Message>());	

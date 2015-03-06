@@ -57,7 +57,7 @@ public class Client extends Thread {
 	}
 	
 	public void sendMessage(String recipient, String text, ImageIcon image) {
-		sendMessage(new String[]{recipient}, text, image);
+		sendMessage(new String[]{recipient, userName}, text, image);
 	}
 
 	@Override
