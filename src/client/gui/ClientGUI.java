@@ -1,7 +1,10 @@
 package client.gui;
 
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.*;
+
 
 /**
  * 
@@ -12,8 +15,9 @@ import java.awt.*;
 public class ClientGUI extends JPanel {
 	
 	private JTextArea chatBox = new JTextArea();
+	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> users;
-	
+		
 	public ClientGUI() {
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
@@ -21,18 +25,58 @@ public class ClientGUI extends JPanel {
 		chatBox.setAutoscrolls(true);
 		chatBox.setLineWrap(true);
 		chatBox.setEditable(false);
+		chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
+		chatBox.setBorder(new MatteBorder(0, 0, 1, 1, Color.BLACK));
 		add(chatBox, BorderLayout.CENTER);
 		
-		DefaultListModel<String> listModel = new DefaultListModel<String>();
-		listModel.addElement("Anv√§ndare 1");
-		listModel.addElement("Anv√§ndare 2");
-		listModel.addElement("Anv√§ndare 3");
+		
+		listModel.addElement("Anv‰ndare 1");
+		listModel.addElement("Anv‰ndare 2");
+		listModel.addElement("Anv‰ndare 3");
 		
 		users = new JList<String>(listModel);
 		
+		users.setFont(new Font("Consolas", Font.PLAIN, 12));
 		users.setPreferredSize(new Dimension(150, 600));
+		users.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
+		users.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		add(users, BorderLayout.EAST);
 		
+		
+		String testchat = 	"[14:00:12] <Andreas> Hej chatten!\n" +
+							"[14:00:32] <Filip> Hej Andreas!\n" + 
+							"[14:00:58] <Klein> *mumlar pÂ danska*";
+		
+		chatBox.setText(testchat);
+		JButton testbutton = new JButton("Test");
+		testbutton.addActionListener(new NewMessageListener());
+		add(testbutton, BorderLayout.SOUTH);
+	}
+	
+	public void append(String entry) {
+		chatBox.append("\n" + entry);
+	}
+	
+	public void append(String[] entries) {
+		for (int i = 0; i < entries.length; i++) {
+			append(entries[i]);
+		}
+	}
+	
+	public void setUsers() {
+		//Uppdatera listan med anv‰ndare
+	}
+	
+	//ej klar, registrerar n‰r man v‰ljer flera men blir fel n‰r man markerar en
+	private class NewMessageListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int[] selectedIndices = users.getSelectedIndices();
+			String[] recipients = new String[selectedIndices.length];
+			
+			for (int i = 0, len = recipients.length; i < len; i++) {
+				recipients[i] = (String) users.getModel().getElementAt(i);
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -47,5 +91,4 @@ public class ClientGUI extends JPanel {
 			}
 		});
 	}
-	
 }
