@@ -121,12 +121,11 @@ public class ClientGUI extends JPanel {
 		
 	}
 	
-	public void setUsers(String[] users) {
+	public void setUsers(String[] userList) {
 		listModel.clear();
-		for (int i = 0, len = users.length; i < len; i++) {
-			listModel.addElement(users[i]);
+		for (int i = 0, len = userList.length; i < len; i++) {
+			listModel.addElement(userList[i]);
 		}
-		this.users = new JList<String>(listModel);
 	}
 	
 	private class SendMessage implements ActionListener {

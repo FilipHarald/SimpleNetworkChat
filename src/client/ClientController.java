@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import other.Message;
 import client.gui.*;
+import javax.swing.*;
 
 /**
  * 
@@ -25,16 +26,24 @@ public class ClientController {
 			public void onConnected() {}
 
 			public void onClientsUpdated(String[] clients) {
-				cgui.setUsers(clients);
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						cgui.setUsers(clients);
+					}
+				});
 			}
 
 			public void onMessageReceived(Message message) {
-				System.out.println(message);
-				if (message.hasImage()) {
-					cgui.append(message, message.getImage());
-				} else {
-					cgui.append(message);
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						System.out.println(message);
+						if (message.hasImage()) {
+							cgui.append(message, message.getImage());
+						} else {
+							cgui.append(message);
+						}
+					}
+				});
 			}
 
 			public void onDisconnected() {}

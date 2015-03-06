@@ -75,12 +75,16 @@ public class StartGUI extends JPanel {
 				
 				frame.setVisible(false);
 				
-				JFrame clientFrame = new JFrame("SimpleNetworkChat");
-				clientFrame.add(new ClientGUI(cc));
-				clientFrame.pack();
-				clientFrame.setLocationRelativeTo(null);
-				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				clientFrame.setVisible(true);
+				SwingUtilities.invokeLater(new Runnable() {
+					public void run() {
+						JFrame clientFrame = new JFrame("SimpleNetworkChat");
+						clientFrame.add(new ClientGUI(cc));
+						clientFrame.pack();
+						clientFrame.setLocationRelativeTo(null);
+						clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+						clientFrame.setVisible(true);
+					}
+				});
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 			}

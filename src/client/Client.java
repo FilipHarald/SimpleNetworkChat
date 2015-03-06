@@ -148,7 +148,7 @@ public class Client extends Thread {
 						message = getMessage ();
 						
 						fireMessageReceived(message);
-		
+						
 					}
 				}
 			} catch (IOException ex) {
