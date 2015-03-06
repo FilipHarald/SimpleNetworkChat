@@ -110,10 +110,14 @@ public class Client extends Thread {
 		}
 		
 		public Message getMessage () {
-			Message message;
+			
 			try {
-				message = (Message) inputStream.readObject();
-				return message;
+				Object obj = inputStream.readObject();
+				if (obj instanceof Message) {
+					return (Message)obj;
+				} else {
+					System.out.println("Received object is not of type Message");
+				}
 			} catch (ClassNotFoundException | IOException e) {
 				
 				e.printStackTrace();
@@ -124,24 +128,27 @@ public class Client extends Thread {
 
 		@Override
 		public void run() {
-			Message message;
-			// Get handshake response
 			
-			sendMessage (null, null, null);
-			message = getMessage ();
-			
-			
-			// Get user list
-
-			fireClientsUpdated(message.getRecipients ());
-			
-			while (true) {
-
-				// Get incoming messages
+			while (!Thread.interrupted()) {
+				Message message;
+				// Get handshake response
+				
+				sendMessage (null, null, null);
 				message = getMessage ();
 				
-				fireMessageReceived(message);
-
+				
+				// Get user list
+	
+				fireClientsUpdated(message.getRecipients ());
+				
+				while (true) {
+	
+					// Get incoming messages
+					message = getMessage ();
+					
+					fireMessageReceived(message);
+	
+				}
 			}
 		}
 

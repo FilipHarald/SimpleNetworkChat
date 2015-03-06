@@ -1,36 +1,66 @@
 package server;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
 
 import other.*;
 
-public class ClientHandler extends Thread {
-	private Socket socketIn;
-	private Socket socketOut;
+public class ClientHandler implements Runnable {
 	private String clientName;
+	private Socket socket;
 	private Server server;
+	ObjectOutputStream oos;
 
 	public ClientHandler(Socket socketIn, Server server) {
-		this.socketIn = socketIn;
+		this.socket = socketIn;
 		this.server = server;
-		System.out.println("ClientHandler created");
 	}
 
 	@Override
 	public void run() {
-		// se till att få en socketOut först
-		new ClientHandlerInput(socketIn, server).start();
+		try {
+			ObjectInputStream ois = new ObjectInputStream(
+					socket.getInputStream());
+			oos = new ObjectOutputStream(
+					socket.getOutputStream());
+			Message message;
+			Object obj;
+			while (!Thread.interrupted()) {
+				obj = ois.readObject();
+				if (obj instanceof Message) {
+					message = (Message) obj;
+					clientName = message.getSender();
+					sendToClient(new Message(null, server.getClientList(), null, null));
+				} else {
+					System.out
+							.println("Handshake object is not of class Message");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				socket.close();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		new ClientHandlerInput(socket, server).start();
 	}
 
-	// public boolean sendToClient(Message message) {
-	// boolean sent = false;
-	// //
-	// // här ska meddelandet skickas med socketOut
-	// //
-	// return sent;
-	// }
+	 public void sendToClient(Message message) {
+		 try {
+			oos.writeObject(message);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	 }
+
+	public String getClientname() {
+		return clientName;
+	}
+
+	// ---------------------------------------------------------------------
 	private class ClientHandlerInput extends Thread {
 		private Socket socketIn;
 		private Server server;
@@ -49,19 +79,12 @@ public class ClientHandler extends Thread {
 					obj = ois.readObject();
 					if (obj instanceof Message) {
 						message = (Message) obj;
-						server.
-					}else{
-						System.out.println("Object received is not of class Message");
+						server.addMessage(message);
+					} else {
+						System.out
+								.println("Object received is not of class Message");
 					}
-					
-
 				}
-				
-				
-				
-				
-				
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
