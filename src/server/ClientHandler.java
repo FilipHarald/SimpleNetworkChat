@@ -96,6 +96,7 @@ public class ClientHandler extends Thread {
 					}
 				}
 			} catch (IOException ex) {
+				Log.write(Log.INFO, String.format("Client %s disconnected", clientName));
 				server.removeClientHandler(clientName);
 			} catch (Exception ex) {
 				ex.printStackTrace();

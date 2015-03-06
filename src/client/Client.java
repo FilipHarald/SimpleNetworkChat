@@ -87,6 +87,7 @@ public class Client extends Thread {
 
 	private void fireClientsUpdated(String[] clients) {
 		for (ClientListener listener : listeners) {
+			System.out.println("Sending onClientsUpdated event to listener " + listener + " with value " + clients);
 			listener.onClientsUpdated(clients);
 		}
 	}
@@ -105,7 +106,7 @@ public class Client extends Thread {
 			this.inputStream = inputStream;
 		}
 		
-		public Message getMessage() {
+		public Message getMessage() throws IOException {
 			
 			try {
 				Object obj = inputStream.readObject();
@@ -120,6 +121,8 @@ public class Client extends Thread {
 				
 				System.out.println("Klienten nedkopplad?");
 				fireDisconnected();
+				
+				throw new IOException();
 			}
 			
 			return null;
@@ -128,24 +131,29 @@ public class Client extends Thread {
 		@Override
 		public void run() {
 			
-			while (!Thread.interrupted()) {
-				Message message;
-				
-				// Send handshake response
-				sendMessage(null, null, null);
-				
-				// Get user list
-				message = getMessage();
-				fireClientsUpdated(message.getRecipients());
-				
-				while (true) {
-	
-					// Get incoming messages
-					message = getMessage ();
+			try {
+				while (!Thread.interrupted()) {
+					Message message;
 					
-					fireMessageReceived(message);
-	
+					// Send handshake response
+					sendMessage(null, null, null);
+					
+					// Get user list
+					message = getMessage();
+					System.out.println(message);
+					fireClientsUpdated(message.getRecipients());
+					
+					while (true) {
+		
+						// Get incoming messages
+						message = getMessage ();
+						
+						fireMessageReceived(message);
+		
+					}
 				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
 			}
 		}
 
