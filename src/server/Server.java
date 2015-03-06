@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 import javax.swing.ImageIcon;
 
-import other.Message;
+import other.*;
 
 /**
  * 
@@ -104,7 +104,11 @@ public class Server extends Thread {
 		Log.write(Log.INFO, String.format(
 				"Added client %s (with ClientHandler %s)", clientName,
 				clientHandler));
-		addMessage(new Message(null, getClients(), getClientsAsString(), null));
+		String[] clients = getClients();
+		String list = getClientsAsString();
+		System.out.println(list);
+		addMessage(new Message(null, clients, list, null));
+		addMessage(new ServerMessage(clients, (String.format("%s connected", clientName))));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
 				addMessage(m);
@@ -118,6 +122,7 @@ public class Server extends Thread {
 		String clientList = getClientsAsString();
 		if (clientList.length() > 0) {
 			addMessage(new Message(null, getClients(), clientList, null));
+			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
 		
 		Log.write(Log.INFO, String.format("Removed client %s", clientName));
