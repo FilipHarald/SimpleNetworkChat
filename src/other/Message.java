@@ -1,8 +1,10 @@
 package other;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
-public class Message {
+public class Message implements Serializable {
 	private String sender;
 	private String [] recipients;
 	private long timeReceived;
