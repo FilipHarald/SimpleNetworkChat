@@ -144,7 +144,7 @@ public class Client extends Thread {
 					
 					// Get user list
 					message = getMessage();
-					fireClientsUpdated(message.getRecipients());
+					fireClientsUpdated(message.getTextMessage().split(","));
 					
 					while (true) {
 		
@@ -152,8 +152,7 @@ public class Client extends Thread {
 						message = getMessage();
 						
 						if (message.getSender() == null) {
-							String clients = message.getTextMessage();
-							fireClientsUpdated(clients.split(","));
+							fireClientsUpdated(message.getTextMessage().split(","));
 						} else {
 							fireMessageReceived(message);
 						}
