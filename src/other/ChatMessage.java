@@ -9,8 +9,8 @@ import java.util.Date;
  */
 public class ChatMessage extends Message {
 
-    private String textMessage;
-    private ImageIcon image;
+    private String textMessage = "";
+    private ImageIcon image = null;
 
     public ChatMessage(String sender, String[] recipients, String textMessage, ImageIcon image) {
         super(sender, recipients);
@@ -27,12 +27,12 @@ public class ChatMessage extends Message {
     }
 
     public boolean hasImage() {
-        return image == null;
+        return (image != null);
     }
 
     private String getDate(long time) {
         Date date = new Date(time);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy - hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
         return sdf.format(date);
     }
 

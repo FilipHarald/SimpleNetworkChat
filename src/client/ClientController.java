@@ -21,7 +21,7 @@ public class ClientController {
 	private ClientGUI cgui;
 	private Client client;
 
-    private static final Pattern patternCommands = Pattern.compile("\\/(\\w*) (\\w*) (.*)");
+    private static final Pattern patternCommands = Pattern.compile("\\/(\\w*) (\\w*)\\s?(.*)?");
 	
 	public ClientController(String hostname, int port, String username) {
 		cgui = new ClientGUI(this);
@@ -64,9 +64,9 @@ public class ClientController {
                         if (message instanceof ChatMessage) {
                             ChatMessage cmsg = (ChatMessage)message;
                             if (cmsg.hasImage()) {
-                                cgui.append(cmsg.getTextMessage(), cmsg.getImage());
+                                cgui.append(cmsg.toString(), cmsg.getImage());
                             } else {
-                                cgui.append(cmsg.getTextMessage());
+                                cgui.append(cmsg.toString());
                             }
                         }
 
@@ -84,6 +84,7 @@ public class ClientController {
 			Matcher m = patternCommands.matcher(textMessage);
 			
 			if (m.find()) {
+				System.out.println("Found match");
 				String command, option, text;
 				command = m.group(1);
 				option = m.group(2);
@@ -97,6 +98,7 @@ public class ClientController {
 					case "message":
 					case "msg":
 						client.sendChatMessage(option, text, cgui.getImageToSend());
+						//client.sendChatMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
 						break;
                     case "whois":
                         client.sendCommandMessage(command, option);

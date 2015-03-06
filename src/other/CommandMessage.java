@@ -21,6 +21,10 @@ public class CommandMessage extends Message {
     public String getArguments() {
         return arguments;
     }
+    
+    public String toString() {
+    	return String.format("%s %s", command, arguments);
+    }
 
     /*
     public Message copy(String[] newRecipients) {

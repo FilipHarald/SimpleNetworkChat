@@ -59,7 +59,11 @@ public class Client extends Thread {
 	}
 	
 	public void sendChatMessage(String recipient, String text, ImageIcon image) {
-		sendChatMessage(new String[]{recipient, userName}, text, image);
+		if (recipient.equals(userName)) {
+			sendChatMessage(new String[]{recipient}, text, image);
+		} else {
+			sendChatMessage(new String[]{recipient, userName}, text, image);
+		}
 	}
 
     public void sendCommandMessage(String command, String arguments) {

@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.swing.ImageIcon;
-
 import other.*;
 
 /**
@@ -57,6 +55,7 @@ public class Server extends Thread {
 	}
 
     private void handleCommand(CommandMessage message) {
+    	System.out.println(String.format("Handling command %s", message.toString()));
         switch (message.getCommand()) {
             case "whois":
                 ClientHandler handler = clientMap.get(message.getArguments());
@@ -85,6 +84,9 @@ public class Server extends Thread {
                 addMessage(message.copy(new String[]{recipient}));
             }
         } else {
+        	
+        	message.setTimeReceived(System.currentTimeMillis());
+        	
             threadPool.execute(new MessageSender(message));
         }
 	}
@@ -118,7 +120,7 @@ public class Server extends Thread {
 		String list = getClientsAsString();
 		System.out.println(list);
 		addMessage(new Message(null, clients));
-		//addMessage(new ServerMessage(clients, (String.format("%s connected", clientName))));
+//		addMessage(new ServerMessage(clients, (String.format("%s connected", clientName))));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
 				addMessage(m);
@@ -132,13 +134,12 @@ public class Server extends Thread {
 		String clientList = getClientsAsString();
 		if (clientList.length() > 0) {
 			addMessage(new Message(null, getClients()));
-			//addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
+//			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
 		
 		Log.write(Log.INFO, String.format("Removed client %s", clientName));
 	}
-
-	// --------------------------------------------------------------------------
+	
 	private class MessageSender implements Runnable {
 		private Message message;
 
@@ -152,14 +153,14 @@ public class Server extends Thread {
 			if (clientExists(recipient)) {
 				message.setTimeDelivered(System.currentTimeMillis());
 				clientMap.get(recipient).sendToClient(message);
-				Log.write(Log.INFO, String.format("Delivered message to %s from %s", recipient, message.getSender()));
+				Log.write(Log.INFO, String.format("Delivered message of type %s to %s from %s", message.getClass().getName(), recipient, message.getSender()));
 			} else {
 				if (!undeliveredMessageMap.containsKey(recipient)) {
 					undeliveredMessageMap.put(recipient, new LinkedList<Message>());
 				}
 				undeliveredMessageMap.get(recipient).add(message);
 				
-				Log.write(Log.INFO, String.format("User %s not online. Added message to undelivered", recipient));
+				Log.write(Log.INFO, String.format("User %s not online. Added message to undelivered storage", recipient));
 			}
 		}
 	}
