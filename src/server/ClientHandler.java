@@ -69,6 +69,7 @@ public class ClientHandler extends Thread {
 
 		public ClientHandlerInput(Server server, ObjectInputStream inputStream) {
 			this.server = server;
+			this.inputStream = inputStream;
 		}
 
 		public void run() {
@@ -85,9 +86,10 @@ public class ClientHandler extends Thread {
 						System.out.println("Object received is not of class Message");
 					}
 				}
-			} catch (IOException | ClassNotFoundException ex) {
-				ex.printStackTrace();
+			} catch (IOException ex) {
 				server.removeClientHandler(clientName);
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 	}

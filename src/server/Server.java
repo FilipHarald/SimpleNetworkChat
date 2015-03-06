@@ -25,6 +25,8 @@ public class Server extends Thread {
 	public Server(int port) {
 		// Initiera loggen
 		Log.init(Server.class.getName());
+		
+		clientHashMap = new HashMap<String, ClientHandler>();
 
 		try {
 			serverSocket = new ServerSocket(port);
@@ -74,7 +76,9 @@ public class Server extends Thread {
 	}
 
 	public String[] getClientList() {
-		return (String[]) clientHashMap.keySet().toArray();
+		String[] array = new String[clientHashMap.size()];
+		array = clientHashMap.keySet().toArray(array);
+		return array;
 	}
 
 	public void addClientHandler(String clientName, ClientHandler clientHandler) {
