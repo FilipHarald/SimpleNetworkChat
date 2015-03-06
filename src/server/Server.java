@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Observable;
 
 import other.Message;
@@ -14,6 +15,7 @@ import other.Message;
  */
 public class Server extends Observable implements Runnable {
 	private ServerSocket serverSocket;
+	private HashMap<String, ClientHandler> clientHashMap;
 
 	// private Log log;
 
@@ -51,8 +53,7 @@ public class Server extends Observable implements Runnable {
 	}
 
 	public String[] getClientList() {
-		// TODO Auto-generated method stub
-		return null;
+		return (String[])clientHashMap.keySet().toArray();
 	}
 
 }
