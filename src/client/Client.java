@@ -148,7 +148,8 @@ public class Client extends Thread {
 						message = getMessage();
 						
 						if (message.getSender() == null) {
-							fireClientsUpdated(message.getRecipients());
+							String clients = message.getTextMessage();
+							fireClientsUpdated(clients.split(","));
 						} else {
 							fireMessageReceived(message);
 						}
