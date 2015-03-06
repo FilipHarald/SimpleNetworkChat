@@ -56,29 +56,27 @@ public class Server extends Observable implements Runnable {
 
 	public void addMessage(Message message) {
 		String[] recipients = message.getRecipients();
-		if (recipients != null) {
-			if (recipients.length == 1) {
-				threadPool.execute(new MessageSender(message));
-			} else {
-				String sender = message.getSender();
-				String textMessage = message.getTextMessage();
-				ImageIcon image = message.getImage();
-
+		
+		if (recipients == null || recipients.length > 1) {
+			String sender = message.getSender();
+			String textMessage = message.getTextMessage();
+			ImageIcon image = message.getImage();
+			
+			if (recipients != null) {
 				for (String client : recipients) {
 					threadPool.execute(new MessageSender(new Message(sender,
 							client, textMessage, image)));
 				}
+			} else {
+				for (String client : getClientList()) {
+					threadPool.execute(new MessageSender(new Message(sender, 
+							client, textMessage, image)));
+				}
 			}
 		} else {
-			String sender = message.getSender();
-			String textMessage = message.getTextMessage();
-			ImageIcon image = message.getImage();
-
-			for (String client : getClientList()) {
-				threadPool.execute(new MessageSender(new Message(sender,
-						client, textMessage, image)));
-			}
+			threadPool.execute(new MessageSender(message));
 		}
+		
 	}
 
 	public String[] getClientList() {
