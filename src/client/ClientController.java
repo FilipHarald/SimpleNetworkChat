@@ -70,7 +70,6 @@ public class ClientController {
 			public void onDisconnected() {}
 		});
 	}
-
 	
 	public void sendMessage(String textMessage) {
 		if (cgui.hasImage()) {
