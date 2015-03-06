@@ -43,9 +43,6 @@ public class ClientHandler extends Thread {
 				System.out.println("Handshake object is not of class Message");
 			}
 			
-			// Send current user list
-			sendToClient(new Message(null, server.getClientList(), null, null));
-			
 			new ClientHandlerInput(server, ois).start();
 			
 		} catch (IOException | ClassNotFoundException e) {

@@ -68,7 +68,7 @@ public class Server extends Thread {
 			ImageIcon image = message.getImage();
 
 			if (recipients == null) {
-				recipients = getClientList();
+				recipients = getClients();
 			}
 			for (String client : recipients) {
 				threadPool.execute(new MessageSender(new Message(sender,
@@ -79,10 +79,19 @@ public class Server extends Thread {
 		}
 	}
 
-	public String[] getClientList() {
+	public String[] getClients() {
 		String[] array = new String[clientMap.size()];
 		array = clientMap.keySet().toArray(array);
 		return array;
+	}
+	
+	public String getClientsAsString(){
+		String temp = "";
+		for(String s : getClients()){
+			temp += s + ",";
+		}
+		temp = temp.substring(0, temp.length()-1);
+		return temp;
 	}
 
 	public void addClientHandler(String clientName, ClientHandler clientHandler) {
@@ -90,6 +99,7 @@ public class Server extends Thread {
 		Log.write(Log.INFO, String.format(
 				"Added client %s (with ClientHandler %s)", clientName,
 				clientHandler));
+		addMessage(new Message(null, getClients(), getClientsAsString(), null));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
 				addMessage(m);
@@ -99,6 +109,7 @@ public class Server extends Thread {
 
 	public void removeClientHandler(String clientName) {
 		clientMap.remove(clientName);
+		addMessage(new Message(null, getClients(), getClientsAsString(), null));
 		Log.write(Log.INFO, String.format("Removed client %s", clientName));
 	}
 
@@ -124,7 +135,5 @@ public class Server extends Thread {
 				undeliveredMessageMap.put(recipient, list);
 			}
 		}
-
 	}
-
 }
