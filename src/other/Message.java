@@ -59,7 +59,7 @@ public class Message {
 	}
 	
 	public String toString() {
-		return "[" + timeReceived + "] <" + sender + ">" + "textMessage";
+		return "[" + timeReceived + "] <" + sender + "> " + textMessage;
 	}
 	
 
