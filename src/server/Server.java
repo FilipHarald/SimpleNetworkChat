@@ -24,7 +24,7 @@ public class Server extends Thread {
 	private HashMap<String, LinkedList<Message>> undeliveredMessageMap;
 
 	public Server(int port) {
-		// Initiera loggen
+		// Initialize log
 		Log.init(Server.class.getName());
 
 		clientMap = new HashMap<String, ClientHandler>();
@@ -39,11 +39,8 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
-		Log.write(
-				Log.INFO,
-				String.format("Server running at port %d",
-						serverSocket.getLocalPort()));
-		while (true) {
+		Log.write(Log.INFO,	String.format("Server running at port %d", serverSocket.getLocalPort()));
+		while (!Thread.interrupted()) {
 			try {
 				Socket socket = serverSocket.accept();
 				Log.write(Log.INFO, "Client connected");
@@ -59,24 +56,37 @@ public class Server extends Thread {
 		return clientMap.containsKey(clientName);
 	}
 
+    private void handleCommand(CommandMessage message) {
+        switch (message.getCommand()) {
+            case "whois":
+                ClientHandler handler = clientMap.get(message.getArguments());
+                addMessage(new ServerMessage(new String[]{message.getSender()}, handler.getClientAddress()));
+                break;
+            case "kick":
+                break;
+            default:
+                break;
+        }
+    }
+
 	public void addMessage(Message message) {
-		String[] recipients = message.getRecipients();
 
-		if (recipients == null || recipients.length > 1) {
-			String sender = message.getSender();
-			String textMessage = message.getTextMessage();
-			ImageIcon image = message.getImage();
+        // Check if command message
+        if (message instanceof CommandMessage) {
+            handleCommand((CommandMessage)message);
+        }
 
-			if (recipients == null) {
-				recipients = getClients();
-			}
-			for (String client : recipients) {
-				threadPool.execute(new MessageSender(new Message(sender,
-						client, textMessage, image)));
-			}
-		} else {
-			threadPool.execute(new MessageSender(message));
-		}
+        String[] recipients = message.getRecipients();
+
+        if (recipients == null) {
+            addMessage(message.copy(getClients()));
+        } else if (recipients.length > 1) {
+            for (String recipient : recipients) {
+                addMessage(message.copy(new String[]{recipient}));
+            }
+        } else {
+            threadPool.execute(new MessageSender(message));
+        }
 	}
 
 	public String[] getClients() {
@@ -107,8 +117,8 @@ public class Server extends Thread {
 		String[] clients = getClients();
 		String list = getClientsAsString();
 		System.out.println(list);
-		addMessage(new Message(null, clients, list, null));
-		addMessage(new ServerMessage(clients, (String.format("%s connected", clientName))));
+		addMessage(new Message(null, clients));
+		//addMessage(new ServerMessage(clients, (String.format("%s connected", clientName))));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
 				addMessage(m);
@@ -121,8 +131,8 @@ public class Server extends Thread {
 		
 		String clientList = getClientsAsString();
 		if (clientList.length() > 0) {
-			addMessage(new Message(null, getClients(), clientList, null));
-			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
+			addMessage(new Message(null, getClients()));
+			//addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
 		
 		Log.write(Log.INFO, String.format("Removed client %s", clientName));
@@ -145,7 +155,7 @@ public class Server extends Thread {
 				Log.write(Log.INFO, String.format("Delivered message to %s from %s", recipient, message.getSender()));
 			} else {
 				if (!undeliveredMessageMap.containsKey(recipient)) {
-					undeliveredMessageMap.put(recipient, new LinkedList<Message>());	
+					undeliveredMessageMap.put(recipient, new LinkedList<Message>());
 				}
 				undeliveredMessageMap.get(recipient).add(message);
 				

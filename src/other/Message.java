@@ -5,74 +5,42 @@ import java.io.Serializable;
 import javax.swing.ImageIcon;
 
 public class Message implements Serializable {
-	private String sender;
-	private String [] recipients;
-	private long timeReceived;
-	private long timeDelivered;
-	private String textMessage = "";
-	private ImageIcon image;
-	
-	public Message(String sender, String[] recipients, String textMessage) throws NullPointerException {
-		this(sender, recipients, textMessage, null);
-	}
-	
-	public Message(String sender, String[] recipients, ImageIcon image) throws NullPointerException {
-		this(sender, recipients, null, image);
-	}
-	
-	public Message(String sender, String[] recipients, String textMessage, ImageIcon image) {
-		this.sender = sender;
-		this.recipients = recipients;
-		this.textMessage = textMessage;
-		this.image = image;
-	}
-	
-	public Message(String sender, String recipient, String textMessage, ImageIcon image) {
-		this.sender = sender;
-		this.recipients = new String[] {recipient};
-		this.textMessage = textMessage;
-		this.image = image;
-	}
+    private String sender;
+    private String[] recipients;
+    private long timeReceived;
+    private long timeDelivered;
 
-	public long getTimeReceived() {
-		return timeReceived;
-	}
+    public Message(String sender, String[] recipients) {
+        this.sender = sender;
+        this.recipients = recipients;
+    }
 
-	public void setTimeReceived(long timeReceived) {
-		this.timeReceived = timeReceived;
-	}
+    public String getSender() {
+        return sender;
+    }
 
-	public long getTimeDelivered() {
-		return timeDelivered;
-	}
+    public String[] getRecipients() {
+        return recipients;
+    }
 
-	public void setTimeDelivered(long timeDelivered) {
-		this.timeDelivered = timeDelivered;
-	}
+    public long getTimeReceived() {
+        return timeReceived;
+    }
 
-	public String getSender() {
-		return sender;
-	}
+    public long getTimeDelivered() {
+        return timeDelivered;
+    }
 
-	public String[] getRecipients() {
-		return recipients;
-	}
+    public void setTimeReceived(long timeReceived) {
+        this.timeReceived = timeReceived;
+    }
 
-	public String getTextMessage() {
-		return textMessage;
-	}
+    public void setTimeDelivered(long timeDelivered) {
+        this.timeDelivered = timeDelivered;
+    }
 
-	public ImageIcon getImage() {
-		return image;
-	}
-	
-	public boolean hasImage() {
-		return image != null;
-	}
-	
-	public String toString() {
-		return "[" + timeReceived + "] <" + sender + "> " + textMessage;
-	}
-	
+    public Message copy(String[] newRecipients) {
+        return new Message(getSender(), newRecipients);
+    }
 
 }

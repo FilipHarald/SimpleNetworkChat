@@ -3,14 +3,13 @@ package client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import other.ChatMessage;
+import other.CommandMessage;
 import other.Message;
 import client.gui.*;
-
-import javax.swing.*;
 
 /**
  * 
@@ -21,6 +20,8 @@ public class ClientController {
 	
 	private ClientGUI cgui;
 	private Client client;
+
+    private static final Pattern patternCommands = Pattern.compile("\\/(\\w*) (\\w*) (.*)");
 	
 	public ClientController(String hostname, int port, String username) {
 		cgui = new ClientGUI(this);
@@ -60,11 +61,15 @@ public class ClientController {
 
 					@Override
 					public void run() {
-						if (message.hasImage()) {
-							cgui.append(message, message.getImage());
-						} else {
-							cgui.append(message);
-						}
+                        if (message instanceof ChatMessage) {
+                            ChatMessage cmsg = (ChatMessage)message;
+                            if (cmsg.hasImage()) {
+                                cgui.append(cmsg.getTextMessage(), cmsg.getImage());
+                            } else {
+                                cgui.append(cmsg.getTextMessage());
+                            }
+                        }
+
 					}
 					
 				});
@@ -76,8 +81,7 @@ public class ClientController {
 	
 	public void sendMessage(String textMessage) {
 		if (textMessage != null) {
-			Pattern p = Pattern.compile("\\/(\\w*) (\\w*) (.*)");
-			Matcher m = p.matcher(textMessage);
+			Matcher m = patternCommands.matcher(textMessage);
 			
 			if (m.find()) {
 				String command, option, text;
@@ -92,14 +96,17 @@ public class ClientController {
 				switch (command) {
 					case "message":
 					case "msg":
-						client.sendMessage(option, text, cgui.getImageToSend());
+						client.sendChatMessage(option, text, cgui.getImageToSend());
 						break;
+                    case "whois":
+                        client.sendCommandMessage(command, option);
+                        break;
 					default:
 						cgui.append("UNKNONWASDN CAMAMAD");
 						break;
 				}
 			} else {
-				client.sendMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
+				client.sendChatMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
 			}
 		}
 		

@@ -6,6 +6,8 @@ import java.util.*;
 
 import javax.swing.ImageIcon;
 
+import other.ChatMessage;
+import other.CommandMessage;
 import other.Message;
 
 /**
@@ -45,10 +47,10 @@ public class Client extends Thread {
 		}
 	}
 
-	public void sendMessage(String[] recipients, String text, ImageIcon image) {
+	public void sendChatMessage(String[] recipients, String text, ImageIcon image) {
 		if (outputStream != null) {
 			try {
-				outputStream.writeObject(new Message(userName, recipients, text, image));
+				outputStream.writeObject(new ChatMessage(userName, recipients, text, image));
 				outputStream.flush();
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -56,9 +58,20 @@ public class Client extends Thread {
 		}
 	}
 	
-	public void sendMessage(String recipient, String text, ImageIcon image) {
-		sendMessage(new String[]{recipient, userName}, text, image);
+	public void sendChatMessage(String recipient, String text, ImageIcon image) {
+		sendChatMessage(new String[]{recipient, userName}, text, image);
 	}
+
+    public void sendCommandMessage(String command, String arguments) {
+        if (outputStream != null) {
+            try {
+                outputStream.writeObject(new CommandMessage(userName, command, arguments));
+                outputStream.flush();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 
 	@Override
 	public void run() {
@@ -91,7 +104,6 @@ public class Client extends Thread {
 
 	private void fireClientsUpdated(String[] clients) {
 		for (ClientListener listener : listeners) {
-			System.out.println("Sending onClientsUpdated event to listener " + listener + " with value " + clients);
 			listener.onClientsUpdated(clients);
 		}
 	}
@@ -136,29 +148,29 @@ public class Client extends Thread {
 		public void run() {
 			
 			try {
-				while (!Thread.interrupted()) {
-					Message message;
-					
-					// Send handshake response
-					sendMessage("", null, null);
-					
-					// Get user list
-					message = getMessage();
-					fireClientsUpdated(message.getTextMessage().split(","));
-					
-					while (true) {
-		
-						// Get incoming messages
-						message = getMessage();
-						
-						if (message.getSender() == null) {
-							fireClientsUpdated(message.getTextMessage().split(","));
-						} else {
-							fireMessageReceived(message);
-						}
-						
-					}
-				}
+                Message message;
+
+                // Send handshake response
+                sendMessage(new Message(userName, null));
+
+                // Get user list
+                message = getMessage();
+                fireClientsUpdated(message.getRecipients());
+                //fireClientsUpdated(message.getTextMessage().split(","));
+
+                while (!Thread.interrupted()) {
+
+                    // Get incoming messages
+                    message = getMessage();
+
+                    if (message.getSender() == null) {
+                        fireClientsUpdated(message.getRecipients());
+                        //fireClientsUpdated(message.getTextMessage().split(","));
+                    } else {
+                        fireMessageReceived(message);
+                    }
+                }
+
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}

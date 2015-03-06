@@ -2,7 +2,6 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
-import java.sql.Date;
 
 import other.*;
 
@@ -10,7 +9,7 @@ public class ClientHandler extends Thread {
 	private String clientName;
 	private Socket socket;
 	private Server server;
-	ObjectOutputStream oos;
+	private ObjectOutputStream oos;
 
 	public ClientHandler(Socket socket, Server server) {
 		this.socket = socket;
@@ -37,12 +36,14 @@ public class ClientHandler extends Thread {
 					oos.close();
 					return;
 				}
-				
+
+                // Register ClientHandle on server
 				server.addClientHandler(clientName, this);
 			} else {
 				System.out.println("Handshake object is not of class Message");
 			}
-			
+
+            // Spawn InputHandler for client
 			new ClientHandlerInput(server, ois).start();
 			
 		} catch (IOException | ClassNotFoundException e) {
@@ -68,6 +69,10 @@ public class ClientHandler extends Thread {
 	public String getClientName() {
 		return clientName;
 	}
+
+    public String getClientAddress() {
+        return socket.getRemoteSocketAddress().toString();
+    }
 
 	// ---------------------------------------------------------------------
 	private class ClientHandlerInput extends Thread {

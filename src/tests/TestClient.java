@@ -1,13 +1,8 @@
 package tests;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import other.Message;
 import client.Client;
-import client.ClientController;
 import client.ClientListener;
-import client.gui.ClientGUI;
 
 public class TestClient {
 
