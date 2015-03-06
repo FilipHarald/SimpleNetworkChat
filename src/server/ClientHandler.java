@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import other.*;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
 	private String clientName;
 	private Socket socket;
 	private Server server;
@@ -45,7 +45,7 @@ public class ClientHandler implements Runnable {
 				e1.printStackTrace();
 			}
 		}
-		new ClientHandlerInput(socket, server).start();
+		new ClientHandlerInput(server).start();
 	}
 
 	 public void sendToClient(Message message) {
@@ -63,17 +63,15 @@ public class ClientHandler implements Runnable {
 
 	// ---------------------------------------------------------------------
 	private class ClientHandlerInput extends Thread {
-		private Socket socketIn;
 		private Server server;
 
-		public ClientHandlerInput(Socket socketIn, Server server) {
-			this.socketIn = socketIn;
+		public ClientHandlerInput(Server server) {
 			this.server = server;
 		}
 
 		public void run() {
 			try (ObjectInputStream ois = new ObjectInputStream(
-					socketIn.getInputStream())) {
+					socket.getInputStream())) {
 				Message message;
 				Object obj;
 				while (!Thread.interrupted()) {
@@ -86,10 +84,11 @@ public class ClientHandler implements Runnable {
 								.println("Object received is not of class Message");
 					}
 				}
+				server.removeClientHandler(clientName);
 			} catch (Exception e) {
 				e.printStackTrace();
 				try {
-					socketIn.close();
+					socket.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
