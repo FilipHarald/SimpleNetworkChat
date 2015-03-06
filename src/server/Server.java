@@ -23,13 +23,9 @@ public class Server extends Observable implements Runnable {
 	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
 	private Buffer<Message> undeliveredMessageBuffer;
 
-	// private Log log;
-
 	public Server(int port, Log log) {
-		// this.log = log;
-		// För tillfället så är log observer till servern och därför behöver
-		// inte servern ha referens till loggen.
-		// addObserver(log);
+		// Initiera loggen
+		Log.init(Server.class.getName());
 
 		try {
 			serverSocket = new ServerSocket(port);
@@ -40,15 +36,13 @@ public class Server extends Observable implements Runnable {
 
 	@Override
 	public void run() {
-		// notifyObservers("Server is running");
 		while (true) {
 			try {
 				Socket socket = serverSocket.accept();
-				System.out.println("Client connected");
+				Log.write(Log.INFO, "Client connected");
 				new ClientHandler(socket, this).start();
-				System.out.println("ClientHandler created");
+				Log.write(Log.INFO, "ClientHandler created");
 			} catch (IOException e) {
-				// notifyObservers(e);
 				e.printStackTrace();
 			}
 		}
@@ -85,10 +79,12 @@ public class Server extends Observable implements Runnable {
 
 	public void addClientHandler(String clientName, ClientHandler clientHandler) {
 		clientHashMap.put(clientName, clientHandler);
+		Log.write(Log.INFO, String.format("Added client %s (with ClientHandler %s)", clientName, clientHandler));
 	}
 
 	public void removeClientHandler(String clientName) {
 		clientHashMap.remove(clientName);
+		Log.write(Log.INFO, String.format("Removed client %s", clientName));
 	}
 
 	// --------------------------------------------------------------------------
