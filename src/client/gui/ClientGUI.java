@@ -44,12 +44,6 @@ public class ClientGUI extends JPanel {
 		scroll.setBorder(new MatteBorder(0, 0, 1, 1, Color.BLACK));
 		add(scroll, BorderLayout.CENTER);
 		
-		listModel.addElement("Jimmy");
-		listModel.addElement("Filip");
-		listModel.addElement("Klein");
-		listModel.addElement("Albert");
-		listModel.addElement("Andreas");
-		
 		users = new JList<String>(listModel);
 		
 		users.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -62,7 +56,7 @@ public class ClientGUI extends JPanel {
 		southPanel.setPreferredSize(new Dimension(800, 32));
 		add(southPanel, BorderLayout.SOUTH);
 		
-		chatTF.setPreferredSize(new Dimension(595, 24));
+		chatTF.setPreferredSize(new Dimension(580, 24));
 		chatTF.setFont(new Font("Consolas", Font.PLAIN, 12));
 		chatTF.addActionListener(new SendMessage());
 		southPanel.add(chatTF);
@@ -76,19 +70,6 @@ public class ClientGUI extends JPanel {
 		addImageBtn.setFont(new Font("Consolas", Font.BOLD, 12));
 		addImageBtn.addActionListener(new AddImage());
 		southPanel.add(addImageBtn);
-		
-		String testchat = 	"[14:00:12] <Andreas> Hej chatten!\n" +
-							"[14:00:32] <Filip> Hej Andreas!\n" + 
-							"[14:00:58] <Klein> *mumlar på danska*\n" + 
-							"[14:00:12] <Andreas> Hej chatten!\n" +
-							"[14:00:32] <Filip> Hej Andreas!\n" + 
-							"[14:00:58] <Klein> *mumlar på danska*\n" + 
-							"[14:00:12] <Andreas> Hej chatten!\n" +
-							"[14:00:32] <Filip> Hej Andreas!\n" + 
-							"[14:00:58] <Klein> *mumlar på danska*\n" + 
-							"[14:00:12] <Andreas> Hej chatten!\n" +
-							"[14:00:32] <Filip> Hej Andreas!\n";
-		chatBox.setText(testchat);
 		
 	}
 	

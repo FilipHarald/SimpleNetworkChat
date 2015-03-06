@@ -18,6 +18,7 @@ public class StartGUI extends JPanel {
 	private JTextField usernameTF = new JTextField();
 	private JTextField hostnameTF = new JTextField();
 	private JTextField portTF = new JTextField();
+	private JFrame frame = new JFrame("SimpleNetworkChat");
 	
 	private JButton connectBtn = new JButton("Connect");
 	private ClientController cc = new ClientController();
@@ -25,7 +26,6 @@ public class StartGUI extends JPanel {
 	public StartGUI() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame frame = new JFrame("SimpleNetworkChat");
 				frame.add(setUpGUI());
 				frame.pack();
 				frame.setLocationRelativeTo(null);
@@ -51,7 +51,7 @@ public class StartGUI extends JPanel {
 		usernameTF.setText("AnonymousUser");
 		usernameTF.setBorder(new TitledBorder("Username"));
 		data.add(usernameTF);
-		hostnameTF.setText("127.0.0.1");
+		hostnameTF.setText("10.1.13.11");
 		hostnameTF.setBorder(new TitledBorder("Hostname/IP:"));
 		data.add(hostnameTF);
 		portTF.setText("3520");
@@ -72,6 +72,12 @@ public class StartGUI extends JPanel {
 				String hostname = hostnameTF.getText();
 				int port = Integer.parseInt(portTF.getText());
 				cc.setClient(new Client(hostname, port, username));
+				frame.setVisible(false);
+				JFrame clientFrame = new JFrame("SimpleNetworkChat");
+				clientFrame.add(new ClientGUI(cc));
+				clientFrame.pack();
+				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				clientFrame.setVisible(true);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 			}
