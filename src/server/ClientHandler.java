@@ -25,6 +25,7 @@ public class ClientHandler extends Thread {
 			Message message;
 			Object obj;
 			
+			// Get user handshake
 			obj = ois.readObject();
 			if (obj instanceof Message) {
 				message = (Message) obj;
@@ -38,9 +39,11 @@ public class ClientHandler extends Thread {
 				
 				server.addClientHandler(clientName, this);
 			} else {
-				System.out
-						.println("Handshake object is not of class Message");
+				System.out.println("Handshake object is not of class Message");
 			}
+			
+			// Send current user list
+			sendToClient(new Message(null, server.getClientList(), null, null));
 			
 			new ClientHandlerInput(server, ois).start();
 			
