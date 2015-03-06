@@ -85,14 +85,18 @@ public class ClientController {
 				option = m.group(2);
 				text = m.group(3);
 				
+				System.out.println(command);
+				System.out.println(option);
+				System.out.println(text);
+				
 				switch (command) {
-				case "/message":
-				case "/msg":
-					client.sendMessage(option, text, cgui.getImageToSend());
-					break;
-				default:
-					cgui.append("UNKNONWASDN CAMAMAD");
-					break;
+					case "message":
+					case "msg":
+						client.sendMessage(option, text, cgui.getImageToSend());
+						break;
+					default:
+						cgui.append("UNKNONWASDN CAMAMAD");
+						break;
 				}
 			} else {
 				client.sendMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());

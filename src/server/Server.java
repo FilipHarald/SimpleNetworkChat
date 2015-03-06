@@ -104,9 +104,6 @@ public class Server extends Thread {
 		Log.write(Log.INFO, String.format(
 				"Added client %s (with ClientHandler %s)", clientName,
 				clientHandler));
-		String[] clients = getClients();
-		String list = getClientsAsString();
-		System.out.println(list);
 		addMessage(new Message(null, getClients(), getClientsAsString(), null));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
@@ -140,12 +137,13 @@ public class Server extends Thread {
 			if (clientExists(recipient)) {
 				message.setTimeDelivered(System.currentTimeMillis());
 				clientMap.get(recipient).sendToClient(message);
-			} else if (undeliveredMessageMap.containsKey(recipient)) {
-				undeliveredMessageMap.get(recipient).add(message);
 			} else {
-				LinkedList<Message> list = new LinkedList<Message>();
-				list.add(message);
-				undeliveredMessageMap.put(recipient, list);
+				if (!undeliveredMessageMap.containsKey(recipient)) {
+					undeliveredMessageMap.put(recipient, new LinkedList<Message>());	
+				}
+				undeliveredMessageMap.get(recipient).add(message);
+				
+				Log.write(Log.INFO, String.format("User %s not online. Added message to undelivered", recipient));
 			}
 		}
 	}
