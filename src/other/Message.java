@@ -13,12 +13,17 @@ public class Message implements Serializable {
 	private ImageIcon image;
 	
 	public Message(String sender, String[] recipients, String textMessage, ImageIcon image) {
-		super();
 		this.sender = sender;
 		this.recipients = recipients;
 		this.textMessage = textMessage;
 		this.image = image;
-		
+	}
+	
+	public Message(String sender, String recipient, String textMessage, ImageIcon image) {
+		this.sender = sender;
+		this.recipients = new String[] {recipient};
+		this.textMessage = textMessage;
+		this.image = image;
 	}
 
 	public long getTimeReceived() {
