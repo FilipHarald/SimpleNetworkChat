@@ -9,7 +9,7 @@ import java.util.Observer;
  * andra skriva på den istället?
  * 
  *
- * @author Filip
+ * @author Filip o jimmy
  *
  */
 public class Log implements Observer {
