@@ -1,8 +1,11 @@
 package client.gui;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.net.*;
+
 import javax.swing.border.*;
 
 import client.*;
@@ -73,6 +76,7 @@ public class StartGUI extends JPanel {
 				
 				new ClientController(hostname, port, username);
 				
+				frame.setVisible(false);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 			}
