@@ -109,11 +109,16 @@ public class ClientGUI extends JPanel {
 		return imageToSend;
 	}
 	
-	public String[] getRecipients() throws ClassCastException {
+	public String[] getRecipients() {
 		ArrayList<String> recipients;
-		recipients = (ArrayList<String>) users.getSelectedValuesList();
-		String[] stringReps = (String[]) recipients.toArray();
-		return stringReps;
+		try {
+			recipients = (ArrayList<String>) users.getSelectedValuesList();
+			String[] stringReps = (String[]) recipients.toArray();
+			return stringReps;
+		} catch (Exception e) {
+			return null;
+		}
+		
 	}
 	
 	public void setUsers(String[] users) {

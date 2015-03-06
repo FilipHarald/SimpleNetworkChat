@@ -72,10 +72,13 @@ public class StartGUI extends JPanel {
 				String hostname = hostnameTF.getText();
 				int port = Integer.parseInt(portTF.getText());
 				cc.setClient(new Client(hostname, port, username));
+				
 				frame.setVisible(false);
+				
 				JFrame clientFrame = new JFrame("SimpleNetworkChat");
 				clientFrame.add(new ClientGUI(cc));
 				clientFrame.pack();
+				clientFrame.setLocationRelativeTo(null);
 				clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				clientFrame.setVisible(true);
 			} catch (NumberFormatException nfe) {

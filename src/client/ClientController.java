@@ -29,6 +29,7 @@ public class ClientController {
 			}
 
 			public void onMessageReceived(Message message) {
+				System.out.println(message);
 				if (message.hasImage()) {
 					cgui.append(message, message.getImage());
 				} else {
