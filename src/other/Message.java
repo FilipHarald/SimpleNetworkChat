@@ -54,10 +54,7 @@ public class Message implements Serializable {
 	}
 	
 	public boolean hasImage() {
-		if (image == null) {
-			return false;
-		}
-		return true;
+		return image != null;
 	}
 	
 	public String toString() {
