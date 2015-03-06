@@ -21,7 +21,6 @@ public class StartGUI extends JPanel {
 	private JFrame frame = new JFrame("SimpleNetworkChat");
 	
 	private JButton connectBtn = new JButton("Connect");
-	private ClientController cc = new ClientController();
 	
 	public StartGUI() {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -71,20 +70,9 @@ public class StartGUI extends JPanel {
 				String username = usernameTF.getText();
 				String hostname = hostnameTF.getText();
 				int port = Integer.parseInt(portTF.getText());
-				cc.setClient(new Client(hostname, port, username));
 				
-				frame.setVisible(false);
+				new ClientController(hostname, port, username);
 				
-				SwingUtilities.invokeLater(new Runnable() {
-					public void run() {
-						JFrame clientFrame = new JFrame("SimpleNetworkChat");
-						clientFrame.add(new ClientGUI(cc));
-						clientFrame.pack();
-						clientFrame.setLocationRelativeTo(null);
-						clientFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-						clientFrame.setVisible(true);
-					}
-				});
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 			}

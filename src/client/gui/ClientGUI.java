@@ -123,8 +123,8 @@ public class ClientGUI extends JPanel {
 	
 	public void setUsers(String[] userList) {
 		listModel.clear();
-		for (int i = 0, len = userList.length; i < len; i++) {
-			listModel.addElement(userList[i]);
+		for (String user : userList) {
+			listModel.addElement(user);
 		}
 	}
 	
@@ -132,6 +132,7 @@ public class ClientGUI extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			String message = chatTF.getText();
 			cc.sendMessage(message);
+			chatTF.setText("");
 		}
 	}
 	
@@ -151,16 +152,4 @@ public class ClientGUI extends JPanel {
 		}
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame("SimpleNetworkChat");
-				frame.add(new ClientGUI(null));
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.pack();
-				frame.setResizable(false);
-				frame.setVisible(true);
-			}
-		});
-	}
 }
