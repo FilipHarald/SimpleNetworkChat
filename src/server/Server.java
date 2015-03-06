@@ -11,7 +11,6 @@ import java.util.Observable;
  *
  */
 public class Server extends Observable implements Runnable {
-	private Thread t = new Thread(this);
 	private ServerSocket serverSocket;
 
 	// private Log log;
@@ -20,24 +19,25 @@ public class Server extends Observable implements Runnable {
 		// this.log = log;
 		// För tillfället så är log observer till servern och därför behöver
 		// inte servern ha referens till loggen.
-		addObserver(log);
+//		addObserver(log);
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		t.start();
 	}
 
 	@Override
 	public void run() {
-		notifyObservers("Server is running");
+//		notifyObservers("Server is running");
 		while(true){
 			try{
 				Socket socket = serverSocket.accept();
-				new ClientHandler(socket).start();
+				System.out.println("Client connected");
+				new ClientHandler(socket, this).start();
 			}catch (IOException e){
-				notifyObservers(e);
+//				notifyObservers(e);
+				e.printStackTrace();
 			}
 		}
 	}
