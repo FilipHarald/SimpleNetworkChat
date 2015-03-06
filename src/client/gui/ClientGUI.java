@@ -21,7 +21,7 @@ public class ClientGUI extends JPanel {
 	private JTextField chatTF = new JTextField();
 	private JButton sendBtn = new JButton("Send");
 	private JButton addImageBtn = new JButton("Send image...");
-	private ImageIcon imageToSend;
+	private ImageIcon imageToSend = null;
 
 	private ClientController cc;
 	

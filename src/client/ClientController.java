@@ -1,5 +1,8 @@
 package client;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -72,10 +75,29 @@ public class ClientController {
 	}
 	
 	public void sendMessage(String textMessage) {
-		if (cgui.hasImage()) {
-			client.sendMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
-		} else {
-			client.sendMessage(cgui.getRecipients(), textMessage, null);
+		if (textMessage != null) {
+			Pattern p = Pattern.compile("\\/(\\w*) (\\w*) (.*)");
+			Matcher m = p.matcher(textMessage);
+			
+			if (m.find()) {
+				String command, option, text;
+				command = m.group(1);
+				option = m.group(2);
+				text = m.group(3);
+				
+				switch (command) {
+				case "/message":
+				case "/msg":
+					client.sendMessage(option, text, cgui.getImageToSend());
+					break;
+				default:
+					cgui.append("UNKNONWASDN CAMAMAD");
+					break;
+				}
+			} else {
+				client.sendMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
+			}
 		}
+		
 	}
 }

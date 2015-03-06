@@ -55,6 +55,10 @@ public class Client extends Thread {
 			}
 		}
 	}
+	
+	public void sendMessage(String recipient, String text, ImageIcon image) {
+		sendMessage(new String[]{recipient}, text, image);
+	}
 
 	@Override
 	public void run() {
@@ -136,7 +140,7 @@ public class Client extends Thread {
 					Message message;
 					
 					// Send handshake response
-					sendMessage(null, null, null);
+					sendMessage("", null, null);
 					
 					// Get user list
 					message = getMessage();
