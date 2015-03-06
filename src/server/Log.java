@@ -3,7 +3,9 @@ package server;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Just nu har jag försökt mig på att göra loggning med en Observer/Observable
@@ -25,6 +27,7 @@ public class Log {
 		
 		try {
 			fileHandler = new FileHandler("log.log");
+			fileHandler.setFormatter(new SimpleFormatter());
 			logger.addHandler(fileHandler);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -34,6 +37,11 @@ public class Log {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public static void write(Level level, String text) {
+		LogRecord record = new LogRecord(level, text);
+		logger.log(record);
 	}
 	
 	public static void write(String level, String text) {
