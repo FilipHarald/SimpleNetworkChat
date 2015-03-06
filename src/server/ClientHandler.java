@@ -2,6 +2,7 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.Date;
 
 import other.*;
 
@@ -90,6 +91,7 @@ public class ClientHandler extends Thread {
 					obj = inputStream.readObject();
 					if (obj instanceof Message) {
 						message = (Message) obj;
+						message.setTimeReceived(System.currentTimeMillis());
 						server.addMessage(message);
 					} else {
 						System.out.println("Object received is not of class Message");

@@ -114,6 +114,7 @@ public class Server extends Thread {
 		public void run() {
 			String recipient = message.getRecipients()[0];
 			if (clientExists(recipient)) {
+				message.setTimeDelivered(System.currentTimeMillis());
 				clientMap.get(recipient).sendToClient(message);
 			} else if (undeliveredMessageMap.containsKey(recipient)) {
 				undeliveredMessageMap.get(recipient).add(message);
