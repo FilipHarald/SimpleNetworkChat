@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.Observable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,13 +16,13 @@ import other.Message;
  * @author Filip & Jimmy
  *
  */
-public class Server extends Observable implements Runnable {
+public class Server extends Thread {
 	private ServerSocket serverSocket;
 	private HashMap<String, ClientHandler> clientHashMap;
 	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
 	private Buffer<Message> undeliveredMessageBuffer;
 
-	public Server(int port, Log log) {
+	public Server(int port) {
 		// Initiera loggen
 		Log.init(Server.class.getName());
 
@@ -37,6 +36,7 @@ public class Server extends Observable implements Runnable {
 	@Override
 	public void run() {
 		while (true) {
+			Log.write(Log.INFO, String.format("Server running at port %d", serverSocket.getLocalPort()));
 			try {
 				Socket socket = serverSocket.accept();
 				Log.write(Log.INFO, "Client connected");
