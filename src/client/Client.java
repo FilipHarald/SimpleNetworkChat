@@ -16,12 +16,9 @@ import other.Message;
 public class Client extends Thread {
 	private String serverHost;
 	private int serverPort;
-
 	private String userName;
-
-	private Thread messageListener;
+	
 	private ObjectOutputStream outputStream;
-
 	private Set<ClientListener> listeners;
 	
 	public Client(String serverHost, int serverPort, String userName) {
@@ -121,6 +118,9 @@ public class Client extends Thread {
 			} catch (ClassNotFoundException | IOException e) {
 				
 				e.printStackTrace();
+				
+				System.out.println("Klienten nedkopplad?");
+				fireDisconnected();
 			}
 			
 			return null;
@@ -131,15 +131,13 @@ public class Client extends Thread {
 			
 			while (!Thread.interrupted()) {
 				Message message;
-				// Get handshake response
 				
+				// Send handshake response
 				sendMessage (null, null, null);
-				message = getMessage ();
-				
 				
 				// Get user list
-	
-				fireClientsUpdated(message.getRecipients ());
+				message = getMessage();
+				fireClientsUpdated(message.getRecipients());
 				
 				while (true) {
 	

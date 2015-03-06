@@ -11,8 +11,8 @@ public class ClientHandler implements Runnable {
 	private Server server;
 	ObjectOutputStream oos;
 
-	public ClientHandler(Socket socketIn, Server server) {
-		this.socket = socketIn;
+	public ClientHandler(Socket socket, Server server) {
+		this.socket = socket;
 		this.server = server;
 	}
 
@@ -31,6 +31,7 @@ public class ClientHandler implements Runnable {
 					message = (Message) obj;
 					clientName = message.getSender();
 					sendToClient(new Message(null, server.getClientList(), null, null));
+					server.addClientHandler(clientName, this);
 				} else {
 					System.out
 							.println("Handshake object is not of class Message");
@@ -56,7 +57,7 @@ public class ClientHandler implements Runnable {
 		}
 	 }
 
-	public String getClientname() {
+	public String getClientName() {
 		return clientName;
 	}
 

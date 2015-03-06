@@ -1,7 +1,11 @@
 package server;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  * Just nu har jag försökt mig på att göra loggning med en Observer/Observable
@@ -12,12 +16,51 @@ import java.util.Observer;
  * @author Filip o jimmy
  *
  */
-public class Log implements Observer {
+public class Log {
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// Här ska loggning ske men nu använder jag SYSO
-		System.out.println((String) arg);
+	private static Logger logger;
+	private static FileHandler fileHandler;
+	
+	public static void init(String name) {
+		logger = Logger.getLogger(name);
+		logger.setLevel(Level.ALL);
+		
+		try {
+			fileHandler = new FileHandler("log.log");
+			fileHandler.setFormatter(new SimpleFormatter());
+			logger.addHandler(fileHandler);
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
-
+	
+	public static void write(Level level, String text) {
+		LogRecord record = new LogRecord(level, text);
+		logger.log(record);
+	}
+	
+	public static void write(String level, String text) {
+		switch (level) {
+			case "info":
+				logger.info(text);
+				break;
+			case "warning":
+				logger.warning(text);
+				break;
+			case "severe":
+				logger.severe(text);
+				break;
+			case "config":
+				logger.config(text);
+				break;
+			default:
+				break;
+		}
+	}
+		
 }

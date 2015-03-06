@@ -38,7 +38,7 @@ public class Server extends Observable implements Runnable {
 			try{
 				Socket socket = serverSocket.accept();
 				System.out.println("Client connected");
-				new ClientHandler(socket, this).start();
+				new Thread(new ClientHandler(socket, this)).start();
 				System.out.println("ClientHandler created");
 			}catch (IOException e){
 //				notifyObservers(e);
@@ -54,6 +54,10 @@ public class Server extends Observable implements Runnable {
 
 	public String[] getClientList() {
 		return (String[])clientHashMap.keySet().toArray();
+	}
+
+	public void addClientHandler(String clientName, ClientHandler clientHandler) {
+		clientHashMap.put(clientName, clientHandler);
 	}
 
 }
