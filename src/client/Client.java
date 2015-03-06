@@ -3,9 +3,10 @@ package client;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+
 import javax.swing.ImageIcon;
 
-import message.Message;
+import other.Message;
 
 /**
  * 
@@ -107,23 +108,39 @@ public class Client extends Thread {
 		public MessageListener(ObjectInputStream inputStream) {
 			this.inputStream = inputStream;
 		}
+		
+		public Message getMessage () {
+			Message message;
+			try {
+				message = (Message) inputStream.readObject();
+				return message;
+			} catch (ClassNotFoundException | IOException e) {
+				
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
 
 		@Override
 		public void run() {
-
+			Message message;
 			// Get handshake response
-
-			fireConnected();
-
+			
+			sendMessage (null, null, null);
+			message = getMessage ();
+			
+			
 			// Get user list
 
-			fireClientsUpdated(null);
-
+			fireClientsUpdated(message.getRecipients ());
+			
 			while (true) {
 
 				// Get incoming messages
-
-				fireMessageReceived(null);
+				message = getMessage ();
+				
+				fireMessageReceived(message);
 
 			}
 		}
