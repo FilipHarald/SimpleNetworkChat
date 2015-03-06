@@ -13,7 +13,7 @@ public class TestClient {
 
 	public static void main(String[] args) {
 		
-		Client client = new Client("10.1.13.11", 3520, "Användare");
+		Client client = new Client("10.1.13.11", 3520, "Anvandaren");
 		
 		client.addListener(new ClientListener() {
 
