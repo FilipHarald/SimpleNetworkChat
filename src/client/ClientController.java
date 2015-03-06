@@ -43,19 +43,28 @@ public class ClientController {
 			public void onConnected() {}
 
 			public void onClientsUpdated(String[] clients) {
-				cgui.setUsers(clients);
-				System.out.println("Client list updated with:");
-				for (String client : clients) {
-					System.out.println(client);
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						cgui.setUsers(clients);	
+					}
+				});
 			}
 
 			public void onMessageReceived(Message message) {
-				if (message.hasImage()) {
-					cgui.append(message, message.getImage());
-				} else {
-					cgui.append(message);
-				}
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						if (message.hasImage()) {
+							cgui.append(message, message.getImage());
+						} else {
+							cgui.append(message);
+						}
+					}
+					
+				});
 			}
 
 			public void onDisconnected() {}

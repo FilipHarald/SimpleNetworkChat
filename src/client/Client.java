@@ -145,9 +145,13 @@ public class Client extends Thread {
 					while (true) {
 		
 						// Get incoming messages
-						message = getMessage ();
+						message = getMessage();
 						
-						fireMessageReceived(message);
+						if (message.getSender() == null) {
+							fireClientsUpdated(message.getRecipients());
+						} else {
+							fireMessageReceived(message);
+						}
 						
 					}
 				}
