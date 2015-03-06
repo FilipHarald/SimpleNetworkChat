@@ -3,7 +3,6 @@ package server;
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -44,37 +43,22 @@ public class Log {
 	}
 	
 	public static void write(int level, String text) {
-		switch (level) {
-			case INFO:
-				logger.info(text);
-				break;
-			case WARNING:
-				logger.warning(text);
-				break;
-			case SEVERE:
-				logger.severe(text);
-				break;
-			default:
-				break;
-		}
-	}
-	
-	public static void write(String level, String text) {
-		switch (level) {
-			case "info":
-				logger.info(text);
-				break;
-			case "warning":
-				logger.warning(text);
-				break;
-			case "severe":
-				logger.severe(text);
-				break;
-			case "config":
-				logger.config(text);
-				break;
-			default:
-				break;
+		if (logger != null && fileHandler != null) {
+			switch (level) {
+				case INFO:
+					logger.info(text);
+					break;
+				case WARNING:
+					logger.warning(text);
+					break;
+				case SEVERE:
+					logger.severe(text);
+					break;
+				default:
+					break;
+			}
+		} else {
+			System.out.println("Loggern finns inte eller är inte initierad");
 		}
 	}
 		
