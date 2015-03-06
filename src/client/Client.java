@@ -140,7 +140,6 @@ public class Client extends Thread {
 					
 					// Get user list
 					message = getMessage();
-					System.out.println(message);
 					fireClientsUpdated(message.getRecipients());
 					
 					while (true) {
