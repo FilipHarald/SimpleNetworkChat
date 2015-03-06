@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Observable;
 
+import other.Message;
+
 /**
  * 
  * @author Filip & Jimmy
@@ -35,11 +37,22 @@ public class Server extends Observable implements Runnable {
 				Socket socket = serverSocket.accept();
 				System.out.println("Client connected");
 				new ClientHandler(socket, this).start();
+				System.out.println("ClientHandler created");
 			}catch (IOException e){
 //				notifyObservers(e);
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void addMessage(Message message) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String[] getClientList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
