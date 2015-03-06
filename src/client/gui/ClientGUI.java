@@ -17,7 +17,7 @@ import client.*;
 
 public class ClientGUI extends JPanel {
 	
-	private JTextArea chatBox = new JTextArea();
+	private JTextPane chatBox = new JTextPane();
 	private JTextField chatTF = new JTextField();
 	private JButton sendBtn = new JButton("Send");
 	private JButton addImageBtn = new JButton("Send image...");
@@ -34,7 +34,6 @@ public class ClientGUI extends JPanel {
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
 		chatBox.setAutoscrolls(true);
-		chatBox.setLineWrap(true);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
 		chatBox.setBounds(0, 0, 650, 500);
@@ -44,9 +43,6 @@ public class ClientGUI extends JPanel {
 		scroll.setViewportView(chatBox);
 		scroll.setBorder(new MatteBorder(0, 0, 1, 1, Color.BLACK));
 		add(scroll, BorderLayout.CENTER);
-
-		//		add(chatBox, BorderLayout.CENTER);
-		
 		
 		listModel.addElement("Jimmy");
 		listModel.addElement("Filip");
@@ -97,7 +93,7 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public void append(String entry) {
-		chatBox.append("\n" + entry);
+		chatBox.setText(chatBox.getText() + "\n" + entry);
 	}
 	
 	public void append(String[] entries) {
@@ -157,16 +153,16 @@ public class ClientGUI extends JPanel {
 		}
 	}
 	
-//	public static void main(String[] args) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//			public void run() {
-//				JFrame frame = new JFrame("SimpleNetworkChat");
-//				frame.add(new ClientGUI());
-//				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//				frame.pack();
-//				frame.setResizable(false);
-//				frame.setVisible(true);
-//			}
-//		});
-//	}
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JFrame frame = new JFrame("SimpleNetworkChat");
+				frame.add(new ClientGUI(null));
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.pack();
+				frame.setResizable(false);
+				frame.setVisible(true);
+			}
+		});
+	}
 }
