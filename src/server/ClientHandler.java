@@ -29,7 +29,13 @@ public class ClientHandler extends Thread {
 			if (obj instanceof Message) {
 				message = (Message) obj;
 				clientName = message.getSender();
-				sendToClient(new Message(null, server.getClientList(), null, null));
+				
+				if (server.clientExists(clientName)) {
+					Log.write(Log.WARNING, String.format("Client %s is already connected to the server", clientName));
+					oos.close();
+					return;
+				}
+				
 				server.addClientHandler(clientName, this);
 			} else {
 				System.out

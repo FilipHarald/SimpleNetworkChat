@@ -49,6 +49,10 @@ public class Server extends Thread {
 			}
 		}
 	}
+	
+	public boolean clientExists(String clientName) {
+		return clientHashMap.containsKey(clientName);
+	}
 
 	public void addMessage(Message message) {
 		String[] recipients = message.getRecipients();
