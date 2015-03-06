@@ -35,9 +35,9 @@ public class Server extends Thread {
 
 	@Override
 	public void run() {
+		Log.write(Log.INFO, String.format("Server running at port %d", serverSocket.getLocalPort()));
 		while (true) {
-			Log.write(Log.INFO, String.format("Server running at port %d", serverSocket.getLocalPort()));
-			try {
+			try {		
 				Socket socket = serverSocket.accept();
 				Log.write(Log.INFO, "Client connected");
 				new ClientHandler(socket, this).start();

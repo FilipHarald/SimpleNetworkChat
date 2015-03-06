@@ -59,11 +59,10 @@ public class Client extends Thread {
 	@Override
 	public void run() {
 
-		try (Socket socket = new Socket(serverHost, serverPort);
-				ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-				ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());) {
-
-			outputStream = oos;
+		try {
+			Socket socket = new Socket(serverHost, serverPort);
+			outputStream = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream()); 
 
 			new MessageListener(ois).start();
 
@@ -106,7 +105,7 @@ public class Client extends Thread {
 			this.inputStream = inputStream;
 		}
 		
-		public Message getMessage () {
+		public Message getMessage() {
 			
 			try {
 				Object obj = inputStream.readObject();
@@ -133,7 +132,7 @@ public class Client extends Thread {
 				Message message;
 				
 				// Send handshake response
-				sendMessage (null, null, null);
+				sendMessage(null, null, null);
 				
 				// Get user list
 				message = getMessage();

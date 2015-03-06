@@ -19,25 +19,26 @@ public class ClientHandler extends Thread {
 	@Override
 	public void run() {
 		try {
-			ObjectInputStream ois = new ObjectInputStream(
-					socket.getInputStream());
-			oos = new ObjectOutputStream(
-					socket.getOutputStream());
+			oos = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+			
 			Message message;
 			Object obj;
-			while (!Thread.interrupted()) {
-				obj = ois.readObject();
-				if (obj instanceof Message) {
-					message = (Message) obj;
-					clientName = message.getSender();
-					sendToClient(new Message(null, server.getClientList(), null, null));
-					server.addClientHandler(clientName, this);
-				} else {
-					System.out
-							.println("Handshake object is not of class Message");
-				}
+			
+			obj = ois.readObject();
+			if (obj instanceof Message) {
+				message = (Message) obj;
+				clientName = message.getSender();
+				sendToClient(new Message(null, server.getClientList(), null, null));
+				server.addClientHandler(clientName, this);
+			} else {
+				System.out
+						.println("Handshake object is not of class Message");
 			}
-		} catch (Exception e) {
+			
+			new ClientHandlerInput(server, ois).start();
+			
+		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 			try {
 				socket.close();
@@ -45,7 +46,7 @@ public class ClientHandler extends Thread {
 				e1.printStackTrace();
 			}
 		}
-		new ClientHandlerInput(server).start();
+		
 	}
 
 	 public void sendToClient(Message message) {
@@ -64,36 +65,30 @@ public class ClientHandler extends Thread {
 	// ---------------------------------------------------------------------
 	private class ClientHandlerInput extends Thread {
 		private Server server;
+		private ObjectInputStream inputStream;
 
-		public ClientHandlerInput(Server server) {
+		public ClientHandlerInput(Server server, ObjectInputStream inputStream) {
 			this.server = server;
 		}
 
 		public void run() {
-			try (ObjectInputStream ois = new ObjectInputStream(
-					socket.getInputStream())) {
-				Message message;
-				Object obj;
+			
+			Message message;
+			Object obj;
+			try {
 				while (!Thread.interrupted()) {
-					obj = ois.readObject();
+					obj = inputStream.readObject();
 					if (obj instanceof Message) {
 						message = (Message) obj;
 						server.addMessage(message);
 					} else {
-						System.out
-								.println("Object received is not of class Message");
+						System.out.println("Object received is not of class Message");
 					}
 				}
+			} catch (IOException | ClassNotFoundException ex) {
+				ex.printStackTrace();
 				server.removeClientHandler(clientName);
-			} catch (Exception e) {
-				e.printStackTrace();
-				try {
-					socket.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			}
-
 		}
 	}
 
