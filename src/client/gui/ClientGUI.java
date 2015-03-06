@@ -2,10 +2,14 @@ package client.gui;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.filechooser.*;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.io.*;
 
-
+import client.*;
 /**
  * 
  * @author Andreas
@@ -15,6 +19,12 @@ import java.awt.event.*;
 public class ClientGUI extends JPanel {
 	
 	private JTextArea chatBox = new JTextArea();
+	private JTextField chatTF = new JTextField();
+	private JButton sendBtn = new JButton("Send");
+	private JButton addImageBtn = new JButton("Send image...");
+	private ImageIcon imageToSend;
+	private ClientController cc;
+	
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> users;
 		
@@ -30,9 +40,11 @@ public class ClientGUI extends JPanel {
 		add(chatBox, BorderLayout.CENTER);
 		
 		
-		listModel.addElement("Anv‰ndare 1");
-		listModel.addElement("Anv‰ndare 2");
-		listModel.addElement("Anv‰ndare 3");
+		listModel.addElement("Jimmy");
+		listModel.addElement("Filip");
+		listModel.addElement("Klein");
+		listModel.addElement("Albert");
+		listModel.addElement("Andreas");
 		
 		users = new JList<String>(listModel);
 		
@@ -42,15 +54,29 @@ public class ClientGUI extends JPanel {
 		users.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		add(users, BorderLayout.EAST);
 		
+		JPanel southPanel = new JPanel();
+		southPanel.setPreferredSize(new Dimension(800, 32));
+		add(southPanel, BorderLayout.SOUTH);
+		
+		chatTF.setPreferredSize(new Dimension(595, 24));
+		chatTF.setFont(new Font("Consolas", Font.PLAIN, 12));
+		southPanel.add(chatTF);
+		
+		sendBtn.setPreferredSize(new Dimension(70, 24));
+		sendBtn.setFont(new Font("Consolas", Font.BOLD, 12));
+		southPanel.add(sendBtn);
+		
+		addImageBtn.setPreferredSize(new Dimension(130, 24));
+		addImageBtn.setFont(new Font("Consolas", Font.BOLD, 12));
+		addImageBtn.addActionListener(new AddImage());
+		southPanel.add(addImageBtn);
 		
 		String testchat = 	"[14:00:12] <Andreas> Hej chatten!\n" +
 							"[14:00:32] <Filip> Hej Andreas!\n" + 
-							"[14:00:58] <Klein> *mumlar pÂ danska*";
+							"[14:00:58] <Klein> *mumlar p√• danska*";
 		
 		chatBox.setText(testchat);
-		JButton testbutton = new JButton("Test");
-		testbutton.addActionListener(new NewMessageListener());
-		add(testbutton, BorderLayout.SOUTH);
+		
 	}
 	
 	public void append(String entry) {
@@ -58,23 +84,49 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public void append(String[] entries) {
-		for (int i = 0; i < entries.length; i++) {
+		for (int i = 0, len = entries.length; i < len; i++) {
 			append(entries[i]);
 		}
 	}
 	
-	public void setUsers() {
-		//Uppdatera listan med anv‰ndare
+	public void append(ArrayList<String> entries) {
+		for (int i = 0, len = entries.size(); i < len; i++) {
+			append(entries.get(i));
+		}
 	}
 	
-	//ej klar, registrerar n‰r man v‰ljer flera men blir fel n‰r man markerar en
-	private class NewMessageListener implements ActionListener {
+	public ImageIcon getImageToSend() throws NullPointerException {
+		return imageToSend;
+	}
+	
+	public ArrayList<String> getRecipients() throws NullPointerException {
+		ArrayList<String> recipients;
+		recipients = (ArrayList<String>) users.getSelectedValuesList();
+		return recipients;
+	}
+	
+	public void setUsers() {
+		//Uppdatera listan med anv√§ndare
+	}
+	
+	private class SendMessage implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			int[] selectedIndices = users.getSelectedIndices();
-			String[] recipients = new String[selectedIndices.length];
 			
-			for (int i = 0, len = recipients.length; i < len; i++) {
-				recipients[i] = (String) users.getModel().getElementAt(i);
+		}
+	}
+	
+	private class AddImage implements ActionListener {
+		private JFileChooser chooser = new JFileChooser();
+		private FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"'.jpg', '.png', '.gif'", "jpg", "png", "gif");
+		
+		public void actionPerformed(ActionEvent e) {
+			chooser.setFileFilter(filter);
+			int returnValue = chooser.showOpenDialog(null);
+			
+			if (returnValue == JFileChooser.APPROVE_OPTION) {
+				imageToSend = new ImageIcon(chooser.getSelectedFile().getName());
+				addImageBtn.setEnabled(false);
 			}
 		}
 	}
