@@ -50,6 +50,7 @@ public class ClientHandler extends Thread {
 	 public void sendToClient(Message message) {
 		 try {
 			oos.writeObject(message);
+			oos.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
