@@ -99,20 +99,6 @@ public class Server extends Thread {
 		return array;
 	}
 	
-	public String getClientsAsString(){
-		String temp = "";
-		String[] clients = getClients();
-		if (clients.length > 0) {
-			for(String s : clients){
-				temp += s + ",";
-			}
-			
-			temp = temp.substring(0, temp.length()-1);
-		}
-		
-		return temp;
-	}
-
 	public void addClientHandler(String clientName, ClientHandler clientHandler) {
 		// Add ClientHandler to our map of clients
 		clientMap.put(clientName, clientHandler);
@@ -120,8 +106,6 @@ public class Server extends Thread {
 		
 		// Send DataMessage to all clients with updated userlist
 		addMessage(new DataMessage(null, getClients()));
-		
-		System.out.println(getClients().length);
 		
 		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {

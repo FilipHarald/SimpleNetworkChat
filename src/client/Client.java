@@ -138,9 +138,9 @@ public class Client extends Thread {
 				}
 			} catch (ClassNotFoundException | IOException e) {
 				
+				System.out.println("Klienten nedkopplad?");
 				e.printStackTrace();
 				
-				System.out.println("Klienten nedkopplad?");
 				fireDisconnected();
 				
 				throw new IOException();
@@ -161,10 +161,8 @@ public class Client extends Thread {
                 // Get user list
                 message = getMessage();
                 if (message instanceof DataMessage) {
-                	System.out.println("Got DataMessage (with userlist)");
                 	fireClientsUpdated((String[])((DataMessage)message).getData());
                 }
-                fireClientsUpdated(message.getRecipients());
 
                 while (!Thread.interrupted()) {
 
@@ -172,7 +170,6 @@ public class Client extends Thread {
                     message = getMessage();
 
                     if (message instanceof DataMessage) {
-                    	System.out.println("Got DataMessage");
                         fireClientsUpdated((String[])((DataMessage)message).getData());
                     } else {
                         fireMessageReceived(message);

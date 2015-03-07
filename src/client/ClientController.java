@@ -47,9 +47,6 @@ public class ClientController {
 			public void onConnected() {}
 
 			public void onClientsUpdated(String[] clients) {
-				for (String client : clients) {
-					System.out.println(client);
-				}
 				SwingUtilities.invokeLater(new Runnable() {
 
 					@Override
