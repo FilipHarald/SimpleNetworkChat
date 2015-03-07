@@ -1,4 +1,5 @@
 /bin/
+/src/bin
 .classpath
 .project
 *.iml
