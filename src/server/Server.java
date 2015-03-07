@@ -33,11 +33,20 @@ public class Server extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+        // Register shutdown hook so that we can close log file
+        // NOTE: This won't trigger when terminating the process from inside Eclipse
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                Log.close();
+            }
+        });
 	}
 
 	@Override
 	public void run() {
-		Log.write(Log.INFO,	String.format("Server running at port %d", serverSocket.getLocalPort()));
+		Log.write(Log.INFO,	String.format("Server running on port %s", serverSocket.getLocalPort()));
 		while (!Thread.interrupted()) {
 			try {
 				Socket socket = serverSocket.accept();

@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,15 +24,21 @@ public class Log {
 
 	private static Logger logger;
 	private static FileHandler fileHandler;
+	private static ConsoleHandler consoleHandler;
 	
 	public static void init(String name) {
 		logger = Logger.getLogger(name);
+		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.ALL);
 		
 		try {
-			fileHandler = new FileHandler("log.log");
-			fileHandler.setFormatter(new SimpleFormatter());
+			fileHandler = new FileHandler("server.log");
+			fileHandler.setFormatter(new LogFormatter());
 			logger.addHandler(fileHandler);
+			
+			consoleHandler = new ConsoleHandler();
+			consoleHandler.setFormatter(new LogFormatter());
+			logger.addHandler(consoleHandler);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -40,6 +47,11 @@ public class Log {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public static void close() {
+		fileHandler.close();
+		consoleHandler.close();
 	}
 	
 	public static void write(int level, String text) {
@@ -58,7 +70,7 @@ public class Log {
 					break;
 			}
 		} else {
-			System.out.println("Loggern finns inte eller är inte initierad");
+			System.out.println("Logger not found or not initiated yet");
 		}
 	}
 		
