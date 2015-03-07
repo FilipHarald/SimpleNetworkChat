@@ -160,8 +160,10 @@ public class Client extends Thread {
 
                 // Get user list
                 message = getMessage();
+                if (message instanceof DataMessage) {
+                	fireClientsUpdated((String[])((DataMessage)message).getData());
+                }
                 fireClientsUpdated(message.getRecipients());
-                //fireClientsUpdated(message.getTextMessage().split(","));
 
                 while (!Thread.interrupted()) {
 
@@ -170,7 +172,6 @@ public class Client extends Thread {
 
                     if (message instanceof DataMessage) {
                         fireClientsUpdated((String[])((DataMessage)message).getData());
-                        //fireClientsUpdated(message.getTextMessage().split(","));
                     } else {
                         fireMessageReceived(message);
                     }
