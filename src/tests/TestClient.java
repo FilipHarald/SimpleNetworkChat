@@ -8,7 +8,7 @@ public class TestClient {
 
 	public static void main(String[] args) {
 		
-		Client client = new Client("10.1.13.11", 3520, "Anvandaren");
+		Client client = new Client("localhost", 3520, "B");
 		
 		client.addListener(new ClientListener() {
 

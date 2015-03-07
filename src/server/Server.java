@@ -79,6 +79,8 @@ public class Server extends Thread {
 
         if (recipients == null) {
             addMessage(message.copy(getClients()));
+        } else if (recipients.length == 0) {
+        	return;
         } else if (recipients.length > 1) {
             for (String recipient : recipients) {
                 addMessage(message.copy(new String[]{recipient}));
@@ -119,8 +121,7 @@ public class Server extends Thread {
 		String[] clients = getClients();
 		String list = getClientsAsString();
 		System.out.println(list);
-		addMessage(new Message(null, clients));
-//		addMessage(new ServerMessage(clients, (String.format("%s connected", clientName))));
+		addMessage(new DataMessage(null, clients));
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
 				addMessage(m);
@@ -133,8 +134,8 @@ public class Server extends Thread {
 		
 		String clientList = getClientsAsString();
 		if (clientList.length() > 0) {
-			addMessage(new Message(null, getClients()));
-//			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
+			addMessage(new DataMessage(null, getClients()));
+			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
 		
 		Log.write(Log.INFO, String.format("Removed client %s", clientName));

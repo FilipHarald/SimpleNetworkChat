@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 
 import other.ChatMessage;
 import other.CommandMessage;
+import other.DataMessage;
 import other.Message;
 
 /**
@@ -167,8 +168,8 @@ public class Client extends Thread {
                     // Get incoming messages
                     message = getMessage();
 
-                    if (message.getSender() == null) {
-                        fireClientsUpdated(message.getRecipients());
+                    if (message instanceof DataMessage) {
+                        fireClientsUpdated((String[])((DataMessage)message).getData());
                         //fireClientsUpdated(message.getTextMessage().split(","));
                     } else {
                         fireMessageReceived(message);

@@ -36,15 +36,19 @@ public class ClientHandler extends Thread {
 					oos.close();
 					return;
 				}
+				
+				// Send client connected message to all current clients
+				server.addMessage(new ServerMessage(server.getClients(), (String.format("%s connected", clientName))));
 
                 // Register ClientHandle on server
 				server.addClientHandler(clientName, this);
+				
+				// Spawn InputHandler for client
+				new ClientHandlerInput(server, ois).start();
+				
 			} else {
 				System.out.println("Handshake object is not of class Message");
 			}
-
-            // Spawn InputHandler for client
-			new ClientHandlerInput(server, ois).start();
 			
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
