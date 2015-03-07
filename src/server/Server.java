@@ -114,14 +114,16 @@ public class Server extends Thread {
 	}
 
 	public void addClientHandler(String clientName, ClientHandler clientHandler) {
+		// Add ClientHandler to our map of clients
 		clientMap.put(clientName, clientHandler);
-		Log.write(Log.INFO, String.format(
-				"Added client %s (with ClientHandler %s)", clientName,
-				clientHandler));
-		String[] clients = getClients();
-		String list = getClientsAsString();
-		System.out.println(list);
-		addMessage(new DataMessage(null, clients));
+		Log.write(Log.INFO, String.format("Added client %s (with ClientHandler %s)", clientName, clientHandler));
+		
+		// Send DataMessage to all clients with updated userlist
+		addMessage(new DataMessage(null, getClients()));
+		
+		System.out.println(getClients().length);
+		
+		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			for (Message m : undeliveredMessageMap.get(clientName)) {
 				addMessage(m);
@@ -130,15 +132,15 @@ public class Server extends Thread {
 	}
 
 	public void removeClientHandler(String clientName) {
+		// Remove ClientHandler from the map of clients
 		clientMap.remove(clientName);
+		Log.write(Log.INFO, String.format("Removed client %s", clientName));
 		
-		String clientList = getClientsAsString();
-		if (clientList.length() > 0) {
+		// If there are any clients left, send updated client list and disconnect message
+		if (clientMap.size() > 0) {
 			addMessage(new DataMessage(null, getClients()));
 			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
-		
-		Log.write(Log.INFO, String.format("Removed client %s", clientName));
 	}
 	
 	private class MessageSender implements Runnable {

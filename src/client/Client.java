@@ -161,6 +161,7 @@ public class Client extends Thread {
                 // Get user list
                 message = getMessage();
                 if (message instanceof DataMessage) {
+                	System.out.println("Got DataMessage (with userlist)");
                 	fireClientsUpdated((String[])((DataMessage)message).getData());
                 }
                 fireClientsUpdated(message.getRecipients());
@@ -171,6 +172,7 @@ public class Client extends Thread {
                     message = getMessage();
 
                     if (message instanceof DataMessage) {
+                    	System.out.println("Got DataMessage");
                         fireClientsUpdated((String[])((DataMessage)message).getData());
                     } else {
                         fireMessageReceived(message);
