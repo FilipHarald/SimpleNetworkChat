@@ -146,7 +146,23 @@ public class ClientGUI extends JPanel {
 			int returnValue = chooser.showOpenDialog(null);
 			
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				imageToSend = new ImageIcon(chooser.getSelectedFile().getName());
+				String filePath = chooser.getSelectedFile().getAbsolutePath();
+				System.out.println(filePath);
+				imageToSend = new ImageIcon(filePath);
+				switch(imageToSend.getImageLoadStatus()) {
+					case MediaTracker.ABORTED:
+						System.out.println("ABORTED");
+						break;
+					case MediaTracker.COMPLETE:
+						System.out.println("COMPLETE");
+						break;
+					case MediaTracker.ERRORED:
+						System.out.println("ERRORED");
+						break;
+					case MediaTracker.LOADING:
+						System.out.println("LOADING");
+						break;
+				}
 				addImageBtn.setEnabled(false);
 			}
 		}
