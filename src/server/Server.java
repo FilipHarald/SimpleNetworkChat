@@ -82,6 +82,7 @@ public class Server extends Thread {
         // Check if command message
         if (message instanceof CommandMessage) {
             handleCommand((CommandMessage)message);
+            return;
         }
 
         String[] recipients = message.getRecipients();
