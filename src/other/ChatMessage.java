@@ -8,6 +8,8 @@ import java.util.Date;
  * @author nekosaur
  */
 public class ChatMessage extends Message {
+	
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
     private String textMessage = "";
     private ImageIcon image = null;
@@ -31,9 +33,7 @@ public class ChatMessage extends Message {
     }
 
     private String getDate(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-        return sdf.format(date);
+        return SIMPLE_DATE_FORMAT.format(new Date(time));
     }
 
     public String toString() {
