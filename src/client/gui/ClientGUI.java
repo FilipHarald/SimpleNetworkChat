@@ -133,6 +133,7 @@ public class ClientGUI extends JPanel {
 			String message = chatTF.getText();
 			cc.sendMessage(message, imageToSend);
 			chatTF.setText("");
+			addImageBtn.setEnabled(true);
 		}
 	}
 	
