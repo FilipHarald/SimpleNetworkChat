@@ -105,8 +105,8 @@ public class ClientGUI extends JPanel {
 		return true;
 	}
 	
-	public ImageIcon getImageToSend() throws NullPointerException {
-		return imageToSend;
+	public void clearImage() {
+		imageToSend = null;
 	}
 	
 	public String[] getRecipients() {
@@ -131,7 +131,7 @@ public class ClientGUI extends JPanel {
 	private class SendMessage implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String message = chatTF.getText();
-			cc.sendMessage(message);
+			cc.sendMessage(message, imageToSend);
 			chatTF.setText("");
 		}
 	}

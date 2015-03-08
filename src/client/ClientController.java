@@ -3,6 +3,7 @@ package client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -21,7 +22,7 @@ public class ClientController {
 	private ClientGUI cgui;
 	private Client client;
 
-    private static final Pattern patternCommands = Pattern.compile("\\/(\\w*) (\\w*)\\s?(.*)?");
+    private static final Pattern patternCommands = Pattern.compile("^\\/(\\w*) (\\w*)\\s?(.*)?");
 	
 	public ClientController(String hostname, int port, String username) {
 		cgui = new ClientGUI(this);
@@ -79,7 +80,7 @@ public class ClientController {
 		});
 	}
 	
-	public void sendMessage(String textMessage) {
+	public void sendMessage(String textMessage, ImageIcon image) {
 		if (textMessage != null) {
 			Matcher m = patternCommands.matcher(textMessage);
 			
@@ -97,7 +98,7 @@ public class ClientController {
 				switch (command) {
 					case "message":
 					case "msg":
-						client.sendChatMessage(option, text, cgui.getImageToSend());
+						client.sendChatMessage(option, text, image);
 						//client.sendChatMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
 						break;
                     case "whois":
@@ -108,8 +109,10 @@ public class ClientController {
 						break;
 				}
 			} else {
-				client.sendChatMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
+				client.sendChatMessage(cgui.getRecipients(), textMessage, image);
 			}
+			
+			cgui.clearImage();
 		}
 		
 	}
