@@ -76,6 +76,12 @@ public class Server extends Thread {
             	}
                 break;
             case "kick":
+            	if (clientMap.containsKey(message.getArguments())) {
+            		clientMap.get(message.getArguments()).disconnect();
+        			addMessage(new ServerMessage(null, String.format("%s kicked %s from the chat!", message.getSender(), message.getArguments())));
+            	} else {
+            		addMessage(new ServerMessage(new String[] {message.getSender()}, "The user you're trying to kick is not online"));
+            	}
                 break;
             default:
                 break;

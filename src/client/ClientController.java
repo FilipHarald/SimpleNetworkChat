@@ -100,11 +100,13 @@ public class ClientController {
 					case "message":
 					case "msg":
 						client.sendChatMessage(option, text, image);
-						//client.sendChatMessage(cgui.getRecipients(), textMessage, cgui.getImageToSend());
 						break;
                     case "whois":
                         client.sendCommandMessage(command, option);
                         break;
+                    case "kick":
+                    	client.sendCommandMessage(command, option);
+                    	break;
 					default:
 						cgui.append("UNKNONWASDN CAMAMAD");
 						break;
