@@ -4,7 +4,6 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.net.*;
 
 import javax.swing.border.*;
 
@@ -62,27 +61,46 @@ public class StartGUI extends JPanel {
 		connectBtn.addActionListener(new ConnectListener());
 		data.add(connectBtn);
 		
+		EnterListener listener = new EnterListener();
+		usernameTF.addKeyListener(listener);
+		hostnameTF.addKeyListener(listener);
+		portTF.addKeyListener(listener);
+		connectBtn.addKeyListener(listener);
+		
 		panel.add(data, BorderLayout.CENTER);
 	
 		return panel;
 	}
 	
-	private class ConnectListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			try {
-				String username = usernameTF.getText();
-				String hostname = hostnameTF.getText();
-				int port = Integer.parseInt(portTF.getText());
-				
-				new ClientController(hostname, port, username);
-				
-				frame.setVisible(false);
-			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
-			}
+	private void connect() {
+		try {
+			String username = usernameTF.getText();
+			String hostname = hostnameTF.getText();
+			int port = Integer.parseInt(portTF.getText());
+			
+			new ClientController(hostname, port, username);
+			
+			frame.setVisible(false);
+		} catch (NumberFormatException nfe) {
+			JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 		}
 	}
 	
+	private class ConnectListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			connect();
+		}
+	}
+	
+	private class EnterListener extends KeyAdapter {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				connect();
+			}
+		}		
+	}
+
 	public static void main(String[] args) {
 		new StartGUI();
 	}

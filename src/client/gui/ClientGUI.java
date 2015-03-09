@@ -33,6 +33,7 @@ public class ClientGUI extends JPanel {
 		
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
+	
 		chatBox.setAutoscrolls(true);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -70,7 +71,14 @@ public class ClientGUI extends JPanel {
 		addImageBtn.setFont(new Font("Consolas", Font.BOLD, 12));
 		addImageBtn.addActionListener(new AddImage());
 		southPanel.add(addImageBtn);
+					
+		this.setFocusTraversalPolicy(new FocusPolicy(chatTF, sendBtn, addImageBtn));
+		this.setFocusTraversalPolicyProvider(true);
 		
+	}
+	
+	public void setInitialFocus() {
+		chatTF.requestFocusInWindow();
 	}
 	
 	public void append(String entry) {
@@ -167,6 +175,60 @@ public class ClientGUI extends JPanel {
 				addImageBtn.setEnabled(false);
 			}
 		}
+	}
+	
+	private class FocusPolicy extends FocusTraversalPolicy {
+		
+		ArrayList<Component> order;
+		
+		public FocusPolicy(Component... components) {
+			order = new ArrayList<Component>();
+			for (Component component : components) {
+				order.add(component);
+			}
+		}
+
+		@Override
+		public Component getComponentAfter(Container container,
+				Component component) {
+			System.out.println("Get after component");
+			System.out.println(order.indexOf(component));
+			System.out.println(order.size());
+			int index = (order.indexOf(component) + 1) % order.size();
+			System.out.println("New component index = " + index);
+			return order.get(index);
+		}
+
+		@Override
+		public Component getComponentBefore(Container container,
+				Component component) {
+			System.out.println("Get before component");
+			int index = order.indexOf(component);
+			if (index == 0) {
+				return getLastComponent(container);
+			} else {
+				return order.get(index - 1);
+			}
+		}
+
+		@Override
+		public Component getDefaultComponent(Container container) {
+			System.out.println("Get default component");
+			return order.get(0);
+		}
+
+		@Override
+		public Component getFirstComponent(Container container) {
+			System.out.println("Get first component");
+			return order.get(0);
+		}
+
+		@Override
+		public Component getLastComponent(Container container) {
+			System.out.println("Get last component");
+			return order.get(order.size() - 1);
+		}
+		
 	}
 	
 }
