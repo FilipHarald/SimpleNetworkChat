@@ -67,8 +67,13 @@ public class Server extends Thread {
     	System.out.println(String.format("Handling command %s", message.toString()));
         switch (message.getCommand()) {
             case "whois":
-                ClientHandler handler = clientMap.get(message.getArguments());
-                addMessage(new ServerMessage(new String[]{message.getSender()}, handler.getClientAddress()));
+            	if (clientMap.containsKey(message.getArguments())) {
+	                ClientHandler handler = clientMap.get(message.getArguments());
+	                addMessage(new ServerMessage(new String[]{message.getSender()}, handler.getClientAddress()));
+            	} else {
+            		addMessage(new ServerMessage(new String[]{message.getSender()}, 
+            				String.format("No user by the name %s is currently connected", message.getArguments())));
+            	}
                 break;
             case "kick":
                 break;
