@@ -136,13 +136,7 @@ public class Client extends Thread {
 				} else {
 					System.out.println("Received object is not of type Message");
 				}
-			} catch (ClassNotFoundException | IOException e) {
-				
-				System.out.println("Klienten nedkopplad?");
-				e.printStackTrace();
-				
-				fireDisconnected();
-				
+			} catch (ClassNotFoundException ex) {
 				throw new IOException();
 			}
 			
@@ -170,14 +164,24 @@ public class Client extends Thread {
                     message = getMessage();
 
                     if (message instanceof DataMessage) {
-                        fireClientsUpdated((String[])((DataMessage)message).getData());
+           				Object data = ((DataMessage)message).getData();
+        				if (data == null) {
+        					inputStream.close();
+        				} else {
+        					fireClientsUpdated((String[])((DataMessage)message).getData());
+        				}
                     } else {
                         fireMessageReceived(message);
                     }
                 }
 
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				
+				fireDisconnected();
+				
+				System.out.println("Klient nedkopplad");
+				
+//				ex.printStackTrace();
 			}
 		}
 
