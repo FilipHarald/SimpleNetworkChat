@@ -61,17 +61,7 @@ public class ClientHandler extends Thread {
 		
 	}
 	
-	public boolean disconnect() {
-		try {
-			socket.close();
-			return true;
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return false;
-	}
-
-	public void sendToClient(Message message) {
+	public synchronized void sendToClient(Message message) {
 		 try {
 			oos.writeObject(message);
 			oos.flush();
