@@ -3,8 +3,9 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,16 +18,16 @@ import other.*;
  */
 public class Server extends Thread {
 	private ServerSocket serverSocket;
-	private HashMap<String, ClientHandler> clientMap;
+	private Map<String, ClientHandler> clientMap;
 	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
-	private HashMap<String, LinkedList<Message>> undeliveredMessageMap;
+	private Map<String, LinkedList<Message>> undeliveredMessageMap;
 
 	public Server(int port) {
 		// Initialize log
 		Log.init(Server.class.getName());
 
-		clientMap = new HashMap<String, ClientHandler>();
-		undeliveredMessageMap = new HashMap<String, LinkedList<Message>>();
+		clientMap = new ConcurrentHashMap<String, ClientHandler>();
+		undeliveredMessageMap = new ConcurrentHashMap<String, LinkedList<Message>>();
 
 		try {
 			serverSocket = new ServerSocket(port);
