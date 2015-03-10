@@ -46,6 +46,10 @@ public class Client extends Thread {
 	}
 
 	public void sendChatMessage(String[] recipients, String text, ImageIcon image) {
+//		for(String rec : recipients){
+//			System.out.println(rec);
+//		}
+//		System.out.println(recipients.length);
 		sendMessage(new ChatMessage(userName, recipients, text, image));
 	}
 	
