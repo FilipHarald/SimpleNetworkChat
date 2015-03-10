@@ -9,7 +9,7 @@ public class PrivateMessage extends ChatMessage {
 	}
 
 	public String toString() {
-        return String.format("[%s] <PM from %s> %s", getDate(getTimeReceived()), getSender(), getTextMessage());
+        return String.format("[%s] <PM from %s to %s> %s", getDate(getTimeReceived()), getSender(), getRecipients()[1], getTextMessage());
     }
 
     @Override
