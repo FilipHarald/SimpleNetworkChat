@@ -58,25 +58,29 @@ public class Log {
 	}
 	
 	public static void write(int level, String text) {
+		String toGUI = "";
 		if (logger != null && fileHandler != null) {
 			switch (level) {
 				case INFO:
 					logger.info(text);
+					toGUI = "[INFO] " + text;
 					break;
 				case WARNING:
 					logger.warning(text);
+					toGUI = "[WARNING] " + text;
 					break;
 				case SEVERE:
 					logger.severe(text);
+					toGUI = "[SEVERE] " + text;
 					break;
 				default:
 					break;
 			}
-			serverController.onWrite(level + text);
 		} else {
-			System.out.println("Logger not found or not initiated yet");
-			serverController.onWrite(level + text);
+			toGUI = "Logger not found or not initiated yet";
+			System.out.println(toGUI);
 		}
+		serverController.onWrite(toGUI);
 	}
 	
 	public static void addListener(LogListener controller){

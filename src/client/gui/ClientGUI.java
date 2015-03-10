@@ -45,10 +45,7 @@ public class ClientGUI extends JPanel {
 		
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
-		
-		
-		
-		
+				
 		StyleContext context = new StyleContext();
 		doc = new DefaultStyledDocument(context);
 		textStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
