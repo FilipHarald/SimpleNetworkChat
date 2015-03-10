@@ -7,9 +7,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import other.ChatMessage;
-import other.CommandMessage;
-import other.Message;
+import messages.ChatMessage;
+import messages.CommandMessage;
+import messages.Message;
 import client.gui.*;
 
 /**

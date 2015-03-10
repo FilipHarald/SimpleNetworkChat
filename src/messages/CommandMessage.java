@@ -1,4 +1,4 @@
-package other;
+package messages;
 
 /**
  * @author nekosaur

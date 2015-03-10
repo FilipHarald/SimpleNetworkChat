@@ -1,4 +1,4 @@
-package other;
+package messages;
 
 public class DataMessage extends Message {
 	

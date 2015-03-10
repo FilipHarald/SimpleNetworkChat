@@ -3,7 +3,7 @@ package server;
 import java.io.*;
 import java.net.Socket;
 
-import other.*;
+import messages.*;
 import server.log.Log;
 
 public class ClientHandler extends Thread {
