@@ -74,6 +74,7 @@ public class Log {
 					toGUI = "[SEVERE] " + text;
 					break;
 				default:
+					toGUI = "[Unknown] " + text;
 					break;
 			}
 		} else {
