@@ -20,7 +20,7 @@ public class ClientGUI extends JPanel {
 	private JTextPane chatBox = new JTextPane();
 	private JTextField chatTF = new JTextField();
 	private JButton sendBtn = new JButton("Send");
-	private JButton addImageBtn = new JButton("Send image...");
+	private JButton addImageBtn = new JButton("Attach image");
 	private ImageIcon imageToSend = null;
 
 	private ClientController cc;
