@@ -31,11 +31,11 @@ public class ServerController {
 			}
 
 			public void onWrite(String str) {
-				sgui.appendText("Log initiated");
+				sgui.appendText(str);
 			}
 
 			public void onWriteFailed(String str) {
-				sgui.appendText("Log initiated");	
+				sgui.appendText(str);	
 			}
 
 			public void onClose() {
