@@ -8,9 +8,6 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- * Just nu har jag försökt mig på att göra loggning med en Observer/Observable
- * implementation. Men det kanske är bättre att göra Log synchronized och låta
- * andra skriva på den istället?
  * 
  *
  * @author Filip o jimmy
@@ -26,6 +23,8 @@ public class Log {
 	private static FileHandler fileHandler;
 	private static ConsoleHandler consoleHandler;
 	
+	private static LogListener guiListener;
+	
 	public static void init(String name) {
 		logger = Logger.getLogger(name);
 		logger.setUseParentHandlers(false);
@@ -39,6 +38,7 @@ public class Log {
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new LogFormatter());
 			logger.addHandler(consoleHandler);
+			guiListener.onInit();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,6 +52,7 @@ public class Log {
 	public static void close() {
 		fileHandler.close();
 		consoleHandler.close();
+		guiListener.onClose();
 	}
 	
 	public static void write(int level, String text) {
@@ -69,9 +70,15 @@ public class Log {
 				default:
 					break;
 			}
+			guiListener.onWrite(level + text);
 		} else {
 			System.out.println("Logger not found or not initiated yet");
+			guiListener.onWrite(level + text);
 		}
+	}
+	
+	public static void addListener(LogListener l){
+		guiListener = l;
 	}
 		
 }

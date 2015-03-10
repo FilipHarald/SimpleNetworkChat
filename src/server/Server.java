@@ -21,6 +21,7 @@ public class Server extends Thread {
 	private Map<String, ClientHandler> clientMap;
 	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
 	private Map<String, LinkedList<Message>> undeliveredMessageMap;
+	private ServerListener guiListener;
 
 	public Server(int port) {
 		// Initialize log
@@ -179,5 +180,10 @@ public class Server extends Thread {
 				}
 			}
 		}
+	}
+
+	public void addListener(ServerListener serverListener) {
+		// TODO Auto-generated method stub
+		
 	}
 }
