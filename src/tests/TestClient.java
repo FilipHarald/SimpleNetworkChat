@@ -1,6 +1,6 @@
 package tests;
 
-import messages.Message;
+import message.Message;
 import client.Client;
 import client.ClientListener;
 

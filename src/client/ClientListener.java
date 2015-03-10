@@ -1,6 +1,6 @@
 package client;
 
-import messages.Message;
+import message.Message;
 
 public interface ClientListener {
     void onConnected();

@@ -21,7 +21,7 @@ public class StartClientGUI extends JPanel {
 	private JTextField hostnameTF = new JTextField();
 	private JTextField portTF = new JTextField();
 	private JFrame frame = new JFrame("SimpleNetworkChat");
-	
+
 	private JButton connectBtn = new JButton("Connect");
 	
 	public StartClientGUI() {

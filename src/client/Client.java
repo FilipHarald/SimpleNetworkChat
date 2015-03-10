@@ -6,7 +6,7 @@ import java.util.*;
 
 import javax.swing.ImageIcon;
 
-import messages.*;
+import message.*;
 
 /**
  * 
