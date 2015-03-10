@@ -144,6 +144,7 @@ public class Server extends Thread {
 		clientMap.put(clientName, clientHandler);
 		Log.write(Log.INFO, String.format("Added client %s (with ClientHandler %s)", clientName, clientHandler));
 		
+		sendNewClientList();
 		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
