@@ -5,6 +5,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.LogRecord;
 import java.util.logging.SimpleFormatter;
 
 /**
@@ -15,13 +16,14 @@ import java.util.logging.SimpleFormatter;
  */
 public class Log {
 	
-	public static final int INFO = 1;
-	public static final int WARNING = 2;
-	public static final int SEVERE = 3;
+	public static final Level INFO = Level.INFO;
+	public static final Level WARNING = Level.WARNING;
+	public static final Level SEVERE = Level.SEVERE;
 
 	private static Logger logger;
 	private static FileHandler fileHandler;
 	private static ConsoleHandler consoleHandler;
+	private static LogFormatter logFormatter;
 	
 	private static LogListener serverController;
 	
@@ -29,16 +31,16 @@ public class Log {
 		logger = Logger.getLogger(name);
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.ALL);
-		
-		
+
+		logFormatter = new LogFormatter();
 		
 		try {
 			fileHandler = new FileHandler("server.log");
-			fileHandler.setFormatter(new LogFormatter());
+			fileHandler.setFormatter(logFormatter);
 			logger.addHandler(fileHandler);
 			
 			consoleHandler = new ConsoleHandler();
-			consoleHandler.setFormatter(new LogFormatter());
+			consoleHandler.setFormatter(logFormatter);
 			
 			logger.addHandler(consoleHandler);
 			
@@ -57,31 +59,15 @@ public class Log {
 		serverController.onClose();
 	}
 	
-	public static void write(int level, String text) {
-		String toGUI = "";
+	public static void write(Level level, String text) {
+		LogRecord record = new LogRecord(level, text);
 		if (logger != null && fileHandler != null) {
-			switch (level) {
-				case INFO:
-					logger.info(text);
-					toGUI = "[INFO] " + text;
-					break;
-				case WARNING:
-					logger.warning(text);
-					toGUI = "[WARNING] " + text;
-					break;
-				case SEVERE:
-					logger.severe(text);
-					toGUI = "[SEVERE] " + text;
-					break;
-				default:
-					toGUI = "[Unknown] " + text;
-					break;
-			}
+			logger.log(record);
+			serverController.onWrite(logFormatter.format(record));
 		} else {
-			toGUI = "Logger not found or not initiated yet";
-			System.out.println(toGUI);
+			serverController.onWrite("Logger is not initialized yet.\n");
 		}
-		serverController.onWrite(toGUI);
+		
 	}
 	
 	public static void addListener(LogListener controller){

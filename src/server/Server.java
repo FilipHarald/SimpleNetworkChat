@@ -23,6 +23,7 @@ public class Server extends Thread {
 	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
 	private Map<String, LinkedList<Message>> undeliveredMessageMap;
 	private ServerListener serverController;
+	private boolean isStopping = false;
 
 	public Server(int port) {
 		// Initialize log
@@ -35,7 +36,7 @@ public class Server extends Thread {
 			serverSocket = new ServerSocket(port);
 			
 		} catch (IOException e) {
-			Log.write(3, e.getMessage());
+			Log.write(Log.SEVERE, e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -47,7 +48,7 @@ public class Server extends Thread {
             	try {
 					serverSocket.close();
 				} catch (IOException e) {
-					Log.write(3, e.getMessage());
+					Log.write(Log.SEVERE, e.getMessage());
 					e.printStackTrace();
 				}
             	Log.close();
@@ -55,22 +56,36 @@ public class Server extends Thread {
             }
         });
 	}
+
 	public void addListener(ServerListener serverListener) {
 		serverController = serverListener;
 		
 	}
 
+	public void stopServer() {
+		try {
+			for (String clientName : getClients()) {
+				addMessage(new DataMessage(new String[]{clientName}, null));
+			}
+			Thread.sleep(500);
+			serverSocket.close();
+			isStopping = true;
+		} catch (InterruptedException | IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	@Override
 	public void run() {
 		Log.write(Log.INFO,	String.format("Server running on port %s", serverSocket.getLocalPort()));
-		while (!Thread.interrupted()) {
+		while (!Thread.interrupted() && !isStopping) {
 			try {
 				Socket socket = serverSocket.accept();
 				Log.write(Log.INFO, "Client connected");
 				new ClientHandler(socket, this).start();
 				Log.write(Log.INFO, "ClientHandler created");
 			} catch (IOException e) {
-				Log.write(3, e.getMessage());
+				Log.write(Log.SEVERE, e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -145,6 +160,7 @@ public class Server extends Thread {
 		Log.write(Log.INFO, String.format("Added client %s (with ClientHandler %s)", clientName, clientHandler));
 		
 		sendNewClientList();
+
 		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));

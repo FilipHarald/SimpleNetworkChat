@@ -3,6 +3,7 @@ package server;
 import server.gui.ServerGUI;
 import server.log.Log;
 import server.log.LogListener;
+import javax.swing.SwingUtilities;
 
 /**
  * 
@@ -22,6 +23,10 @@ public class ServerController {
 		this.server = new Server(port);
 		server.start();
 		startListeningServer();
+	}
+
+	public void stopServer() {
+		server.stopServer();
 	}
 	
 	public void startListeningLog() {
@@ -47,14 +52,22 @@ public class ServerController {
 	public void startListeningServer(){
 		
 		server.addListener(new ServerListener(){
+			
 			@Override
 			public void onStop() {
 				sgui.appendText("Server stopped");	
 			}
+
 			@Override
 			public void onClientListUpdated(String[] clientList) {
-				sgui.updateClientList(clientList);
-			}	
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run() {
+						sgui.updateClientList(clientList);
+					}
+				});
+			}					
 		});
 	}
 }
