@@ -99,7 +99,7 @@ public class ClientController {
 				switch (command) {
 					case "message":
 					case "msg":
-						client.sendChatMessage(option, text, image);
+						client.sendPrivateMessage(option, text, image);
 						break;
                     case "whois":
                         client.sendCommandMessage(command, option);

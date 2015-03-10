@@ -32,7 +32,7 @@ public class ChatMessage extends Message {
         return (image != null);
     }
 
-    private String getDate(long time) {
+    protected String getDate(long time) {
         return SIMPLE_DATE_FORMAT.format(new Date(time));
     }
 

@@ -6,10 +6,7 @@ import java.util.*;
 
 import javax.swing.ImageIcon;
 
-import other.ChatMessage;
-import other.CommandMessage;
-import other.DataMessage;
-import other.Message;
+import other.*;
 
 /**
  * 
@@ -49,14 +46,7 @@ public class Client extends Thread {
 	}
 
 	public void sendChatMessage(String[] recipients, String text, ImageIcon image) {
-		if (outputStream != null) {
-			try {
-				outputStream.writeObject(new ChatMessage(userName, recipients, text, image));
-				outputStream.flush();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
+		sendMessage(new ChatMessage(userName, recipients, text, image));
 	}
 	
 	public void sendChatMessage(String recipient, String text, ImageIcon image) {
@@ -67,15 +57,20 @@ public class Client extends Thread {
 		}
 	}
 
+	public void sendPrivateMessage(String[] recipients, String text, ImageIcon image) {
+		sendMessage(new PrivateMessage(userName, recipients, text, image));
+	}
+
+	public void sendPrivateMessage(String recipient, String text, ImageIcon image) {
+		if (recipient.equals(userName)) {
+			sendPrivateMessage(new String[] {recipient}, text, image);
+		} else {
+			sendPrivateMessage(new String[] {recipient, userName}, text, image);
+		}
+	}
+
     public void sendCommandMessage(String command, String arguments) {
-        if (outputStream != null) {
-            try {
-                outputStream.writeObject(new CommandMessage(userName, command, arguments));
-                outputStream.flush();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+    	sendMessage(new CommandMessage(userName, command, arguments));
     }
 
 	@Override
