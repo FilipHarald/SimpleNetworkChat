@@ -155,7 +155,7 @@ public class ClientGUI extends JPanel {
 		try {
 			recipients = (ArrayList<String>) users.getSelectedValuesList();
 			String[] arrayRecipients = new String[recipients.size()];
-			recipients.toArray(arrayRecipients);
+			arrayRecipients = recipients.toArray(arrayRecipients);
 			return arrayRecipients;
 		} catch (Exception e) {
 			return null;
