@@ -93,12 +93,11 @@ public class ServerGUI extends JPanel {
 			int port = 0;
 			try {
 				port = Integer.parseInt(txtPort.getText());
+				controller.startServer(port);
+				appendText("Server running on port " + port);
 			} catch (NumberFormatException nfe) {
 				JOptionPane.showMessageDialog(null, "Ange endast siffror som port");
 			}
-			
-			controller.startServer(port);
-			appendText("Server running on port " + port);
 		}
 	}
 	
