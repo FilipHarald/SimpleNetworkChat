@@ -66,7 +66,7 @@ public class Server extends Thread {
 			for (String clientName : getClients()) {
 				addMessage(new DataMessage(new String[]{clientName}, null));
 			}
-			Thread.sleep(500);
+			Thread.sleep(750);
 			serverSocket.close();
 			isStopping = true;
 		} catch (InterruptedException | IOException ex) {

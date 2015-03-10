@@ -16,7 +16,7 @@ public class ServerController {
 	private Server server;
 	
 	public ServerController(){
-		this.sgui = sgui;
+		this.sgui = new ServerGUI(this);
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
