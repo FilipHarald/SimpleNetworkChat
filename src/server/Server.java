@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import other.*;
+import server.log.Log;
 
 /**
  * 
@@ -29,10 +30,12 @@ public class Server extends Thread {
 
 		clientMap = new ConcurrentHashMap<String, ClientHandler>();
 		undeliveredMessageMap = new ConcurrentHashMap<String, LinkedList<Message>>();
-
+		
 		try {
 			serverSocket = new ServerSocket(port);
+			
 		} catch (IOException e) {
+			Log.write(3, e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -41,9 +44,20 @@ public class Server extends Thread {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                Log.close();
+            	try {
+					serverSocket.close();
+				} catch (IOException e) {
+					Log.write(3, e.getMessage());
+					e.printStackTrace();
+				}
+            	Log.close();
+            	guiListener.onStop();
             }
         });
+	}
+	public void addListener(ServerListener serverListener) {
+		guiListener = serverListener;
+		
 	}
 
 	@Override
@@ -56,6 +70,7 @@ public class Server extends Thread {
 				new ClientHandler(socket, this).start();
 				Log.write(Log.INFO, "ClientHandler created");
 			} catch (IOException e) {
+				Log.write(3, e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -129,9 +144,6 @@ public class Server extends Thread {
 		clientMap.put(clientName, clientHandler);
 		Log.write(Log.INFO, String.format("Added client %s (with ClientHandler %s)", clientName, clientHandler));
 		
-		// Send DataMessage to all clients with updated userlist
-		addMessage(new DataMessage(null, getClients()));
-		
 		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {
 			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
@@ -145,9 +157,17 @@ public class Server extends Thread {
 		
 		// If there are any clients left, send updated client list and disconnect message
 		if (clientMap.size() > 0) {
-			addMessage(new DataMessage(null, getClients()));
+			sendNewClientList();
 			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
+	}
+	
+	public void sendNewClientList(){
+		String[] clients =  getClients();
+		// Send DataMessage to all clients with updated userlist
+		addMessage(new DataMessage(null, clients));
+		// Update GUI
+		guiListener.onClientListUpdated(clients);
 	}
 	
 	private class MessageSender implements Runnable {
@@ -182,8 +202,4 @@ public class Server extends Thread {
 		}
 	}
 
-	public void addListener(ServerListener serverListener) {
-		// TODO Auto-generated method stub
-		
-	}
 }

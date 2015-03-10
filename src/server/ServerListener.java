@@ -1,7 +1,6 @@
 package server;
 
 public interface ServerListener {
-	void onClientAdded();
-	void onStart();
 	void onStop();
+	void onClientListUpdated(String [] clientList);
 }

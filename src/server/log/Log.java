@@ -1,4 +1,4 @@
-package server;
+package server.log;
 
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;

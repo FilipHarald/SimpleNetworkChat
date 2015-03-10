@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 
 import other.*;
+import server.log.Log;
 
 public class ClientHandler extends Thread {
 	private String clientName;

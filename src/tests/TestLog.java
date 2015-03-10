@@ -1,6 +1,6 @@
 package tests;
 
-import server.Log;
+import server.log.Log;
 
 public class TestLog {
 

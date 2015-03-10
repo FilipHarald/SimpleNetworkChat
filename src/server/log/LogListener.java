@@ -1,4 +1,4 @@
-package server;
+package server.log;
 
 
 public interface LogListener {

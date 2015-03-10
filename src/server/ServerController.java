@@ -1,6 +1,8 @@
 package server;
 
 import server.gui.ServerGUI;
+import server.log.Log;
+import server.log.LogListener;
 
 /**
  * 
@@ -11,56 +13,42 @@ public class ServerController {
 	private Server server;
 	private ServerGUI sgui;
 	
+	public ServerController(ServerGUI sgui, int port){
+		server = new Server(port);
+		this.sgui = sgui;
+		startListening();
+	}
 	
-	
-	public void addListener(){
+	public void startListening(){
+		
 		server.addListener(new ServerListener(){
-
-			@Override
-			public void onClientAdded() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void onStart() {
-				// TODO Auto-generated method stub
-				
-			}
-
 			@Override
 			public void onStop() {
-				// TODO Auto-generated method stub
-				
+				sgui.appendText("Server stopped");	
 			}
-			
+			@Override
+			public void onClientListUpdated(String[] clientList) {
+				sguiupdateClientList(clientList);
+			}	
 		});
+		
 		Log.addListener(new LogListener(){
-
 			@Override
 			public void onInit() {
-				sgui.appendText("Log initiated");
-				
+				sgui.appendText("Log initiated");	
 			}
-
 			@Override
 			public void onWrite(String str) {
-				// TODO Auto-generated method stub
-				
+				sgui.appendText("Log initiated");
 			}
-
 			@Override
 			public void onWriteFailed(String str) {
-				// TODO Auto-generated method stub
-				
+				sgui.appendText("Log initiated");	
 			}
-
 			@Override
 			public void onClose() {
 				sgui.appendText("Log closed");
-				
 			}
-			
 		});
 	}
 }
