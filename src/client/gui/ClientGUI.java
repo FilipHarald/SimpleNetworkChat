@@ -59,7 +59,7 @@ public class ClientGUI extends JPanel {
 		
 		serverStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setAlignment(serverStyle, StyleConstants.ALIGN_LEFT);
-		StyleConstants.setFontSize(serverStyle, 12);
+		StyleConstants.setFontSize(serverStyle, 16);
 		StyleConstants.setSpaceAbove(serverStyle, 4);
 		StyleConstants.setSpaceBelow(serverStyle, 4);
 		StyleConstants.setFontFamily(serverStyle, "Consolas");
@@ -67,7 +67,7 @@ public class ClientGUI extends JPanel {
 		
 		pmStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
 		StyleConstants.setAlignment(pmStyle, StyleConstants.ALIGN_LEFT);
-		StyleConstants.setFontSize(pmStyle, 12);
+		StyleConstants.setFontSize(pmStyle, 14);
 		StyleConstants.setSpaceAbove(pmStyle, 4);
 		StyleConstants.setSpaceBelow(pmStyle, 4);
 		StyleConstants.setFontFamily(pmStyle, "Consolas");
