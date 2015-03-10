@@ -28,7 +28,7 @@ public class ServerController {
 			}
 			@Override
 			public void onClientListUpdated(String[] clientList) {
-				sguiupdateClientList(clientList);
+				sgui.updateClientList(clientList);
 			}	
 		});
 		

@@ -83,7 +83,11 @@ public class ServerGUI extends JPanel {
 		
 	}
 	
-
+	
+	public void updateClientList(String[] clientList) {
+		
+	}
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
