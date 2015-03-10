@@ -109,8 +109,10 @@ public class Server extends Thread {
             }
         } else {
         	
-        	message.setTimeReceived(System.currentTimeMillis());
-        	
+        	if (message.getTimeReceived() <= 0) {
+        		message.setTimeReceived(System.currentTimeMillis());
+        	}
+
             threadPool.execute(new MessageSender(message));
         }
 	}
@@ -131,9 +133,7 @@ public class Server extends Thread {
 		
 		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {
-			for (Message m : undeliveredMessageMap.get(clientName)) {
-				addMessage(m);
-			}
+			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
 		}
 	}
 
@@ -150,26 +150,33 @@ public class Server extends Thread {
 	}
 	
 	private class MessageSender implements Runnable {
-		private Message message;
+		private LinkedList<Message> messages;
 
 		public MessageSender(Message message) {
-			this.message = message;
+			messages = new LinkedList<Message>();
+			messages.add(message);
+		}
+
+		public MessageSender(LinkedList<Message> messages) {
+			this.messages = messages;
 		}
 
 		@Override
 		public void run() {
-			String recipient = message.getRecipients()[0];
-			if (clientExists(recipient)) {
-				message.setTimeDelivered(System.currentTimeMillis());
-				clientMap.get(recipient).sendToClient(message);
-				Log.write(Log.INFO, String.format("Delivered message of type %s to %s from %s", message.getClass().getName(), recipient, message.getSender()));
-			} else if (message instanceof ChatMessage) {
-				if (!undeliveredMessageMap.containsKey(recipient)) {
-					undeliveredMessageMap.put(recipient, new LinkedList<Message>());
+			for (Message message : messages) {
+				String recipient = message.getRecipients()[0];
+				if (clientExists(recipient)) {
+					message.setTimeDelivered(System.currentTimeMillis());
+					clientMap.get(recipient).sendToClient(message);
+					Log.write(Log.INFO, String.format("Delivered message of type %s to %s from %s", message.getClass().getName(), recipient, message.getSender()));
+				} else if (message instanceof ChatMessage) {
+					if (!undeliveredMessageMap.containsKey(recipient)) {
+						undeliveredMessageMap.put(recipient, new LinkedList<Message>());
+					}
+					undeliveredMessageMap.get(recipient).add(message);
+					
+					Log.write(Log.INFO, String.format("User %s not online. Added message to undelivered storage", recipient));
 				}
-				undeliveredMessageMap.get(recipient).add(message);
-				
-				Log.write(Log.INFO, String.format("User %s not online. Added message to undelivered storage", recipient));
 			}
 		}
 	}
