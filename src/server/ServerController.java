@@ -10,16 +10,40 @@ import server.log.LogListener;
  *
  */
 public class ServerController {
-	private Server server;
 	private ServerGUI sgui;
+	private Server server;
 	
-	public ServerController(ServerGUI sgui, int port){
-		server = new Server(port);
+	public ServerController(ServerGUI sgui){
 		this.sgui = sgui;
-		startListening();
 	}
 	
-	public void startListening(){
+	public void startServer(int port) {
+		startListeningLog();
+		this.server = new Server(port);
+		startListeningServer();
+	}
+	
+	public void startListeningLog() {
+		Log.addListener(new LogListener(){
+			public void onInit() {
+				sgui.appendText("Log initiated");	
+			}
+
+			public void onWrite(String str) {
+				sgui.appendText("Log initiated");
+			}
+
+			public void onWriteFailed(String str) {
+				sgui.appendText("Log initiated");	
+			}
+
+			public void onClose() {
+				sgui.appendText("Log closed");
+			}
+		});
+	}
+	
+	public void startListeningServer(){
 		
 		server.addListener(new ServerListener(){
 			@Override
@@ -30,25 +54,6 @@ public class ServerController {
 			public void onClientListUpdated(String[] clientList) {
 				sgui.updateClientList(clientList);
 			}	
-		});
-		
-		Log.addListener(new LogListener(){
-			@Override
-			public void onInit() {
-				sgui.appendText("Log initiated");	
-			}
-			@Override
-			public void onWrite(String str) {
-				sgui.appendText("Log initiated");
-			}
-			@Override
-			public void onWriteFailed(String str) {
-				sgui.appendText("Log initiated");	
-			}
-			@Override
-			public void onClose() {
-				sgui.appendText("Log closed");
-			}
 		});
 	}
 }

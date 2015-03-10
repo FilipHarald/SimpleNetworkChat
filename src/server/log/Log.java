@@ -30,6 +30,8 @@ public class Log {
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.ALL);
 		
+		
+		
 		try {
 			fileHandler = new FileHandler("server.log");
 			fileHandler.setFormatter(new LogFormatter());
@@ -37,7 +39,9 @@ public class Log {
 			
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new LogFormatter());
+			
 			logger.addHandler(consoleHandler);
+			
 			guiListener.onInit();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block

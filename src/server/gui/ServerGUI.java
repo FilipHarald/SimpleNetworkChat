@@ -24,8 +24,7 @@ public class ServerGUI extends JPanel {
 	private JTextArea textAreaLog = new JTextArea();
 
 	public ServerGUI() {
-		//this.controller = controller;
-
+		this.controller = new ServerController(this);
 		createGUI();
 	}
 
@@ -67,7 +66,9 @@ public class ServerGUI extends JPanel {
 		scroll.setPreferredSize(new Dimension(400, 500));
 		scroll.setViewportView(textAreaLog);
 		scroll.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
-
+		
+		btnStart.addActionListener(new StartListener());
+		
 		c.gridx = 1;
 		c.gridy = 0;
 		c.gridheight = 2;
@@ -79,13 +80,26 @@ public class ServerGUI extends JPanel {
 
 
 	public void appendText(String string) {
-		// TODO Auto-generated method stub
-		
+		textAreaLog.append(string + "\n");
 	}
 	
 	
 	public void updateClientList(String[] clientList) {
 		
+	}
+	
+	private class StartListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			int port = 0;
+			try {
+				port = Integer.parseInt(txtPort.getText());
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(null, "Ange endast siffror som port");
+			}
+			
+			controller.startServer(port);
+			appendText("Server running on port " + port);
+		}
 	}
 	
 	public static void main(String[] args) {
