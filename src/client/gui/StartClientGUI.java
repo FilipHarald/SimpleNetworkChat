@@ -49,10 +49,10 @@ public class StartClientGUI extends JPanel {
 		panel.add(logoLabel, BorderLayout.NORTH);
 		
 		JPanel data = new JPanel(new GridLayout(4, 1, 5, 5));
-		usernameTF.setText("AnonymousUser");
+		usernameTF.setText("Andreas");
 		usernameTF.setBorder(new TitledBorder("Username"));
 		data.add(usernameTF);
-		hostnameTF.setText("10.1.13.11");
+		hostnameTF.setText("127.0.0.1");
 		hostnameTF.setBorder(new TitledBorder("Hostname/IP:"));
 		data.add(hostnameTF);
 		portTF.setText("3520");

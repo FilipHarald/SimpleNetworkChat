@@ -1,11 +1,19 @@
 package client.gui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.filechooser.*;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.*;
 
 import client.*;
@@ -17,7 +25,11 @@ import client.*;
 
 public class ClientGUI extends JPanel {
 	
-	private JTextPane chatBox = new JTextPane();
+	private JTextPane chatBox;
+	private StyledDocument doc;
+	private Style textStyle;
+	private Style imgStyle;
+	
 	private JTextField chatTF = new JTextField();
 	private JButton sendBtn = new JButton("Send");
 	private JButton addImageBtn = new JButton("Attach image");
@@ -33,7 +45,23 @@ public class ClientGUI extends JPanel {
 		
 		setPreferredSize(new Dimension(800, 600));
 		setLayout(new BorderLayout());
-	
+		
+		
+		
+		
+		StyleContext context = new StyleContext();
+		doc = new DefaultStyledDocument(context);
+		textStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
+		StyleConstants.setAlignment(textStyle, StyleConstants.ALIGN_LEFT);
+		StyleConstants.setFontSize(textStyle, 12);
+		StyleConstants.setSpaceAbove(textStyle, 4);
+		StyleConstants.setSpaceBelow(textStyle, 4);
+		StyleConstants.setFontFamily(textStyle, "Consolas");
+		
+		imgStyle = doc.addStyle("Image style", null);
+		
+		
+		chatBox = new JTextPane(doc);
 		chatBox.setAutoscrolls(true);
 		chatBox.setEditable(false);
 		chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -82,7 +110,10 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public void append(String entry) {
-		chatBox.setText(chatBox.getText() + "\n" + entry);
+		try {
+			doc.insertString(doc.getLength(), entry + "\n", textStyle);
+		} catch (Exception e) {}
+//		chatBox.setText(chatBox.getText() + "\n" + entry);
 	}
 	
 	public void append(String[] entries) {
@@ -103,7 +134,12 @@ public class ClientGUI extends JPanel {
 	
 	public void append(Object obj, ImageIcon icon) {
 		append(obj.toString() + "\n");
-		chatBox.insertIcon(icon);
+		try {
+			StyleConstants.setIcon(imgStyle, icon);
+			doc.insertString(doc.getLength(), "ignored", imgStyle);
+			doc.insertString(doc.getLength(), "\n", textStyle);
+			
+		} catch (Exception e) {}
 	}
 	
 	public boolean hasImage() {
