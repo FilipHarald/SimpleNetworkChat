@@ -48,7 +48,7 @@ public class ServerGUI extends JPanel {
 		this.add(panel, c);
 
 		listUsers.setFont(new Font("Consolas", Font.PLAIN, 12));
-		listUsers.setPreferredSize(new Dimension(100, 300));
+		listUsers.setPreferredSize(new Dimension(150, 400));
 		listUsers.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		listUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -63,7 +63,7 @@ public class ServerGUI extends JPanel {
 		textAreaLog.setBounds(0, 0, 400, 500);
 		
 		JScrollPane scroll = new JScrollPane(textAreaLog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setPreferredSize(new Dimension(400, 500));
+		scroll.setPreferredSize(new Dimension(600, 500));
 		scroll.setViewportView(textAreaLog);
 		scroll.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		

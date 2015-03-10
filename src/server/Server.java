@@ -52,7 +52,6 @@ public class Server extends Thread {
 					e.printStackTrace();
 				}
             	Log.close();
-            	serverController.onStop();
             }
         });
 	}
