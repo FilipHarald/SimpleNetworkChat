@@ -183,7 +183,9 @@ public class Server extends Thread {
 		// Send DataMessage to all clients with updated userlist
 		addMessage(new DataMessage(null, clients));
 		// Update GUI
-		serverController.onClientListUpdated(clients);
+		if (serverController != null) {
+			serverController.onClientListUpdated(clients);
+		}
 	}
 	
 	private class MessageSender implements Runnable {
