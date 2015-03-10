@@ -67,7 +67,9 @@ public class ServerGUI extends JPanel {
 		scroll.setViewportView(textAreaLog);
 		scroll.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		
-		btnStart.addActionListener(new StartListener());
+		ClickListener listener = new ClickListener();
+		btnStart.addActionListener(listener);
+		btnStop.addActionListener(listener);
 		
 		c.gridx = 1;
 		c.gridy = 0;
@@ -80,23 +82,29 @@ public class ServerGUI extends JPanel {
 
 
 	public void appendText(String string) {
-		textAreaLog.append(string + "\n");
+		textAreaLog.append(string);
 	}
 	
 	
 	public void updateClientList(String[] clientList) {
-		
+		listModel.clear();
+		for (String client : clientList) {
+			listModel.addElement(client);
+		}
 	}
 	
-	private class StartListener implements ActionListener {
+	private class ClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			int port = 0;
-			try {
-				port = Integer.parseInt(txtPort.getText());
-				controller.startServer(port);
-				appendText("Server running on port " + port);
-			} catch (NumberFormatException nfe) {
-				JOptionPane.showMessageDialog(null, "Ange endast siffror som port");
+			if (e.getSource() == btnStart) {
+				int port = 0;
+				try {
+					port = Integer.parseInt(txtPort.getText());
+					controller.startServer(port);
+				} catch (NumberFormatException nfe) {
+					JOptionPane.showMessageDialog(null, "Ange endast siffror som port");
+				}
+			} else if (e.getSource() == btnStop) {
+				controller.stopServer();
 			}
 		}
 	}
