@@ -32,7 +32,7 @@ public class ServerController {
 	public void startListeningLog() {
 		Log.addListener(new LogListener(){
 			public void onInit() {
-				sgui.appendText("Log initiated");	
+				sgui.appendText("[LOG] Started logging...\n");	
 			}
 
 			public void onWrite(String str) {
@@ -44,7 +44,7 @@ public class ServerController {
 			}
 
 			public void onClose() {
-				sgui.appendText("Log closed");
+				sgui.appendText("[LOG] Stopped logging\n");
 			}
 		});
 	}
@@ -52,11 +52,6 @@ public class ServerController {
 	public void startListeningServer(){
 		
 		server.addListener(new ServerListener(){
-			
-			@Override
-			public void onStop() {
-				sgui.appendText("Server stopped");	
-			}
 
 			@Override
 			public void onClientListUpdated(String[] clientList) {
