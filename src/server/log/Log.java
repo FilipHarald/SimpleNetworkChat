@@ -44,7 +44,9 @@ public class Log {
 			
 			logger.addHandler(consoleHandler);
 			
-			serverController.onInit();
+			if (serverController != null) {
+				serverController.onInit();
+			}
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -54,18 +56,28 @@ public class Log {
 	}
 	
 	public static void close() {
-		fileHandler.close();
-		consoleHandler.close();
-		serverController.onClose();
+		if (fileHandler != null) {
+			fileHandler.close();
+		}
+		if (consoleHandler != null) {
+			consoleHandler.close();
+		}
+		if (serverController != null) {
+			serverController.onClose();
+		}
 	}
 	
 	public static void write(Level level, String text) {
 		LogRecord record = new LogRecord(level, text);
 		if (logger != null && fileHandler != null) {
 			logger.log(record);
-			serverController.onWrite(logFormatter.format(record));
+			if (serverController != null) {
+				serverController.onWrite(logFormatter.format(record));
+			}
 		} else {
-			serverController.onWrite("Logger is not initialized yet.\n");
+			if (serverController != null) {
+				serverController.onWrite("Logger is not initialized yet.\n");
+			}
 		}
 		
 	}
