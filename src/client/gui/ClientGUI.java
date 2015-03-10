@@ -29,6 +29,8 @@ public class ClientGUI extends JPanel {
 	private StyledDocument doc;
 	private Style textStyle;
 	private Style imgStyle;
+	private Style serverStyle;
+	private Style pmStyle;
 	
 	private JTextField chatTF = new JTextField();
 	private JButton sendBtn = new JButton("Send");
@@ -54,6 +56,22 @@ public class ClientGUI extends JPanel {
 		StyleConstants.setSpaceAbove(textStyle, 4);
 		StyleConstants.setSpaceBelow(textStyle, 4);
 		StyleConstants.setFontFamily(textStyle, "Consolas");
+		
+		serverStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
+		StyleConstants.setAlignment(serverStyle, StyleConstants.ALIGN_LEFT);
+		StyleConstants.setFontSize(serverStyle, 12);
+		StyleConstants.setSpaceAbove(serverStyle, 4);
+		StyleConstants.setSpaceBelow(serverStyle, 4);
+		StyleConstants.setFontFamily(serverStyle, "Consolas");
+		StyleConstants.setBold(serverStyle, true);
+		
+		pmStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
+		StyleConstants.setAlignment(pmStyle, StyleConstants.ALIGN_LEFT);
+		StyleConstants.setFontSize(pmStyle, 12);
+		StyleConstants.setSpaceAbove(pmStyle, 4);
+		StyleConstants.setSpaceBelow(pmStyle, 4);
+		StyleConstants.setFontFamily(pmStyle, "Consolas");
+		StyleConstants.setItalic(pmStyle, true);
 		
 		imgStyle = doc.addStyle("Image style", null);
 		
@@ -111,6 +129,18 @@ public class ClientGUI extends JPanel {
 			doc.insertString(doc.getLength(), entry + "\n", textStyle);
 		} catch (Exception e) {}
 //		chatBox.setText(chatBox.getText() + "\n" + entry);
+	}
+	
+	public void appendServerMessage(String entry) {
+		try {
+			doc.insertString(doc.getLength(), entry + "\n", serverStyle);
+		} catch (Exception e) {}
+	}
+	
+	public void appendPrivateMessage(String entry) {
+		try {
+			doc.insertString(doc.getLength(), entry + "\n", pmStyle);
+		} catch (Exception e) {}
 	}
 	
 	public void append(String[] entries) {
