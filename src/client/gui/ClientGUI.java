@@ -154,11 +154,10 @@ public class ClientGUI extends JPanel {
 		ArrayList<String> recipients;
 		try {
 			recipients = (ArrayList<String>) users.getSelectedValuesList();
-			String[] stringReps = (String[]) recipients.toArray();
-			System.out.println(stringReps);
-			return stringReps;
+			String[] arrayRecipients = new String[recipients.size()];
+			arrayRecipients = recipients.toArray(arrayRecipients);
+			return arrayRecipients;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 		
