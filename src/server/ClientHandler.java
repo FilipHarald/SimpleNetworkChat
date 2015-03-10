@@ -100,6 +100,10 @@ public class ClientHandler extends Thread {
 						message = (Message) obj;
 						message.setTimeReceived(System.currentTimeMillis());
 						server.addMessage(message);
+						if (message instanceof PrivateMessage) {
+							System.out.println("Private message received, copying to send back");
+							server.addMessage(message.copy(new String[] {clientName}));
+						}
 					} else {
 						System.out.println("Object received is not of class Message");
 					}

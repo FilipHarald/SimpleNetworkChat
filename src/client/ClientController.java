@@ -61,19 +61,20 @@ public class ClientController {
 
 					@Override
 					public void run() {
-                        if (message instanceof ChatMessage) {
-                            ChatMessage cmsg = (ChatMessage)message;
-                            if (cmsg.hasImage()) {
-                                cgui.append(cmsg.toString(), cmsg.getImage());
-                            } else {
-                                cgui.append(cmsg.toString());
-                            }
-                        } else if (message instanceof ServerMessage) {
+                        if (message instanceof ServerMessage) {
                         	cgui.appendServerMessage(message.toString());
                         } else if (message instanceof PrivateMessage) {
-                        	cgui.appendPrivateMessage(message.toString());
+                        	PrivateMessage pmsg = (PrivateMessage)message;
+                        	if (message.getSender().equals(client.getUserName())) {
+                        		pmsg.setSenderCopy(true);
+                        		cgui.appendPrivateMessage(message.toString(), pmsg.getImage(), pmsg.getGroup());
+                        	} else {
+                        		cgui.appendPublicMessage(message.toString(), pmsg.getImage());
+                        	}
+                        } else if (message instanceof ChatMessage) {
+                            ChatMessage cmsg = (ChatMessage)message;
+                            cgui.appendPublicMessage(cmsg.toString(), cmsg.getImage());
                         }
-
 					}
 					
 				});
@@ -83,7 +84,7 @@ public class ClientController {
 		});
 	}
 	
-	public void sendMessage(String textMessage, ImageIcon image) {
+	public void sendMessage(String textMessage, ImageIcon image, int group) {
 		if (textMessage != null) {
 			Matcher m = patternCommands.matcher(textMessage);
 			
@@ -101,7 +102,7 @@ public class ClientController {
 				switch (command) {
 					case "message":
 					case "msg":
-						client.sendPrivateMessage(option, text, image);
+						client.sendPrivateMessage(option, text, image, group);
 						break;
                     case "whois":
                         client.sendCommandMessage(command, option);
@@ -110,11 +111,16 @@ public class ClientController {
                     	client.sendCommandMessage(command, option);
                     	break;
 					default:
-						cgui.append("UNKNONWASDN CAMAMAD");
+						cgui.appendPublicMessage("UNKNONWASDN CAMAMAD", null);
 						break;
 				}
 			} else {
-				client.sendChatMessage(cgui.getRecipients(), textMessage, image);
+				if (group == 0) {
+					client.sendChatMessage(cgui.getRecipients(), textMessage, image);
+				} else {
+					client.sendPrivateMessage(cgui.getRecipients(), textMessage, image, group);
+				}
+				
 			}
 			
 			cgui.clearImage();

@@ -1,6 +1,5 @@
 package client.gui;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.filechooser.*;
@@ -12,11 +11,14 @@ import javax.swing.text.StyledDocument;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.*;
 
 import client.*;
+import client.gui.models.Group;
+import client.gui.panels.ChatPanel;
+import client.gui.panels.ChatPanelListener;
+import client.gui.panels.UsersPanel;
+import client.gui.panels.UsersPanelListener;
 
 /**
  * 
@@ -25,76 +27,33 @@ import client.*;
 
 public class ClientGUI extends JPanel {
 	
-	private JTextPane chatBox;
-	private StyledDocument doc;
-	private Style textStyle;
-	private Style imgStyle;
-	private Style serverStyle;
-	private Style pmStyle;
-	
 	private JTextField chatTF = new JTextField();
 	private JButton sendBtn = new JButton("Send");
 	private JButton addImageBtn = new JButton("Attach image");
 	private ImageIcon imageToSend = null;
+	
+	private ChatPanel chatPanel = new ChatPanel();
+	private UsersPanel usersPanel = new UsersPanel();
+	
+	private Map<String, Group> groups;
+	private String currentGroup;
 
 	private ClientController cc;
-	
-	private DefaultListModel<String> listModel = new DefaultListModel<String>();
-	private JList<String> users;
 		
 	public ClientGUI(ClientController cc) {
 		this.cc = cc;
 		
+		this.groups = new HashMap<String, Group>();
+		this.addGroup("Lobby", null, false);
+		this.currentGroup = "Lobby";
+		
 		setPreferredSize(new Dimension(800, 600));
-		setLayout(new BorderLayout());
-				
-		StyleContext context = new StyleContext();
-		doc = new DefaultStyledDocument(context);
-		textStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
-		StyleConstants.setAlignment(textStyle, StyleConstants.ALIGN_LEFT);
-		StyleConstants.setFontSize(textStyle, 12);
-		StyleConstants.setSpaceAbove(textStyle, 4);
-		StyleConstants.setSpaceBelow(textStyle, 4);
-		StyleConstants.setFontFamily(textStyle, "Consolas");
+		setLayout(new BorderLayout(5, 0));		
 		
-		serverStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
-		StyleConstants.setAlignment(serverStyle, StyleConstants.ALIGN_LEFT);
-		StyleConstants.setFontSize(serverStyle, 16);
-		StyleConstants.setSpaceAbove(serverStyle, 4);
-		StyleConstants.setSpaceBelow(serverStyle, 4);
-		StyleConstants.setFontFamily(serverStyle, "Consolas");
-		StyleConstants.setBold(serverStyle, true);
+		add(chatPanel, BorderLayout.CENTER);
+		add(usersPanel, BorderLayout.EAST);
 		
-		pmStyle = context.getStyle(StyleContext.DEFAULT_STYLE);
-		StyleConstants.setAlignment(pmStyle, StyleConstants.ALIGN_LEFT);
-		StyleConstants.setFontSize(pmStyle, 14);
-		StyleConstants.setSpaceAbove(pmStyle, 4);
-		StyleConstants.setSpaceBelow(pmStyle, 4);
-		StyleConstants.setFontFamily(pmStyle, "Consolas");
-		StyleConstants.setItalic(pmStyle, true);
-		
-		imgStyle = doc.addStyle("Image style", null);
-		
-		
-		chatBox = new JTextPane(doc);
-		chatBox.setAutoscrolls(true);
-		chatBox.setEditable(false);
-		chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
-		chatBox.setBounds(0, 0, 650, 500);
-		
-		JScrollPane scroll = new JScrollPane(chatBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setPreferredSize(new Dimension(650, 500));
-		scroll.setViewportView(chatBox);
-		scroll.setBorder(new MatteBorder(0, 0, 1, 1, Color.BLACK));
-		add(scroll, BorderLayout.CENTER);
-		
-		users = new JList<String>(listModel);
-		
-		users.setFont(new Font("Consolas", Font.PLAIN, 12));
-		users.setPreferredSize(new Dimension(150, 600));
-		users.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
-		users.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		add(users, BorderLayout.EAST);
+		registerListeners();
 		
 		JPanel southPanel = new JPanel();
 		southPanel.setPreferredSize(new Dimension(800, 32));
@@ -120,60 +79,53 @@ public class ClientGUI extends JPanel {
 		
 	}
 	
+	private void registerListeners() {
+		chatPanel.addListener(new ChatPanelListener() {
+
+			@Override
+			public void onChangedTab(String name) {
+				if (groups.containsKey(name)) {
+					System.out.println("Switching to tab: " + name);
+					currentGroup = name;
+					usersPanel.updateList(groups.get(name).getUsers());
+				}
+			}
+			
+		});
+		
+		usersPanel.addListener(new UsersPanelListener() {
+
+			@Override
+			public void onCreateGroup(String name, String[] users) {
+				System.out.println("Creating new group: " + name);
+				for (String user : users) {
+					System.out.println(user);
+				}
+				addGroup(name, users, true);
+			}
+			
+		});
+	}
+	
+	private void addGroup(String name, String[] users, boolean showButton) {
+		groups.put(name, new Group(name, users));
+		chatPanel.addTab(name, showButton);
+	}
+	
 	public void setInitialFocus() {
 		chatTF.requestFocusInWindow();
 	}
 	
-	public void append(String entry) {
-		try {
-			doc.insertString(doc.getLength(), entry + "\n", textStyle);
-		} catch (Exception e) {}
-//		chatBox.setText(chatBox.getText() + "\n" + entry);
+	public void appendPublicMessage(String text, ImageIcon image) {
+		chatPanel.appendLobbyTab(text, image);
 	}
 	
-	public void appendServerMessage(String entry) {
-		try {
-			doc.insertString(doc.getLength(), entry + "\n", serverStyle);
-		} catch (Exception e) {}
+	public void appendServerMessage(String text) {
+		chatPanel.appendAllTabs(text, null);
 	}
 	
-	public void appendPrivateMessage(String entry) {
-		try {
-			doc.insertString(doc.getLength(), entry + "\n", pmStyle);
-		} catch (Exception e) {}
-	}
-	
-	public void append(String[] entries) {
-		for (int i = 0, len = entries.length; i < len; i++) {
-			append(entries[i]);
-		}
-	}
-	
-	public void append(ArrayList<String> entries) {
-		for (int i = 0, len = entries.size(); i < len; i++) {
-			append(entries.get(i));
-		}
-	}
-	
-	public void append(Object obj) {
-		append(obj.toString());
-	}
-	
-	public void append(Object obj, ImageIcon icon) {
-		append(obj.toString() + "\n");
-		try {
-			StyleConstants.setIcon(imgStyle, icon);
-			doc.insertString(doc.getLength(), "ignored", imgStyle);
-			doc.insertString(doc.getLength(), "\n", textStyle);
-			
-		} catch (Exception e) {}
-	}
-	
-	public boolean hasImage() {
-		if (imageToSend == null) {
-			return false;
-		}
-		return true;
+	public void appendPrivateMessage(String text, ImageIcon image, int group) {
+		chatPanel.appendTab(group, text, image);
 	}
 	
 	public void clearImage() {
@@ -181,29 +133,22 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public String[] getRecipients() {
-		ArrayList<String> recipients;
-		try {
-			recipients = (ArrayList<String>) users.getSelectedValuesList();
-			String[] arrayRecipients = new String[recipients.size()];
-			arrayRecipients = recipients.toArray(arrayRecipients);
-			return arrayRecipients;
-		} catch (Exception e) {
-			return null;
-		}
-		
+		return groups.get(currentGroup).getUsers();
 	}
 	
 	public void setUsers(String[] userList) {
-		listModel.clear();
-		for (String user : userList) {
-			listModel.addElement(user);
+		Group lobby = groups.get("Lobby");
+		lobby.setUsers(userList);
+		
+		if (lobby.getName().equals(currentGroup)) {
+			usersPanel.updateList(userList);
 		}
 	}
 	
 	private class SendMessage implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			String message = chatTF.getText();
-			cc.sendMessage(message, imageToSend);
+			cc.sendMessage(message, imageToSend, chatPanel.getCurrentTab());
 			chatTF.setText("");
 			addImageBtn.setEnabled(true);
 		}
@@ -220,22 +165,7 @@ public class ClientGUI extends JPanel {
 			
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
 				String filePath = chooser.getSelectedFile().getAbsolutePath();
-				System.out.println(filePath);
 				imageToSend = new ImageIcon(filePath);
-				switch(imageToSend.getImageLoadStatus()) {
-					case MediaTracker.ABORTED:
-						System.out.println("ABORTED");
-						break;
-					case MediaTracker.COMPLETE:
-						System.out.println("COMPLETE");
-						break;
-					case MediaTracker.ERRORED:
-						System.out.println("ERRORED");
-						break;
-					case MediaTracker.LOADING:
-						System.out.println("LOADING");
-						break;
-				}
 				addImageBtn.setEnabled(false);
 			}
 		}
@@ -255,18 +185,13 @@ public class ClientGUI extends JPanel {
 		@Override
 		public Component getComponentAfter(Container container,
 				Component component) {
-			System.out.println("Get after component");
-			System.out.println(order.indexOf(component));
-			System.out.println(order.size());
 			int index = (order.indexOf(component) + 1) % order.size();
-			System.out.println("New component index = " + index);
 			return order.get(index);
 		}
 
 		@Override
 		public Component getComponentBefore(Container container,
 				Component component) {
-			System.out.println("Get before component");
 			int index = order.indexOf(component);
 			if (index == 0) {
 				return getLastComponent(container);
@@ -277,19 +202,16 @@ public class ClientGUI extends JPanel {
 
 		@Override
 		public Component getDefaultComponent(Container container) {
-			System.out.println("Get default component");
 			return order.get(0);
 		}
 
 		@Override
 		public Component getFirstComponent(Container container) {
-			System.out.println("Get first component");
 			return order.get(0);
 		}
 
 		@Override
 		public Component getLastComponent(Container container) {
-			System.out.println("Get last component");
 			return order.get(order.size() - 1);
 		}
 		

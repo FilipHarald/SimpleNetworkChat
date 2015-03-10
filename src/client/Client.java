@@ -33,6 +33,10 @@ public class Client extends Thread {
 	public void addListener(ClientListener listener) {
 		listeners.add(listener);
 	}
+	
+	public String getUserName() {
+		return userName;
+	}
 
 	public void sendMessage(Message message) {
 		if (outputStream != null) {
@@ -46,31 +50,15 @@ public class Client extends Thread {
 	}
 
 	public void sendChatMessage(String[] recipients, String text, ImageIcon image) {
-//		for(String rec : recipients){
-//			System.out.println(rec);
-//		}
-//		System.out.println(recipients.length);
 		sendMessage(new ChatMessage(userName, recipients, text, image));
 	}
-	
-	public void sendChatMessage(String recipient, String text, ImageIcon image) {
-		if (recipient.equals(userName)) {
-			sendChatMessage(new String[]{recipient}, text, image);
-		} else {
-			sendChatMessage(new String[]{recipient, userName}, text, image);
-		}
+
+	public void sendPrivateMessage(String[] recipients, String text, ImageIcon image, int group) {
+		sendMessage(new PrivateMessage(userName, recipients, text, image, group));
 	}
 
-	public void sendPrivateMessage(String[] recipients, String text, ImageIcon image) {
-		sendMessage(new PrivateMessage(userName, recipients, text, image));
-	}
-
-	public void sendPrivateMessage(String recipient, String text, ImageIcon image) {
-		if (recipient.equals(userName)) {
-			sendPrivateMessage(new String[] {recipient}, text, image);
-		} else {
-			sendPrivateMessage(new String[] {recipient, userName}, text, image);
-		}
+	public void sendPrivateMessage(String recipient, String text, ImageIcon image, int group) {
+		sendPrivateMessage(new String[] {recipient}, text, image, group);
 	}
 
     public void sendCommandMessage(String command, String arguments) {
