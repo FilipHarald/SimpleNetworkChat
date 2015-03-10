@@ -7,9 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import message.ChatMessage;
-import message.CommandMessage;
-import message.Message;
+import message.*;
 import client.gui.*;
 
 /**
@@ -70,6 +68,10 @@ public class ClientController {
                             } else {
                                 cgui.append(cmsg.toString());
                             }
+                        } else if (message instanceof ServerMessage) {
+                        	cgui.appendServerMessage(message.toString());
+                        } else if (message instanceof PrivateMessage) {
+                        	cgui.appendPrivateMessage(message.toString());
                         }
 
 					}

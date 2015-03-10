@@ -4,6 +4,7 @@ import server.gui.ServerGUI;
 import server.log.Log;
 import server.log.LogListener;
 import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * 
@@ -14,8 +15,20 @@ public class ServerController {
 	private ServerGUI sgui;
 	private Server server;
 	
-	public ServerController(ServerGUI sgui){
+	public ServerController(){
 		this.sgui = sgui;
+
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				JFrame frame = new JFrame();
+				frame.add(sgui);
+				frame.pack();
+				frame.setLocationRelativeTo(null);
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setResizable(false);
+				frame.setVisible(true);
+			}
+		});
 	}
 	
 	public void startServer(int port) {
@@ -64,5 +77,9 @@ public class ServerController {
 				});
 			}					
 		});
+	}
+
+	public static void main(String[] args) {
+		ServerController controller = new ServerController();
 	}
 }

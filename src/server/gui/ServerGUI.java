@@ -23,8 +23,8 @@ public class ServerGUI extends JPanel {
 	private JList<String> listUsers = new JList<String>(listModel);
 	private JTextArea textAreaLog = new JTextArea();
 
-	public ServerGUI() {
-		this.controller = new ServerController(this);
+	public ServerGUI(ServerController controller) {
+		this.controller = controller;
 		createGUI();
 	}
 
@@ -109,18 +109,6 @@ public class ServerGUI extends JPanel {
 		}
 	}
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame();
-				frame.add(new ServerGUI());
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setResizable(false);
-				frame.setVisible(true);
-			}
-		});
-	}
+	
 
 }
