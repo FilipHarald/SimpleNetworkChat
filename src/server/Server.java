@@ -22,7 +22,7 @@ public class Server extends Thread {
 	private Map<String, ClientHandler> clientMap;
 	private ExecutorService threadPool = Executors.newFixedThreadPool(10);
 	private Map<String, LinkedList<Message>> undeliveredMessageMap;
-	private ServerListener guiListener;
+	private ServerListener serverController;
 
 	public Server(int port) {
 		// Initialize log
@@ -51,12 +51,12 @@ public class Server extends Thread {
 					e.printStackTrace();
 				}
             	Log.close();
-            	guiListener.onStop();
+            	serverController.onStop();
             }
         });
 	}
 	public void addListener(ServerListener serverListener) {
-		guiListener = serverListener;
+		serverController = serverListener;
 		
 	}
 
@@ -167,7 +167,7 @@ public class Server extends Thread {
 		// Send DataMessage to all clients with updated userlist
 		addMessage(new DataMessage(null, clients));
 		// Update GUI
-		guiListener.onClientListUpdated(clients);
+		serverController.onClientListUpdated(clients);
 	}
 	
 	private class MessageSender implements Runnable {

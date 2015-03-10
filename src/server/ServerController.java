@@ -20,6 +20,7 @@ public class ServerController {
 	public void startServer(int port) {
 		startListeningLog();
 		this.server = new Server(port);
+		server.start();
 		startListeningServer();
 	}
 	

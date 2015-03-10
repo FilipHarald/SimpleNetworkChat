@@ -23,7 +23,7 @@ public class Log {
 	private static FileHandler fileHandler;
 	private static ConsoleHandler consoleHandler;
 	
-	private static LogListener guiListener;
+	private static LogListener serverController;
 	
 	public static void init(String name) {
 		logger = Logger.getLogger(name);
@@ -42,7 +42,7 @@ public class Log {
 			
 			logger.addHandler(consoleHandler);
 			
-			guiListener.onInit();
+			serverController.onInit();
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -54,7 +54,7 @@ public class Log {
 	public static void close() {
 		fileHandler.close();
 		consoleHandler.close();
-		guiListener.onClose();
+		serverController.onClose();
 	}
 	
 	public static void write(int level, String text) {
@@ -72,15 +72,15 @@ public class Log {
 				default:
 					break;
 			}
-			guiListener.onWrite(level + text);
+			serverController.onWrite(level + text);
 		} else {
 			System.out.println("Logger not found or not initiated yet");
-			guiListener.onWrite(level + text);
+			serverController.onWrite(level + text);
 		}
 	}
 	
-	public static void addListener(LogListener l){
-		guiListener = l;
+	public static void addListener(LogListener controller){
+		serverController = controller;
 	}
 		
 }
