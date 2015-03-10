@@ -15,7 +15,7 @@ import client.*;
  *
  */
 
-public class StartGUI extends JPanel {
+public class StartClientGUI extends JPanel {
 	
 	private JTextField usernameTF = new JTextField();
 	private JTextField hostnameTF = new JTextField();
@@ -24,7 +24,7 @@ public class StartGUI extends JPanel {
 	
 	private JButton connectBtn = new JButton("Connect");
 	
-	public StartGUI() {
+	public StartClientGUI() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				frame.add(setUpGUI());
@@ -102,7 +102,7 @@ public class StartGUI extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		new StartGUI();
+		new StartClientGUI();
 	}
 	
 }
