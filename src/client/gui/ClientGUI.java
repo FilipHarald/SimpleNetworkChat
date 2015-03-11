@@ -3,11 +3,6 @@ package client.gui;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.filechooser.*;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
 
 import java.awt.*;
 import java.awt.event.*;
