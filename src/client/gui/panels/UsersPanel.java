@@ -26,7 +26,7 @@ public class UsersPanel extends JPanel {
 		
 		usersList.setFont(new Font("Consolas", Font.PLAIN, 12));
 		usersList.setPreferredSize(new Dimension(150, 600));
-		usersList.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
+		usersList.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		usersList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 		usersList.addMouseListener(new MouseAdapter() {

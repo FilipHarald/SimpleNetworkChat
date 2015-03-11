@@ -69,7 +69,7 @@ public class ClientController {
                         		pmsg.setSenderCopy(true);
                         		cgui.appendPrivateMessage(message.toString(), pmsg.getImage(), pmsg.getGroup());
                         	} else {
-                        		cgui.appendPublicMessage(message.toString(), pmsg.getImage());
+                        		cgui.appendPrivateMessage(message.toString(), pmsg.getImage(), 0);
                         	}
                         } else if (message instanceof ChatMessage) {
                             ChatMessage cmsg = (ChatMessage)message;

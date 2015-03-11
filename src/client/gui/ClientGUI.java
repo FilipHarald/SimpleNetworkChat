@@ -48,7 +48,10 @@ public class ClientGUI extends JPanel {
 		this.currentGroup = "Lobby";
 		
 		setPreferredSize(new Dimension(800, 600));
-		setLayout(new BorderLayout(5, 0));		
+		setLayout(new BorderLayout(5, 0));
+		
+		usersPanel.setBorder(new EmptyBorder(35, 0, 0, 5));
+		chatPanel.setBorder(new EmptyBorder(5, 5, 0, 0));
 		
 		add(chatPanel, BorderLayout.CENTER);
 		add(usersPanel, BorderLayout.EAST);
@@ -117,15 +120,15 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public void appendPublicMessage(String text, ImageIcon image) {
-		chatPanel.appendLobbyTab(text, image);
+		chatPanel.appendLobbyTab(text, image, ChatPanel.NORMAL);
 	}
 	
 	public void appendServerMessage(String text) {
-		chatPanel.appendAllTabs(text, null);
+		chatPanel.appendAllTabs(text, null, ChatPanel.BOLD);
 	}
 	
 	public void appendPrivateMessage(String text, ImageIcon image, int group) {
-		chatPanel.appendTab(group, text, image);
+		chatPanel.appendTab(group, text, image, ChatPanel.ITALIC);
 	}
 	
 	public void clearImage() {

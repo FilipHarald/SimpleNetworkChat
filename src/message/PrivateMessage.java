@@ -22,7 +22,7 @@ public class PrivateMessage extends ChatMessage {
 
 	public String toString() {
 		if (senderCopy)
-			return String.format("[%s] <PM to %s> %s", getDate(getTimeReceived()), getSender(), getTextMessage());
+			return String.format("[%s] <%s> %s", getDate(getTimeReceived()), getSender(), getTextMessage());
 		else
 			return String.format("[%s] <PM from %s> %s", getDate(getTimeReceived()), getRecipients()[0], getTextMessage());
     }
