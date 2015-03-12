@@ -115,7 +115,7 @@ public class ChatPanel extends JPanel {
 			scroll.setViewportView(chatBox);
 			scroll.setBounds(0, 35, 650, 500);
 			
-			this.add(chatBox, BorderLayout.CENTER);
+			this.add(scroll, BorderLayout.CENTER);
 		}
 		
 		public void append(String text, ImageIcon image, int style) {
@@ -164,9 +164,6 @@ public class ChatPanel extends JPanel {
 			public TabButton() {
 				this.setPreferredSize(new Dimension(size, size));
 				this.addActionListener(this);
-
-				//this.setOpaque(false);
-				//this.setContentAreaFilled(false);
 				this.setBorderPainted(false);
 			}
 
