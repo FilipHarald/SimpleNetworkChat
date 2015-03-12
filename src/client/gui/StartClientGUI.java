@@ -49,7 +49,7 @@ public class StartClientGUI extends JPanel {
 		panel.add(logoLabel, BorderLayout.NORTH);
 		
 		JPanel data = new JPanel(new GridLayout(4, 1, 5, 5));
-		usernameTF.setText("Andreas");
+		usernameTF.setText("Filip");
 		usernameTF.setBorder(new TitledBorder("Username"));
 		data.add(usernameTF);
 		hostnameTF.setText("127.0.0.1");
