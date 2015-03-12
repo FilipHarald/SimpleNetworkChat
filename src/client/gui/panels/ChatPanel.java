@@ -116,11 +116,13 @@ public class ChatPanel extends JPanel {
 			chatBox.setBounds(0, 35, 650, 500);
 			chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
 			
+			
 			JScrollPane scroll = new JScrollPane(chatBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 			scroll.setPreferredSize(new Dimension(650, 500));
 			scroll.setViewportView(chatBox);
+			scroll.setBounds(0, 35, 650, 500);
 			
-			this.add(scroll, BorderLayout.CENTER);
+			this.add(chatBox, BorderLayout.CENTER);
 		}
 		
 		public void append(String text, ImageIcon image, int style) {

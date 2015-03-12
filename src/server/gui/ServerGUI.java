@@ -22,11 +22,11 @@ public class ServerGUI extends JPanel {
 	private JLabel ipAddress = new JLabel("", JLabel.CENTER);
 	private JLabel port = new JLabel("port");
 	private JTextField txtPort = new JTextField("3520");
-	private JButton btnStart = new JButton("START");
-	private JButton btnStop = new JButton("STOP");
+	private JButton btnStartStop = new JButton("START");
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> listUsers = new JList<String>(listModel);
 	private JTextArea textAreaLog = new JTextArea();
+	private boolean isRunning = false;
 
 	public ServerGUI(ServerController controller) {
 		this.controller = controller;
@@ -46,8 +46,7 @@ public class ServerGUI extends JPanel {
 		panel.add(ipAddress);
 		panel.add(port);
 		panel.add(txtPort);
-		panel.add(btnStart);
-		panel.add(btnStop);
+		panel.add(btnStartStop);
 
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -77,23 +76,18 @@ public class ServerGUI extends JPanel {
 		scroll.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		
 		ClickListener listener = new ClickListener();
-		btnStart.addActionListener(listener);
-		btnStop.addActionListener(listener);
+		btnStartStop.addActionListener(listener);
 		
 		c.gridx = 1;
 		c.gridy = 0;
 		c.gridheight = 2;
 		c.insets = new Insets(5,5,5,5);
 		this.add(scroll, c);
-
 	}
-
-
 
 	public void appendText(String string) {
 		textAreaLog.append(string);
 	}
-	
 	
 	public void updateClientList(String[] clientList) {
 		listModel.clear();
@@ -101,23 +95,32 @@ public class ServerGUI extends JPanel {
 			listModel.addElement(client);
 		}
 	}
-	
-	private class ClickListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnStart) {
-				int port = 0;
-				try {
-					port = Integer.parseInt(txtPort.getText());
-					controller.startServer(port);
-				} catch (NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(null, "Ange endast siffror som port");
-				}
-			} else if (e.getSource() == btnStop) {
-				controller.stopServer();
-			}
+
+	private void toggleButton() {
+		isRunning = !isRunning;
+		if (isRunning) {
+			btnStartStop.setText("STOP");
+		} else {
+			btnStartStop.setText("START");
+			listModel.clear();
 		}
 	}
 	
-	
-
+	private class ClickListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == btnStartStop) {
+				if (!isRunning) {
+					try {
+						int port = Integer.parseInt(txtPort.getText());
+						controller.startServer(port);
+					} catch (NumberFormatException nfe) {
+						JOptionPane.showMessageDialog(null, "Port can only be a number");
+					}
+				} else {
+					controller.stopServer();
+				}
+				toggleButton();
+			}
+		}
+	}
 }

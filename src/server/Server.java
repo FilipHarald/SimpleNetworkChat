@@ -85,9 +85,11 @@ public class Server extends Thread {
 				Log.write(Log.INFO, "ClientHandler created");
 			} catch (IOException e) {
 				Log.write(Log.SEVERE, e.getMessage());
-				e.printStackTrace();
 			}
 		}
+
+		// Make sure we close log
+		Log.close();
 	}
 
 	public boolean clientExists(String clientName) {

@@ -177,12 +177,7 @@ public class Client {
                 }
 
 			} catch (IOException ex) {
-				
 				fireDisconnected();
-				
-				System.out.println("Klient nedkopplad");
-				
-//				ex.printStackTrace();
 			}
 		}
 

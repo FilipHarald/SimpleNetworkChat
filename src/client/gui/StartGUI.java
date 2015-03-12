@@ -15,41 +15,41 @@ import client.*;
  *
  */
 
-public class StartClientGUI extends JPanel {
+public class StartGUI extends JPanel {
 	
 	private JTextField usernameTF = new JTextField();
 	private JTextField hostnameTF = new JTextField();
 	private JTextField portTF = new JTextField();
-	private JFrame frame = new JFrame("SimpleNetworkChat");
+	private ClientController controller;
 
 	private JButton connectBtn = new JButton("Connect");
 	
-	public StartClientGUI() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				frame.add(setUpGUI());
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setResizable(false);
-				frame.setVisible(true);
-			}
-		});
-		
+	public StartGUI(ClientController controller) {
+		this.controller = controller;
+
+		createGUI();
+
+		usernameTF.setText("User");
+		hostnameTF.setText("127.0.0.1");
+		portTF.setText("3520");
+
 	}
 	
-	public JPanel setUpGUI() {
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.setPreferredSize(new Dimension(500, 250));
+	public void createGUI() {
+		this.setLayout(new BorderLayout());
+
+		this.setPreferredSize(new Dimension(500, 250));
 		
+		// Create logo
 		JLabel logoLabel = new JLabel("<html>SimpleNetworkChat<br><hr style='width: 340px;'></html>");
 		logoLabel.setHorizontalAlignment(JLabel.CENTER);
 		logoLabel.setFont(new Font("Consolas", Font.BOLD, 36));
 		logoLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-		panel.add(logoLabel, BorderLayout.NORTH);
+		this.add(logoLabel, BorderLayout.NORTH);
 		
+		// Create input fields
 		JPanel data = new JPanel(new GridLayout(4, 1, 5, 5));
-		usernameTF.setText("Filip");
+		usernameTF.setText("Andreas");
 		usernameTF.setBorder(new TitledBorder("Username"));
 		data.add(usernameTF);
 		hostnameTF.setText("127.0.0.1");
@@ -61,15 +61,14 @@ public class StartClientGUI extends JPanel {
 		connectBtn.addActionListener(new ConnectListener());
 		data.add(connectBtn);
 		
+		// Add listeners
 		EnterListener listener = new EnterListener();
 		usernameTF.addKeyListener(listener);
 		hostnameTF.addKeyListener(listener);
 		portTF.addKeyListener(listener);
 		connectBtn.addKeyListener(listener);
 		
-		panel.add(data, BorderLayout.CENTER);
-	
-		return panel;
+		this.add(data, BorderLayout.CENTER);
 	}
 	
 	private void connect() {
@@ -77,10 +76,9 @@ public class StartClientGUI extends JPanel {
 			String username = usernameTF.getText();
 			String hostname = hostnameTF.getText();
 			int port = Integer.parseInt(portTF.getText());
-			
-			new ClientController(hostname, port, username, frame);
-			
-			//frame.setVisible(false);
+
+			controller.connect(hostname, port, username);
+
 		} catch (NumberFormatException nfe) {
 			JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 		}

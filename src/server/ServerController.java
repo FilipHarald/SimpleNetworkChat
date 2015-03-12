@@ -8,6 +8,7 @@ import server.log.Log;
 import server.log.LogListener;
 
 import javax.swing.*;
+import java.awt.event.*;
 
 /**
  * 
@@ -30,6 +31,12 @@ public class ServerController {
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setResizable(false);
 				frame.setVisible(true);
+				frame.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosing(WindowEvent e) {
+						stopServer();
+					}
+				});
 			}
 		});
 	}
@@ -51,12 +58,8 @@ public class ServerController {
 			localIp = InetAddress.getLocalHost();
 			return localIp.getHostAddress().toString();
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return "UNKNOWN";
 		}
-		
-		return "Your local IP is not available";
-		
 	}
 	
 	public void startListeningLog() {

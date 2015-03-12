@@ -57,9 +57,11 @@ public class Log {
 	
 	public static void close() {
 		if (fileHandler != null) {
+			logger.removeHandler(fileHandler);
 			fileHandler.close();
 		}
 		if (consoleHandler != null) {
+			logger.removeHandler(consoleHandler);
 			consoleHandler.close();
 		}
 		if (serverController != null) {

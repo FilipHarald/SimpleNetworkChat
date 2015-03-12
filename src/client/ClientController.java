@@ -2,7 +2,7 @@ package client;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 import message.*;
@@ -16,45 +16,78 @@ import client.gui.*;
 public class ClientController {
 	
 	private ClientGUI cgui;
+	private StartGUI sgui;
 	private Client client;
-	private JFrame frame;
+	private JFrame frameStart;
+	private JFrame frameGUI;
+	private String hostname;
+	private int port;
+	private String username;
 
     private static final Pattern patternCommands = Pattern.compile("^\\/(\\w*) (\\w*)\\s?(.*)?");
 	
-	public ClientController(String hostname, int port, String username, JFrame frameStart) {
+	public ClientController() {
 		cgui = new ClientGUI(this);
-		client = new Client(hostname, port, username);
+		sgui = new StartGUI(this);
 
+		showStartGUI();
+
+	}
+
+	private void showStartGUI() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				frameStart = new JFrame("SimpleNetworkChat - Connect");
+				frameStart.add(sgui);
+				frameStart.pack();
+				frameStart.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frameStart.setLocationRelativeTo(null);
+				frameStart.setVisible(true);
+			}
+		});
+	}
+
+	public void connect(String hostname, int port, String username) {
 		try {
+			this.hostname = hostname;
+			this.port = port;
+			this.username = username;
+
+			client = new Client(hostname, port, username);
 			client.start();
 
 			frameStart.setVisible(false);
 
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					frame = new JFrame(String.format("SimpleNetworkChat - Connected to %s:%s", hostname, port));
-					frame.add(cgui);
-					frame.pack();
-					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					frame.setLocationRelativeTo(null);
-					frame.setVisible(true);
+					frameGUI = new JFrame(String.format("SimpleNetworkChat - Connected to %s:%d", hostname, port));
+					frameGUI.add(cgui);
+					frameGUI.pack();
+					frameGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frameGUI.setLocationRelativeTo(null);
+					frameGUI.setVisible(true);
 					cgui.setInitialFocus();
 				}
 			});
 
-			setClient(client);
+			registerListeners();
+
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex.getMessage());
+			if (!frameStart.isVisible()) {
+				if (frameGUI != null) {
+					frameGUI.setVisible(false);
+				}
+				frameStart.setVisible(true);
+			}
 		}
-
 	}
 	
-	public void setClient(Client client) {
-		this.client.addListener(new ClientListener() {
-			public void onConnected(String host, int port) {
-				// not used
-			}
+	public void registerListeners() {
+		client.addListener(new ClientListener() {
 
+			@Override
 			public void onClientsUpdated(String[] clients) {
 				SwingUtilities.invokeLater(new Runnable() {
 
@@ -65,6 +98,7 @@ public class ClientController {
 				});
 			}
 
+			@Override
 			public void onMessageReceived(Message message) {
 				SwingUtilities.invokeLater(new Runnable() {
 
@@ -89,7 +123,15 @@ public class ClientController {
 				});
 			}
 
-			public void onDisconnected() {}
+			@Override
+			public void onDisconnected() {
+				int answer = JOptionPane.showConfirmDialog(null, "Do you want to reconnect?", "Client disconnected!", JOptionPane.YES_NO_OPTION);
+				if (answer == JOptionPane.YES_OPTION) {
+					connect(hostname, port, username);
+				} else {
+					frameStart.dispatchEvent(new WindowEvent(frameStart, WindowEvent.WINDOW_CLOSING));
+				}
+			}
 		});
 	}
 	
@@ -135,5 +177,9 @@ public class ClientController {
 			cgui.clearImage();
 		}
 		
+	}
+
+	public static void main(String[] args) {
+		new ClientController();
 	}
 }
