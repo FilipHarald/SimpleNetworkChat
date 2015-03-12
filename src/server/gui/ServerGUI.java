@@ -15,8 +15,9 @@ import javax.swing.border.*;
 public class ServerGUI extends JPanel {
 
 	private ServerController controller;
-
-	private JTextField txtPort = new JTextField();
+	
+	private JLabel port = new JLabel("port");
+	private JTextField txtPort = new JTextField("3520");
 	private JButton btnStart = new JButton("START");
 	private JButton btnStop = new JButton("STOP");
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -35,7 +36,8 @@ public class ServerGUI extends JPanel {
 		txtPort.setPreferredSize(new Dimension(50, 25));
 
 		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(150, 75));
+		panel.setPreferredSize(new Dimension(150, 100));
+		panel.add(port);
 		panel.add(txtPort);
 		panel.add(btnStart);
 		panel.add(btnStop);
