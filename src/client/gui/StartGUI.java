@@ -29,7 +29,7 @@ public class StartGUI extends JPanel {
 
 		createGUI();
 
-		usernameTF.setText("User");
+		usernameTF.setText("User" + new java.util.Random().nextInt(30000));
 		hostnameTF.setText("127.0.0.1");
 		portTF.setText("3520");
 
