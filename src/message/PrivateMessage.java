@@ -24,7 +24,7 @@ public class PrivateMessage extends ChatMessage {
 		if (senderCopy)
 			return String.format("[%s] <%s> %s", getDate(getTimeReceived()), getSender(), getTextMessage());
 		else
-			return String.format("[%s] <PM from %s> %s", getDate(getTimeReceived()), getRecipients()[0], getTextMessage());
+			return String.format("[%s] <PM from %s> %s", getDate(getTimeReceived()), getSender(), getTextMessage());
     }
 
     @Override
