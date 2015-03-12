@@ -1,9 +1,12 @@
 package server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import server.gui.ServerGUI;
 import server.log.Log;
 import server.log.LogListener;
-import javax.swing.SwingUtilities;
+
 import javax.swing.*;
 
 /**
@@ -40,6 +43,20 @@ public class ServerController {
 
 	public void stopServer() {
 		server.stopServer();
+	}
+	
+	public String getIP(){
+		InetAddress localIp;
+		try {
+			localIp = InetAddress.getLocalHost();
+			return localIp.getHostAddress().toString();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "Your local IP is not available";
+		
 	}
 	
 	public void startListeningLog() {

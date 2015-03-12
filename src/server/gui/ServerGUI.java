@@ -1,9 +1,12 @@
 package server.gui;
 
 import server.*;
+
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.border.*;
 
 /**
@@ -16,6 +19,7 @@ public class ServerGUI extends JPanel {
 
 	private ServerController controller;
 	
+	private JLabel ipAddress = new JLabel("", JLabel.CENTER);
 	private JLabel port = new JLabel("port");
 	private JTextField txtPort = new JTextField("3520");
 	private JButton btnStart = new JButton("START");
@@ -32,11 +36,14 @@ public class ServerGUI extends JPanel {
 	public void createGUI() {
 
 		this.setLayout(new GridBagLayout());
-
+		ipAddress.setText("IP: " + controller.getIP());
 		txtPort.setPreferredSize(new Dimension(50, 25));
 
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(150, 100));
+		ipAddress.setPreferredSize(new Dimension(150,25));
+
+		panel.add(ipAddress);
 		panel.add(port);
 		panel.add(txtPort);
 		panel.add(btnStart);
