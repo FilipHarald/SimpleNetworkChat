@@ -17,6 +17,7 @@ public class Client extends Thread {
 	private String serverHost;
 	private int serverPort;
 	private String userName;
+	private Socket socket;
 	
 	private ObjectOutputStream outputStream;
 	private Set<ClientListener> listeners;
@@ -30,6 +31,14 @@ public class Client extends Thread {
 		this.start();
 	}
 
+	public void close() {
+		if (socket != null) {
+			try {
+				socket.close();
+			} catch (Exception e) {}
+		}
+	}
+	
 	public void addListener(ClientListener listener) {
 		listeners.add(listener);
 	}
@@ -69,7 +78,7 @@ public class Client extends Thread {
 	public void run() {
 
 		try {
-			Socket socket = new Socket(serverHost, serverPort);
+			socket = new Socket(serverHost, serverPort);
 			outputStream = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream()); 
 

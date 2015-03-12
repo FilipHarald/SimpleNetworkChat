@@ -75,7 +75,11 @@ public class ServerController {
 						sgui.updateClientList(clientList);
 					}
 				});
-			}					
+			}
+			
+			public void onStop() {
+				
+			}
 		});
 	}
 

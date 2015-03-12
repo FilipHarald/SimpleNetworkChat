@@ -113,6 +113,7 @@ public class ChatPanel extends JPanel {
 			chatBox = new JTextPane(doc);
 			chatBox.setAutoscrolls(true);
 			chatBox.setEditable(false);
+			chatBox.setBounds(0, 35, 650, 500);
 			chatBox.setFont(new Font("Consolas", Font.PLAIN, 12));
 			
 			JScrollPane scroll = new JScrollPane(chatBox, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
