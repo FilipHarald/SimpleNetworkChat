@@ -18,6 +18,7 @@ import java.awt.event.*;
 public class ServerController {
 	private ServerGUI sgui;
 	private Server server;
+	private boolean running;
 	
 	public ServerController(){
 		this.sgui = new ServerGUI(this);
@@ -42,6 +43,7 @@ public class ServerController {
 	}
 	
 	public void startServer(int port) {
+		running = true;
 		startListeningLog();
 		this.server = new Server(port);
 		server.start();
@@ -49,9 +51,14 @@ public class ServerController {
 	}
 
 	public void stopServer() {
+		running = false;
 		if (server != null) {
 			server.stopServer();
 		}
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 	
 	public String getIP(){
@@ -94,7 +101,9 @@ public class ServerController {
 
 					@Override
 					public void run() {
-						sgui.updateClientList(clientList);
+						if (running) {
+							sgui.updateClientList(clientList);
+						}
 					}
 				});
 			}

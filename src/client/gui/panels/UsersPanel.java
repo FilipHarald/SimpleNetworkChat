@@ -39,6 +39,11 @@ public class UsersPanel extends JPanel {
 			}
 			
 		});
+
+		JScrollPane scrollList = new JScrollPane(usersList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollList.setPreferredSize(new Dimension(150, 600));
+		scrollList.setViewportView(usersList);
+		scrollList.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		
 		this.add(usersList, BorderLayout.CENTER);
 	}

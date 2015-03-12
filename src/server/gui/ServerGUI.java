@@ -26,7 +26,6 @@ public class ServerGUI extends JPanel {
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> listUsers = new JList<String>(listModel);
 	private JTextArea textAreaLog = new JTextArea();
-	private boolean isRunning = false;
 
 	public ServerGUI(ServerController controller) {
 		this.controller = controller;
@@ -60,10 +59,15 @@ public class ServerGUI extends JPanel {
 		listUsers.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		listUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
+		JScrollPane scrollList = new JScrollPane(listUsers, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollList.setPreferredSize(new Dimension(150, 400));
+		scrollList.setViewportView(listUsers);
+		scrollList.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
+
 		c.gridx = 0;
 		c.gridy = 1;
 		c.insets = new Insets(5,5,5,5);
-		this.add(listUsers, c);
+		this.add(scrollList, c);
 
 		textAreaLog.setAutoscrolls(true);
 		textAreaLog.setEditable(false);
@@ -97,19 +101,21 @@ public class ServerGUI extends JPanel {
 	}
 
 	private void toggleButton() {
-		isRunning = !isRunning;
-		if (isRunning) {
+		if (controller.isRunning()) {
 			btnStartStop.setText("STOP");
 		} else {
 			btnStartStop.setText("START");
-			listModel.clear();
 		}
+	}
+
+	public void clearList() {
+		listModel.clear();
 	}
 	
 	private class ClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnStartStop) {
-				if (!isRunning) {
+				if (!controller.isRunning()) {
 					try {
 						int port = Integer.parseInt(txtPort.getText());
 						controller.startServer(port);
@@ -118,6 +124,7 @@ public class ServerGUI extends JPanel {
 					}
 				} else {
 					controller.stopServer();
+					listModel.clear();
 				}
 				toggleButton();
 			}
