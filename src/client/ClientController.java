@@ -19,6 +19,7 @@ public class ClientController {
 	
 	private ClientGUI cgui;
 	private Client client;
+	private JFrame frame;
 
     private static final Pattern patternCommands = Pattern.compile("^\\/(\\w*) (\\w*)\\s?(.*)?");
 	
@@ -28,7 +29,7 @@ public class ClientController {
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				JFrame frame = new JFrame("SimpleNetworkChat");
+				frame = new JFrame("SimpleNetworkChat - Connecting to server...");
 				frame.add(cgui);
 				frame.pack();
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -44,7 +45,14 @@ public class ClientController {
 	
 	public void setClient(Client client) {
 		this.client.addListener(new ClientListener() {
-			public void onConnected() {}
+			public void onConnected(String host, int port) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						frame.setTitle(String.format("SimpleNetworkChat - Connected to %s:%d", host, port));
+					}
+				});
+			}
 
 			public void onClientsUpdated(String[] clients) {
 				SwingUtilities.invokeLater(new Runnable() {

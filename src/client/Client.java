@@ -93,7 +93,7 @@ public class Client extends Thread {
 
 	private void fireConnected() {
 		for (ClientListener listener : listeners) {
-			listener.onConnected();
+			listener.onConnected(serverHost, serverPort);
 		}
 	}
 
