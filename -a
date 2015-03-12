@@ -1,0 +1,80 @@
+[33mcommit ec484d89df5271280d07f802d654361e23de30a3[m
+Merge: 5aafc85 e420c03
+Author: FilipHarald <filip.harald@gmail.com>
+Date:   Thu Mar 5 10:14:37 2015 +0100
+
+    Merge branch 'master' of
+    https://github.com/FilipHarald/SimpleNetworkChat
+    
+    # Please enter a commit message to explain why this merge is necessary,
+    # especially if it merges an updated upstream into a topic branch.
+    #
+    # Lines starting with '#' will be ignored, and an empty message aborts
+    # the commit.
+
+[33mcommit 5aafc85e463224637696d67e88461a68250d6ff9[m
+Author: FilipHarald <filip.harald@gmail.com>
+Date:   Thu Mar 5 09:06:36 2015 +0100
+
+    la till lite i servern
+
+[33mcommit e420c03d1923f45023f9b4bab8d7fce269d0c994[m
+Merge: 7af5030 51ccad3
+Author: nekosaur <albert@kaaman.nu>
+Date:   Thu Mar 5 01:16:54 2015 +0100
+
+    Merge branch 'master' of https://github.com/FilipHarald/SimpleNetworkChat
+
+[33mcommit 7af503082468aec6442d6579b6fcb2a212167915[m
+Author: nekosaur <albert@kaaman.nu>
+Date:   Thu Mar 5 01:16:07 2015 +0100
+
+    Utökat funktionalitet i Client klassen, lagt till ClientListener interface så att GUI kan uppdateras, bytat namn på Message klassen och lagt till konstruktor
+
+[33mcommit 51ccad3e9bcb65bf3f0a8ad08e6362c514d83644[m
+Author: nekosaur <albert@kaaman.nu>
+Date:   Thu Mar 5 00:46:51 2015 +0100
+
+    Lagt till fler IntelliJ projektfiler i .gitignore
+
+[33mcommit 35c72d41f6d3a5e6e9da012d77c6e88ef695f1e3[m
+Author: FilipHarald <filip.harald@gmail.com>
+Date:   Wed Mar 4 23:37:30 2015 +0100
+
+    lagt till ofärdiga metoder i Server samt skapat klassen ClientHandler
+
+[33mcommit 2f719db6200893529e3c3d1cd5794c21d6723b7d[m
+Author: nekosaur <albert@kaaman.nu>
+Date:   Wed Mar 4 22:07:03 2015 +0100
+
+    Lagt till ignores för IntelliJ projektfiler
+
+[33mcommit b4ca7cbe2a3227f829e6d2b28ae2c3d02011da87[m
+Author: andreasindahl <andreas@rocketship.se>
+Date:   Wed Mar 4 15:08:32 2015 +0100
+
+    GUI-bas
+
+[33mcommit 340a7ecf0b569467146f1313c820bd2a9e1a816c[m
+Author: FilipHarald <filip.harald@gmail.com>
+Date:   Wed Mar 4 14:54:43 2015 +0100
+
+    lagt till author i skeletten
+
+[33mcommit 83e92c37588ffab5e952828fb06f5c489121b476[m
+Author: FilipHarald <filip.harald@gmail.com>
+Date:   Wed Mar 4 14:52:08 2015 +0100
+
+    lagt till skelett för de klasser vi kom fram till
+
+[33mcommit 9440be06ec30516a0dd69261384f3191f63f67ef[m
+Author: FilipHarald <filip.harald@gmail.com>
+Date:   Wed Mar 4 14:33:47 2015 +0100
+
+    lagt till .classpath och .project i .gitignore
+
+[33mcommit ea7f43b7b59fe96ae3eac8690637b8f1e85e1437[m
+Author: Filip Harald <Filip.harald@gmail.com>
+Date:   Wed Mar 4 14:10:26 2015 +0100
+
+    Initial commit

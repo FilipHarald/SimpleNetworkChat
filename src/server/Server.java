@@ -170,7 +170,11 @@ public class Server extends Thread {
 
 		// Add any undelivered messages to the message queue
 		if (undeliveredMessageMap.containsKey(clientName)) {
-			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
+			while(!undeliveredMessageMap.get(clientName).isEmpty()){
+				Message undeliveredMessage = undeliveredMessageMap.get(clientName).poll();
+				threadPool.execute(new MessageSender(undeliveredMessage));
+			}
+//			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
 		}
 	}
 
