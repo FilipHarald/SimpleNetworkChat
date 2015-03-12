@@ -55,6 +55,10 @@ public class ClientController {
 			this.username = username;
 
 			client = new Client(hostname, port, username);
+
+			// Make sure we register listeners before we start the client
+			registerListeners();
+
 			client.start();
 
 			frameStart.setVisible(false);
@@ -70,8 +74,6 @@ public class ClientController {
 					cgui.setInitialFocus();
 				}
 			});
-
-			registerListeners();
 
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null, ex.getMessage());
@@ -93,6 +95,7 @@ public class ClientController {
 
 					@Override
 					public void run() {
+
 						cgui.setUsers(clients);	
 					}
 				});
