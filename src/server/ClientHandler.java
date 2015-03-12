@@ -34,8 +34,14 @@ public class ClientHandler extends Thread {
 				
 				if (server.clientExists(clientName)) {
 					Log.write(Log.WARNING, String.format("Client %s is already connected to the server", clientName));
-					oos.close();
+					// We have to send directly to client since we haven't added it to server map yet
+					sendToClient(new Message(null, null));
+					// Make sure we close the socket, and return so that we exit the thread loop
+					socket.close();
 					return;
+				} else {
+					// We have to send directly to client since we haven't added it to server map yet
+					sendToClient(new Message(clientName, null));
 				}
 				
 				// Send client connected message to all current clients

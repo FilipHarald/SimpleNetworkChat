@@ -4,16 +4,17 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
 import message.*;
+import exceptions.*;
 
 /**
  * 
  * @author Albert och Henrik
  *
  */
-public class Client extends Thread {
+public class Client {
 	private String serverHost;
 	private int serverPort;
 	private String userName;
@@ -27,8 +28,6 @@ public class Client extends Thread {
 		this.serverPort = serverPort;
 		this.userName = userName;
 		this.listeners = new HashSet<ClientListener>();
-	
-		this.start();
 	}
 
 	public void close() {
@@ -74,25 +73,32 @@ public class Client extends Thread {
     	sendMessage(new CommandMessage(userName, command, arguments));
     }
 
-	@Override
-	public void run() {
+	public void start() throws ConnectException, SocketTimeoutException, IOException, NameInUseException {
+		socket = new Socket();
+		socket.connect(new InetSocketAddress(serverHost, serverPort), 2000);
+		outputStream = new ObjectOutputStream(socket.getOutputStream());
+		ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
-		try {
-			socket = new Socket(serverHost, serverPort);
-			outputStream = new ObjectOutputStream(socket.getOutputStream());
-			ObjectInputStream ois = new ObjectInputStream(socket.getInputStream()); 
+		// Send handshake response
+        sendMessage(new Message(userName, null));
 
-			new MessageListener(ois).start();
+        // Get user list
+        try {
+	        Message message = (Message)ois.readObject();
+			if (message.getSender() == null) {
+				throw new NameInUseException(String.format("Username %s is already connected", userName));
+			}
+        } catch (ClassNotFoundException ex) {
+        	ex.printStackTrace();
+        }
 
-			fireConnected();
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		new MessageListener(ois).start();
 	}
 
 	private void fireConnected() {
+		System.out.println("fireConnected");
 		for (ClientListener listener : listeners) {
+			System.out.println("sneding to listener");
 			listener.onConnected(serverHost, serverPort);
 		}
 	}
@@ -122,7 +128,7 @@ public class Client extends Thread {
 		public MessageListener(ObjectInputStream inputStream) {
 			this.inputStream = inputStream;
 		}
-		
+
 		public Message getMessage() throws IOException {
 			
 			try {
@@ -143,16 +149,15 @@ public class Client extends Thread {
 		public void run() {
 			
 			try {
+
                 Message message;
 
-                // Send handshake response
-                sendMessage(new Message(userName, null));
+				message = getMessage();
 
-                // Get user list
-                message = getMessage();
                 if (message instanceof DataMessage) {
-                	fireClientsUpdated((String[])((DataMessage)message).getData());
-                }
+   					System.out.println("got user list");
+	        		fireClientsUpdated((String[])((DataMessage)message).getData());
+	        	}
 
                 while (!Thread.interrupted()) {
 

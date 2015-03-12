@@ -3,9 +3,7 @@ package client;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import message.*;
 import client.gui.*;
@@ -23,35 +21,38 @@ public class ClientController {
 
     private static final Pattern patternCommands = Pattern.compile("^\\/(\\w*) (\\w*)\\s?(.*)?");
 	
-	public ClientController(String hostname, int port, String username) {
+	public ClientController(String hostname, int port, String username, JFrame frameStart) {
 		cgui = new ClientGUI(this);
 		client = new Client(hostname, port, username);
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				frame = new JFrame("SimpleNetworkChat - Connecting to server...");
-				frame.add(cgui);
-				frame.pack();
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setLocationRelativeTo(null);
-				frame.setVisible(true);
-				cgui.setInitialFocus();
-			}
-		});
-		
-		setClient(client);
-		
+
+		try {
+			client.start();
+
+			frameStart.setVisible(false);
+
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					frame = new JFrame(String.format("SimpleNetworkChat - Connected to %s:%s", hostname, port));
+					frame.add(cgui);
+					frame.pack();
+					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+					frame.setLocationRelativeTo(null);
+					frame.setVisible(true);
+					cgui.setInitialFocus();
+				}
+			});
+
+			setClient(client);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, ex.getMessage());
+		}
+
 	}
 	
 	public void setClient(Client client) {
 		this.client.addListener(new ClientListener() {
 			public void onConnected(String host, int port) {
-				SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						frame.setTitle(String.format("SimpleNetworkChat - Connected to %s:%d", host, port));
-					}
-				});
+				// not used
 			}
 
 			public void onClientsUpdated(String[] clients) {

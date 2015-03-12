@@ -78,9 +78,9 @@ public class StartClientGUI extends JPanel {
 			String hostname = hostnameTF.getText();
 			int port = Integer.parseInt(portTF.getText());
 			
-			new ClientController(hostname, port, username);
+			new ClientController(hostname, port, username, frame);
 			
-			frame.setVisible(false);
+			//frame.setVisible(false);
 		} catch (NumberFormatException nfe) {
 			JOptionPane.showMessageDialog(null, "You have entered incorrect values.");
 		}
