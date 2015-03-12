@@ -95,13 +95,6 @@ public class Client {
 		new MessageListener(ois).start();
 	}
 
-	private void fireConnected() {
-		System.out.println("fireConnected");
-		for (ClientListener listener : listeners) {
-			System.out.println("sneding to listener");
-		}
-	}
-
 	private void fireDisconnected() {
 		for (ClientListener listener : listeners) {
 			listener.onDisconnected();

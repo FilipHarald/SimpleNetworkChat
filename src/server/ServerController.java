@@ -49,7 +49,9 @@ public class ServerController {
 	}
 
 	public void stopServer() {
-		server.stopServer();
+		if (server != null) {
+			server.stopServer();
+		}
 	}
 	
 	public String getIP(){

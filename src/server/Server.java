@@ -131,16 +131,20 @@ public class Server extends Thread {
 
         String[] recipients = message.getRecipients();
 
+        // If recipients is null, the message should go to all clients
         if (recipients == null) {
             addMessage(message.copy(getClients()));
+        }
+        // If recipients length is 0, no clients are currently connected
+        else if (recipients.length == 0) {
+        	return;
         } 
-//        else if (recipients.length == 0) {
-//        	return;
-//        } 
+        // If recipients is more than one, break up into individual messages
         else if (recipients.length > 1) {
             for (String recipient : recipients) {
                 addMessage(message.copy(new String[]{recipient}));
             }
+        // If we get here, then we have a message with a single recipient
         } else {
         	
         	if (message.getTimeReceived() <= 0) {
@@ -183,7 +187,7 @@ public class Server extends Thread {
 	}
 	
 	public void sendNewClientList(){
-		String[] clients =  getClients();
+		String[] clients = getClients();
 		// Send DataMessage to all clients with updated userlist
 		addMessage(new DataMessage(null, clients));
 		// Update GUI

@@ -1,22 +1,15 @@
 package client.gui.panels;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.*;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.awt.geom.Line2D;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import javax.swing.event.*;
+import javax.swing.text.*;
 
 public class ChatPanel extends JPanel {
 	
@@ -166,9 +159,24 @@ public class ChatPanel extends JPanel {
 		}
 		
 		private class TabButton extends JButton implements ActionListener {
+			private int size = 12;
+
 			public TabButton() {
-				this.setPreferredSize(new Dimension(16, 16));
+				this.setPreferredSize(new Dimension(size, size));
 				this.addActionListener(this);
+
+				//this.setOpaque(false);
+				//this.setContentAreaFilled(false);
+				this.setBorderPainted(false);
+			}
+
+			@Override
+			public void paint(Graphics g) {
+				Graphics2D g2d = (Graphics2D)g.create();
+				g2d.setStroke(new BasicStroke(4));
+				g2d.setColor(Color.RED);
+				g2d.draw(new Line2D.Double(0,0,size,size));
+				g2d.draw(new Line2D.Double(0, size, size, 0));
 			}
 			
 			@Override
