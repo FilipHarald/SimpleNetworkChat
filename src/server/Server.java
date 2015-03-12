@@ -206,7 +206,7 @@ public class Server extends Thread {
 				String recipient = message.getRecipients()[0];
 				if (clientExists(recipient)) {
 					message.setTimeDelivered(System.currentTimeMillis());
-					clientMap.get(recipient).sendToClient(message);
+					clientMap.get(recipient).sendMessage(message);
 					Log.write(Log.INFO, String.format("Delivered message of type %s to %s from %s", message.getClass().getName(), recipient, message.getSender()));
 				} else if (message instanceof ChatMessage) {
 					if (!undeliveredMessageMap.containsKey(recipient)) {

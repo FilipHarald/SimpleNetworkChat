@@ -35,13 +35,13 @@ public class ClientHandler extends Thread {
 				if (server.clientExists(clientName)) {
 					Log.write(Log.WARNING, String.format("Client %s is already connected to the server", clientName));
 					// We have to send directly to client since we haven't added it to server map yet
-					sendToClient(new Message(null, null));
+					sendMessage(new Message(null, null));
 					// Make sure we close the socket, and return so that we exit the thread loop
 					socket.close();
 					return;
 				} else {
 					// We have to send directly to client since we haven't added it to server map yet
-					sendToClient(new Message(clientName, null));
+					sendMessage(new Message(clientName, null));
 				}
 				
 				// Send client connected message to all current clients
@@ -51,7 +51,7 @@ public class ClientHandler extends Thread {
 				server.addClientHandler(clientName, this);
 				
 				// Spawn InputHandler for client
-				new ClientHandlerInput(server, ois).start();
+				new ClientInputHandler(server, ois).start();
 				
 			} else {
 				System.out.println("Handshake object is not of class Message");
@@ -68,7 +68,7 @@ public class ClientHandler extends Thread {
 		
 	}
 	
-	public synchronized void sendToClient(Message message) {
+	public synchronized void sendMessage(Message message) {
 		 try {
 			oos.writeObject(message);
 			oos.flush();
@@ -86,11 +86,11 @@ public class ClientHandler extends Thread {
     }
 
 	// ---------------------------------------------------------------------
-	private class ClientHandlerInput extends Thread {
+	private class ClientInputHandler extends Thread {
 		private Server server;
 		private ObjectInputStream inputStream;
 
-		public ClientHandlerInput(Server server, ObjectInputStream inputStream) {
+		public ClientInputHandler(Server server, ObjectInputStream inputStream) {
 			this.server = server;
 			this.inputStream = inputStream;
 		}
