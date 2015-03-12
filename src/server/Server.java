@@ -133,9 +133,11 @@ public class Server extends Thread {
 
         if (recipients == null) {
             addMessage(message.copy(getClients()));
-        } else if (recipients.length == 0) {
-        	return;
-        } else if (recipients.length > 1) {
+        } 
+//        else if (recipients.length == 0) {
+//        	return;
+//        } 
+        else if (recipients.length > 1) {
             for (String recipient : recipients) {
                 addMessage(message.copy(new String[]{recipient}));
             }
