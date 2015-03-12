@@ -98,9 +98,4 @@ public class StartGUI extends JPanel {
 			}
 		}		
 	}
-
-	public static void main(String[] args) {
-		new StartClientGUI();
-	}
-	
 }

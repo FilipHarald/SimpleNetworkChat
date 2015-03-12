@@ -99,7 +99,6 @@ public class Client {
 		System.out.println("fireConnected");
 		for (ClientListener listener : listeners) {
 			System.out.println("sneding to listener");
-			listener.onConnected(serverHost, serverPort);
 		}
 	}
 
