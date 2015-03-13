@@ -1,14 +1,35 @@
 package tests;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+
 import message.Message;
 import client.Client;
 import client.ClientListener;
+import exceptions.NameInUseException;
 
 public class TestClient {
 
 	public static void main(String[] args) {
 		
 		Client client = new Client("localhost", 3520, "B");
+		
+		try {
+			client.start();
+		} catch (ConnectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SocketTimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NameInUseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		client.addListener(new ClientListener() {
 
