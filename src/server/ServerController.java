@@ -1,5 +1,6 @@
 package server;
 
+import java.io.IOException;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -52,7 +53,7 @@ public class ServerController {
 			server.start();
 			startListeningServer();
 			running = true;
-		} catch (BindException e) {
+		} catch (IOException e) {
 			// Do nothing, error gets written to log
 		}
 	}
