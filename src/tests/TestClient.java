@@ -13,12 +13,6 @@ public class TestClient {
 		client.addListener(new ClientListener() {
 
 			@Override
-			public void onConnected() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
 			public void onClientsUpdated(String[] clients) {
 				// TODO Auto-generated method stub
 				System.out.println("Got clients: ");
