@@ -25,8 +25,6 @@ public class UsersPanel extends JPanel {
 		this.setLayout(new BorderLayout());
 		
 		usersList.setFont(new Font("Consolas", Font.PLAIN, 12));
-		usersList.setPreferredSize(new Dimension(150, 600));
-		usersList.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		usersList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 		usersList.addMouseListener(new MouseAdapter() {
@@ -43,9 +41,8 @@ public class UsersPanel extends JPanel {
 		JScrollPane scrollList = new JScrollPane(usersList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollList.setPreferredSize(new Dimension(150, 600));
 		scrollList.setViewportView(usersList);
-		scrollList.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		
-		this.add(usersList, BorderLayout.CENTER);
+		this.add(scrollList, BorderLayout.CENTER);
 	}
 	
 	public void addListener(UsersPanelListener listener) {

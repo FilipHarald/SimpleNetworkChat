@@ -1,5 +1,6 @@
 package server;
 
+import java.net.BindException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -8,6 +9,7 @@ import server.log.Log;
 import server.log.LogListener;
 
 import javax.swing.*;
+
 import java.awt.event.*;
 
 /**
@@ -22,6 +24,8 @@ public class ServerController {
 	
 	public ServerController(){
 		this.sgui = new ServerGUI(this);
+		
+		startListeningLog();
 
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -43,11 +47,14 @@ public class ServerController {
 	}
 	
 	public void startServer(int port) {
-		running = true;
-		startListeningLog();
-		this.server = new Server(port);
-		server.start();
-		startListeningServer();
+		try {			
+			server = new Server(port);
+			server.start();
+			startListeningServer();
+			running = true;
+		} catch (BindException e) {
+			// Do nothing, error gets written to log
+		}
 	}
 
 	public void stopServer() {
@@ -101,9 +108,14 @@ public class ServerController {
 
 					@Override
 					public void run() {
-						if (running) {
-							sgui.updateClientList(clientList);
-						}
+						SwingUtilities.invokeLater(new Runnable() {
+							@Override
+							public void run() {
+								if (running) {
+									sgui.updateClientList(clientList);
+								}
+							}
+						});
 					}
 				});
 			}

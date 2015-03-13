@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.border.*;
+import javax.swing.text.DefaultCaret;
 
 /**
  * 
@@ -20,7 +21,7 @@ public class ServerGUI extends JPanel {
 	private ServerController controller;
 	
 	private JLabel ipAddress = new JLabel("", JLabel.CENTER);
-	private JLabel port = new JLabel("port");
+	private JLabel port = new JLabel("Port: ");
 	private JTextField txtPort = new JTextField("3520");
 	private JButton btnStartStop = new JButton("START");
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -35,8 +36,8 @@ public class ServerGUI extends JPanel {
 	public void createGUI() {
 
 		this.setLayout(new GridBagLayout());
-		ipAddress.setText("IP: " + controller.getIP());
-		txtPort.setPreferredSize(new Dimension(50, 25));
+		ipAddress.setText("<html>IP: <i>" + controller.getIP() + "</i></html>");
+		txtPort.setPreferredSize(new Dimension(50, 20));
 
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(new Dimension(150, 100));
@@ -51,33 +52,30 @@ public class ServerGUI extends JPanel {
 
 		c.gridx = 0;
 		c.gridy = 0;
-		c.insets = new Insets(5,5,5,5);
+		c.insets = new Insets(5,5,0,5);
 		this.add(panel, c);
 
 		listUsers.setFont(new Font("Consolas", Font.PLAIN, 12));
-		listUsers.setPreferredSize(new Dimension(150, 400));
-		listUsers.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		listUsers.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
 		JScrollPane scrollList = new JScrollPane(listUsers, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollList.setPreferredSize(new Dimension(150, 400));
 		scrollList.setViewportView(listUsers);
-		scrollList.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 
 		c.gridx = 0;
 		c.gridy = 1;
-		c.insets = new Insets(5,5,5,5);
+		c.insets = new Insets(0,5,5,5);
 		this.add(scrollList, c);
 
+		DefaultCaret caret = (DefaultCaret)textAreaLog.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textAreaLog.setAutoscrolls(true);
 		textAreaLog.setEditable(false);
 		textAreaLog.setFont(new Font("Consolas", Font.PLAIN, 12));
-		textAreaLog.setBounds(0, 0, 400, 500);
 		
 		JScrollPane scroll = new JScrollPane(textAreaLog, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scroll.setPreferredSize(new Dimension(600, 500));
+		scroll.setPreferredSize(new Dimension(700, 500));
 		scroll.setViewportView(textAreaLog);
-		scroll.setBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK));
 		
 		ClickListener listener = new ClickListener();
 		btnStartStop.addActionListener(listener);
@@ -89,7 +87,7 @@ public class ServerGUI extends JPanel {
 		this.add(scroll, c);
 	}
 
-	public void appendText(String string) {
+	public synchronized void appendText(String string) {
 		textAreaLog.append(string);
 	}
 	
