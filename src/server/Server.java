@@ -1,13 +1,17 @@
 package server;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import message.*;
 import server.log.Log;
@@ -25,20 +29,20 @@ public class Server extends Thread {
 	private ServerListener serverController;
 	private boolean isStopping = false;
 
-	public Server(int port) {
+	public Server(int port) throws IOException {
 		// Initialize log
-		Log.init(Server.class.getName());
+		Log.init();
 
 		clientMap = new ConcurrentHashMap<String, ClientHandler>();
 		undeliveredMessageMap = new ConcurrentHashMap<String, LinkedList<Message>>();
 		
 		try {
 			serverSocket = new ServerSocket(port);
-			
-		} catch (IOException e) {
-			Log.write(Log.SEVERE, e.getMessage());
-			e.printStackTrace();
-		}
+		} catch (IOException ex) {
+			Log.write(Log.SEVERE, ex.getMessage());
+			Log.close();
+			throw ex;
+		} 
 
         // Register shutdown hook so that we can close log file
         // NOTE: This won't trigger when terminating the process from inside Eclipse
@@ -63,14 +67,27 @@ public class Server extends Thread {
 
 	public void stopServer() {
 		try {
-			for (String clientName : getClients()) {
-				addMessage(new DataMessage(new String[]{clientName}, null));
+			Log.write(Log.INFO, "Shutting down server...");
+			int numClients = clientMap.size();
+			
+			for (Entry<String, ClientHandler> entry : clientMap.entrySet()) {
+				ClientHandler handler = entry.getValue();
+				handler.disconnect();
 			}
-			Thread.sleep(750);
+			
+			int wait = (100 * numClients) > 5000 ? 5000 : (100 * numClients);
+			
+			threadPool.shutdown();
+			threadPool.awaitTermination(wait, TimeUnit.MILLISECONDS);
+			
 			serverSocket.close();
 			isStopping = true;
-		} catch (InterruptedException | IOException ex) {
+			
+		} catch (InterruptedException ex) {
 			ex.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -80,7 +97,7 @@ public class Server extends Thread {
 		while (!Thread.interrupted() && !isStopping) {
 			try {
 				Socket socket = serverSocket.accept();
-				Log.write(Log.INFO, "Client connected");
+				Log.write(Log.INFO, String.format("Client %s connected", socket.getRemoteSocketAddress().toString()));
 				new ClientHandler(socket, this).start();
 				Log.write(Log.INFO, "ClientHandler created");
 			} catch (IOException e) {
@@ -144,14 +161,19 @@ public class Server extends Thread {
             for (String recipient : recipients) {
                 addMessage(message.copy(new String[]{recipient}));
             }
-        // If we get here, then we have a message with a single recipient
+        // If we get here, then we have a message with a single recipient, send it!
         } else {
         	
+        	// This is so that undelivered messages retain their original received time
         	if (message.getTimeReceived() <= 0) {
         		message.setTimeReceived(System.currentTimeMillis());
         	}
 
-            threadPool.execute(new MessageSender(message));
+        	try {
+        		threadPool.execute(new MessageSender(message));
+        	} catch (RejectedExecutionException ex) {
+        		Log.write(Log.WARNING, "Server shutting down, unable to send message");
+        	}
         }
 	}
 
@@ -168,13 +190,10 @@ public class Server extends Thread {
 		
 		sendNewClientList();
 
-		// Add any undelivered messages to the message queue
+		// Add any undelivered messages to the message queue, then remove them from the undelivered map
 		if (undeliveredMessageMap.containsKey(clientName)) {
-			while(!undeliveredMessageMap.get(clientName).isEmpty()){
-				Message undeliveredMessage = undeliveredMessageMap.get(clientName).poll();
-				threadPool.execute(new MessageSender(undeliveredMessage));
-			}
-//			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
+			threadPool.execute(new MessageSender(undeliveredMessageMap.get(clientName)));
+			undeliveredMessageMap.remove(clientName);
 		}
 	}
 
@@ -185,16 +204,26 @@ public class Server extends Thread {
 		
 		// If there are any clients left, send updated client list and disconnect message
 		if (clientMap.size() > 0) {
-			sendNewClientList();
 			addMessage(new ServerMessage(getClients(), (String.format("%s disconnected", clientName))));
 		}
+		
+		// Send client list updates to remaining clients
+		sendNewClientList();
 	}
 	
 	public void sendNewClientList(){
 		String[] clients = getClients();
-		// Send DataMessage to all clients with updated userlist
-		addMessage(new DataMessage(null, clients));
-		// Update GUI
+		
+		// Send updated client list if there are any remaining clients
+		if (clients.length > 0) {
+			addMessage(new DataMessage(null, clients));
+		}
+		
+		// Always update GUI
+		fireOnClientListUpdated(clients);
+	}
+	
+	private void fireOnClientListUpdated(String[] clients) {
 		if (serverController != null) {
 			serverController.onClientListUpdated(clients);
 		}
@@ -219,7 +248,7 @@ public class Server extends Thread {
 				if (clientExists(recipient)) {
 					message.setTimeDelivered(System.currentTimeMillis());
 					clientMap.get(recipient).sendMessage(message);
-					Log.write(Log.INFO, String.format("Delivered message of type %s to %s from %s", message.getClass().getName(), recipient, message.getSender()));
+					Log.write(Log.INFO, String.format("Delivered %s to %s from %s", message.getClass().getName(), recipient, message.getSender()));
 				} else if (message instanceof ChatMessage) {
 					if (!undeliveredMessageMap.containsKey(recipient)) {
 						undeliveredMessageMap.put(recipient, new LinkedList<Message>());

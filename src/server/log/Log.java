@@ -16,19 +16,19 @@ import java.util.logging.SimpleFormatter;
  */
 public class Log {
 	
+	private static final Logger logger = Logger.getLogger(Log.class.getName());
+	
 	public static final Level INFO = Level.INFO;
 	public static final Level WARNING = Level.WARNING;
 	public static final Level SEVERE = Level.SEVERE;
 
-	private static Logger logger;
 	private static FileHandler fileHandler;
 	private static ConsoleHandler consoleHandler;
 	private static LogFormatter logFormatter;
 	
 	private static LogListener serverController;
 	
-	public static void init(String name) {
-		logger = Logger.getLogger(name);
+	public static void init() {
 		logger.setUseParentHandlers(false);
 		logger.setLevel(Level.ALL);
 

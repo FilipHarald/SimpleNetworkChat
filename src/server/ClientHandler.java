@@ -2,6 +2,7 @@ package server;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 import message.*;
 import server.log.Log;
@@ -38,6 +39,7 @@ public class ClientHandler extends Thread {
 					sendMessage(new Message(null, null));
 					// Make sure we close the socket, and return so that we exit the thread loop
 					socket.close();
+					Log.write(Log.INFO, "Disconnected imposter client");
 					return;
 				} else {
 					// We have to send directly to client since we haven't added it to server map yet
@@ -68,12 +70,23 @@ public class ClientHandler extends Thread {
 		
 	}
 	
+	public void disconnect() {
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public synchronized void sendMessage(Message message) {
 		 try {
 			oos.writeObject(message);
 			oos.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (SocketException ex) {
+			Log.write(Log.SEVERE, "Unable to write to socket, it has already been closed");
+		} catch (Exception ex) {
+			Log.write(Log.SEVERE, ex.getMessage());
 		}
 	 }
 
