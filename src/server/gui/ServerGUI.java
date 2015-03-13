@@ -1,14 +1,11 @@
 package server.gui;
 
-import server.*;
-
-import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.border.*;
+import javax.swing.*;
 import javax.swing.text.DefaultCaret;
+
+import server.*;
 
 /**
  * 

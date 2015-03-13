@@ -1,7 +1,5 @@
 package message;
 
-import javax.swing.*;
-
 public class ServerMessage extends ChatMessage {
 
     public ServerMessage(String[] recipients, String textMessage) {

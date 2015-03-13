@@ -2,8 +2,6 @@ package message;
 
 import java.io.Serializable;
 
-import javax.swing.ImageIcon;
-
 public class Message implements Serializable {
     private String sender;
     private String[] recipients;

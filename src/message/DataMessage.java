@@ -2,7 +2,7 @@ package message;
 
 public class DataMessage extends Message {
 	
-	Object data;
+	private Object data;
 	
 	public DataMessage(String[] recipients, Object data) {
 		super(null, recipients);
@@ -15,9 +15,6 @@ public class DataMessage extends Message {
 
 	public Message copy(String[] newRecipients) {
 		return new DataMessage(newRecipients, getData());
-	}
-	
-	
-	
+	}	
 
 }

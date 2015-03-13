@@ -1,7 +1,6 @@
 package tests;
 
 import java.io.IOException;
-import java.net.BindException;
 
 import client.Client;
 import server.Server;

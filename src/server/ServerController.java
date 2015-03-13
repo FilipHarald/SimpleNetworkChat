@@ -1,17 +1,14 @@
 package server;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import javax.swing.*;
+import java.awt.event.*;
 
 import server.gui.ServerGUI;
 import server.log.Log;
 import server.log.LogListener;
-
-import javax.swing.*;
-
-import java.awt.event.*;
 
 /**
  * 

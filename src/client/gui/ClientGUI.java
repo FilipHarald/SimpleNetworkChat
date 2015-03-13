@@ -10,10 +10,7 @@ import java.util.*;
 
 import client.*;
 import client.gui.models.Group;
-import client.gui.panels.ChatPanel;
-import client.gui.panels.ChatPanelListener;
-import client.gui.panels.UsersPanel;
-import client.gui.panels.UsersPanelListener;
+import client.gui.panels.*;
 
 /**
  * 
