@@ -70,6 +70,7 @@ public class ClientController {
 					frameGUI.pack();
 					frameGUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frameGUI.setLocationRelativeTo(null);
+					frameGUI.setResizable(false);
 					frameGUI.setVisible(true);
 					cgui.setInitialFocus();
 				}
