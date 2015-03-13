@@ -52,7 +52,8 @@ public class Client {
 				outputStream.writeObject(message);
 				outputStream.flush();
 			} catch (IOException ex) {
-				ex.printStackTrace();
+				// Something has gone wrong with the socket
+				System.out.println(ex.getMessage());
 			}
 		}
 	}
@@ -169,6 +170,11 @@ public class Client {
                 }
 
 			} catch (IOException ex) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				fireDisconnected();
 			}
 		}
