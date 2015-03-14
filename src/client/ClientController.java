@@ -9,6 +9,7 @@ import message.*;
 import client.gui.*;
 
 /**
+ * Controller class that binds together Client and GUI components
  * 
  * @author Andreas
  *
@@ -30,8 +31,8 @@ public class ClientController {
 		cgui = new ClientGUI(this);
 		sgui = new StartGUI(this);
 
+		// Start by showing connect window
 		showStartGUI();
-
 	}
 
 	private void showStartGUI() {
@@ -58,9 +59,9 @@ public class ClientController {
 
 			// Make sure we register listeners before we start the client
 			registerListeners();
-
 			client.start();
 
+			// Hide connect window
 			frameStart.setVisible(false);
 
 			SwingUtilities.invokeLater(new Runnable() {
@@ -77,6 +78,7 @@ public class ClientController {
 			});
 
 		} catch (Exception ex) {
+			// If there are any problems connecting to server, show error message
 			JOptionPane.showMessageDialog(null, ex.getMessage());
 			if (!frameStart.isVisible()) {
 				if (frameGUI != null) {
@@ -96,7 +98,6 @@ public class ClientController {
 
 					@Override
 					public void run() {
-
 						cgui.setUsers(clients);	
 					}
 				});
@@ -112,6 +113,7 @@ public class ClientController {
                         	cgui.appendServerMessage(message.toString());
                         } else if (message instanceof PrivateMessage) {
                         	PrivateMessage pmsg = (PrivateMessage)message;
+                        	// We need this check to make sure PM user sent is shown in the correct tab
                         	if (message.getSender().equals(client.getUserName())) {
                         		pmsg.setSenderCopy(true);
                         		cgui.appendPrivateMessage(message.toString(), pmsg.getImage(), pmsg.getGroup());
@@ -129,6 +131,7 @@ public class ClientController {
 
 			@Override
 			public void onDisconnected() {
+				// Show option to reconnect if disconnected from server
 				int answer = JOptionPane.showConfirmDialog(null, "Do you want to reconnect?", "Client disconnected!", JOptionPane.YES_NO_OPTION);
 				if (answer == JOptionPane.YES_OPTION) {
 					connect(hostname, port, username);
@@ -141,18 +144,15 @@ public class ClientController {
 	
 	public void sendMessage(String textMessage, ImageIcon image, int group) {
 		if (textMessage != null) {
-			Matcher m = patternCommands.matcher(textMessage);
 			
+			// Check for any commands
+			Matcher m = patternCommands.matcher(textMessage);
+
 			if (m.find()) {
-				System.out.println("Found match");
 				String command, option, text;
 				command = m.group(1);
 				option = m.group(2);
 				text = m.group(3);
-				
-				System.out.println(command);
-				System.out.println(option);
-				System.out.println(text);
 				
 				switch (command) {
 					case "message":
@@ -170,6 +170,7 @@ public class ClientController {
 						break;
 				}
 			} else {
+				// If not a command, simply send appropriate message
 				if (group == 0) {
 					client.sendChatMessage(cgui.getRecipients(), textMessage, image);
 				} else {

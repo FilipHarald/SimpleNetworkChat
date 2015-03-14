@@ -10,6 +10,8 @@ import message.*;
 import exceptions.*;
 
 /**
+ * Client class used to talk to Server. Uses an inner class MessageListener
+ * to continually listen for incoming messages from the server.
  * 
  * @author Albert och Henrik
  *
@@ -93,6 +95,7 @@ public class Client {
         	ex.printStackTrace();
         }
 
+        // Start a MessageListener thread to listen for incoming messages
 		new MessageListener(ois).start();
 	}
 
@@ -114,6 +117,12 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Thread that listens for incoming messages from the server
+	 * 
+	 * @author Albert & Henrik
+	 *
+	 */
 	private class MessageListener extends Thread {
 
 		private ObjectInputStream inputStream;
@@ -132,7 +141,7 @@ public class Client {
 					System.out.println("Received object is not of type Message");
 				}
 			} catch (ClassNotFoundException ex) {
-				throw new IOException();
+				System.out.println("Received object is not available on client");
 			}
 			
 			return null;
@@ -142,13 +151,11 @@ public class Client {
 		public void run() {
 			
 			try {
-
                 Message message;
 
+                // Get initial userlist
 				message = getMessage();
-
                 if (message instanceof DataMessage) {
-   					System.out.println("got user list");
 	        		fireClientsUpdated((String[])((DataMessage)message).getData());
 	        	}
 
@@ -157,6 +164,9 @@ public class Client {
                     // Get incoming messages
                     message = getMessage();
 
+                    /* If we get a DataMessage it's either a forced disconnect (data is null)
+                     * or an updated client list. If it's any other type of message, notify listeners 
+                     */
                     if (message instanceof DataMessage) {
            				Object data = ((DataMessage)message).getData();
         				if (data == null) {

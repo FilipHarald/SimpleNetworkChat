@@ -7,6 +7,13 @@ import java.awt.Font;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**
+ * GUI panel representing a list of connected clients. User is able to
+ * select clients, right click to create a Group.
+ * 
+ * @author Albert
+ *
+ */
 public class UsersPanel extends JPanel {
 
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
@@ -21,14 +28,12 @@ public class UsersPanel extends JPanel {
 		usersList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		
 		usersList.addMouseListener(new MouseAdapter() {
-
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					new ContextMenu().show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
-			
 		});
 
 		JScrollPane scrollList = new JScrollPane(usersList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -53,6 +58,13 @@ public class UsersPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Inner class used to show a context menu when right-clicking
+	 * in the user list.
+	 * 
+	 * @author Albert
+	 *
+	 */
 	private class ContextMenu extends JPopupMenu {
 		
 		public ContextMenu() {
@@ -77,19 +89,5 @@ public class UsersPanel extends JPanel {
 			
 			this.add(createGroup);
 		}
-	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame();
-				frame.add(new UsersPanel());
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setResizable(false);
-				frame.setVisible(true);
-			}
-		});
 	}
 }

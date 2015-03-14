@@ -8,11 +8,13 @@ import javax.swing.border.*;
 import client.*;
 
 /**
+ * GUI panel that shows an initial connection screen asking user to 
+ * input username, hostname, and port of the chat server they want
+ * to connect to
  * 
  * @author Andreas
  *
  */
-
 public class StartGUI extends JPanel {
 	
 	private JTextField usernameTF = new JTextField();

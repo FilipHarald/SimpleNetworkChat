@@ -1,5 +1,12 @@
 package client.gui.models;
 
+/**
+ * Model used in Client GUI to represent a user created group of clients
+ * to send private messages to
+ * 
+ * @author Albert
+ *
+ */
 public class Group {
 
 	private String name;

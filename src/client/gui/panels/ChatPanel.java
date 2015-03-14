@@ -9,6 +9,15 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
+/**
+ * ChatPanel represent one or several tabs of chat windows.
+ * 
+ * Each tab is made up of the inner class ChatTab, and an optional
+ * TabButtonComponent if the tab should be closeable.
+ * 
+ * @author Albert
+ *
+ */
 public class ChatPanel extends JPanel {
 	
 	public static final int NORMAL = 0;
@@ -51,10 +60,6 @@ public class ChatPanel extends JPanel {
 		return currentTab;
 	}
 	
-	public void addTab(String name) {
-		addTab(name, true);
-	}
-	
 	public void addTab(String name, boolean showButton) {
 		ChatTab newTab = new ChatTab();		
 		tabPane.addTab(name, newTab);
@@ -63,9 +68,8 @@ public class ChatPanel extends JPanel {
 		tabPane.setTabComponentAt(index, new TabButtonComponent(name, showButton));
 	}
 	
-	public void appendLobbyTab(String text, ImageIcon image, int style) {
-		ChatTab tab = tabs.get(0);
-		tab.append(text, image, style);
+	public void addTab(String name) {
+		addTab(name, true);
 	}
 	
 	public void appendAllTabs(String text, ImageIcon image, int style) {
@@ -82,6 +86,13 @@ public class ChatPanel extends JPanel {
 		}
 	}
 	
+	
+	/**
+	 * Inner class representing one tab in the ChatPanel.
+	 * 
+	 * @author Albert
+	 *
+	 */
 	private class ChatTab extends JPanel {
 		
 		private JTextPane chatBox;
@@ -145,6 +156,12 @@ public class ChatPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Inner class representing a close button on the tab title
+	 * 
+	 * @author Albert
+	 *
+	 */
 	private class TabButtonComponent extends JPanel {
 		
 		public TabButtonComponent(String name, boolean showButton) {
@@ -152,8 +169,9 @@ public class ChatPanel extends JPanel {
 			JLabel label = new JLabel(name);
 			label.setPreferredSize(new Dimension(name.length()*10, 15));
 	        this.add(label);
-	        if (showButton)
+	        if (showButton) {
 	        	this.add(new TabButton());
+	        }
 		}
 		
 		private class TabButton extends JButton implements ActionListener {
@@ -167,6 +185,7 @@ public class ChatPanel extends JPanel {
 
 			@Override
 			public void paint(Graphics g) {
+				// We're painting the red cross instead of using an icon
 				Graphics2D g2d = (Graphics2D)g.create();
 				g2d.setStroke(new BasicStroke(4));
 				g2d.setColor(Color.RED);
@@ -182,19 +201,5 @@ public class ChatPanel extends JPanel {
 				}
 			}
 		}
-	}
-	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame();
-				frame.add(new ChatPanel());
-				frame.pack();
-				frame.setLocationRelativeTo(null);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setResizable(false);
-				frame.setVisible(true);
-			}
-		});
 	}
 }

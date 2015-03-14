@@ -13,6 +13,8 @@ import client.gui.models.Group;
 import client.gui.panels.*;
 
 /**
+ * Main GUI panel for Client. It combines all panels into a cohesive
+ * interface and talks to a ClientController.
  * 
  * @author Andreas
  */
@@ -30,29 +32,31 @@ public class ClientGUI extends JPanel {
 	private Map<String, Group> groups;
 	private String currentGroup;
 
+	private String defaultTabName = "Lobby";
+	
 	private ClientController cc;
 		
 	public ClientGUI(ClientController cc) {
 		this.cc = cc;
-		
 		this.groups = new HashMap<String, Group>();
-		this.addGroup("Lobby", null, false);
-		this.currentGroup = "Lobby";
 		
-		setPreferredSize(new Dimension(800, 600));
-		setLayout(new BorderLayout(5, 0));
+		// Create default tab 
+		this.addGroup(defaultTabName, null, false);
+		this.currentGroup = defaultTabName;
+		
+		// Create GUI
+		this.setPreferredSize(new Dimension(800, 600));
+		this.setLayout(new BorderLayout(5, 0));
 		
 		usersPanel.setBorder(new EmptyBorder(35, 0, 0, 5));
 		chatPanel.setBorder(new EmptyBorder(5, 5, 0, 0));
 		
-		add(chatPanel, BorderLayout.CENTER);
-		add(usersPanel, BorderLayout.EAST);
-		
-		registerListeners();
+		this.add(chatPanel, BorderLayout.CENTER);
+		this.add(usersPanel, BorderLayout.EAST);		
 		
 		JPanel southPanel = new JPanel();
 		southPanel.setPreferredSize(new Dimension(800, 32));
-		add(southPanel, BorderLayout.SOUTH);
+		this.add(southPanel, BorderLayout.SOUTH);
 		
 		chatTF.setPreferredSize(new Dimension(580, 24));
 		chatTF.setFont(new Font("Consolas", Font.PLAIN, 12));
@@ -68,37 +72,31 @@ public class ClientGUI extends JPanel {
 		addImageBtn.setFont(new Font("Consolas", Font.BOLD, 12));
 		addImageBtn.addActionListener(new AddImage());
 		southPanel.add(addImageBtn);
-					
+		
+		// Restrict focus to text input field, send button, and attach image button
 		this.setFocusTraversalPolicy(new FocusPolicy(chatTF, sendBtn, addImageBtn));
 		this.setFocusTraversalPolicyProvider(true);
+		
+		registerListeners();
 		
 	}
 	
 	private void registerListeners() {
 		chatPanel.addListener(new ChatPanelListener() {
-
 			@Override
 			public void onChangedTab(String name) {
 				if (groups.containsKey(name)) {
-					System.out.println("Switching to tab: " + name);
 					currentGroup = name;
 					usersPanel.updateList(groups.get(name).getUsers());
 				}
 			}
-			
 		});
 		
 		usersPanel.addListener(new UsersPanelListener() {
-
 			@Override
 			public void onCreateGroup(String name, String[] users) {
-				System.out.println("Creating new group: " + name);
-				for (String user : users) {
-					System.out.println(user);
-				}
 				addGroup(name, users, true);
 			}
-			
 		});
 	}
 	
@@ -112,7 +110,7 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public void appendPublicMessage(String text, ImageIcon image) {
-		chatPanel.appendLobbyTab(text, image, ChatPanel.NORMAL);
+		chatPanel.appendTab(0, text, image, ChatPanel.NORMAL);
 	}
 	
 	public void appendServerMessage(String text) {
@@ -132,7 +130,7 @@ public class ClientGUI extends JPanel {
 	}
 	
 	public void setUsers(String[] userList) {
-		Group lobby = groups.get("Lobby");
+		Group lobby = groups.get(defaultTabName);
 		lobby.setUsers(userList);
 		
 		if (lobby.getName().equals(currentGroup)) {
@@ -166,6 +164,11 @@ public class ClientGUI extends JPanel {
 		}
 	}
 	
+	/**
+	 * Inner class used to cycle through a specified set of focusable components
+	 * @author Albert
+	 *
+	 */
 	private class FocusPolicy extends FocusTraversalPolicy {
 		
 		ArrayList<Component> order;
