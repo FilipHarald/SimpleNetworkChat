@@ -46,7 +46,6 @@ public class Server extends Thread {
 					serverSocket.close();
 				} catch (IOException e) {
 					Log.write(Log.SEVERE, e.getMessage());
-					e.printStackTrace();
 				}
             	Log.close();
             }
@@ -76,11 +75,8 @@ public class Server extends Thread {
 			serverSocket.close();
 			isStopping = true;
 			
-		} catch (InterruptedException ex) {
-			ex.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (InterruptedException | IOException ex) {
+			Log.write(Log.SEVERE, ex.getMessage());
 		}
 	}
 

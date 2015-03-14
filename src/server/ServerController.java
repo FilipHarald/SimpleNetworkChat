@@ -70,7 +70,7 @@ public class ServerController {
 		InetAddress localIp;
 		try {
 			localIp = InetAddress.getLocalHost();
-			return localIp.getHostAddress().toString();
+			return localIp.getHostAddress();
 		} catch (UnknownHostException e) {
 			return "UNKNOWN";
 		}

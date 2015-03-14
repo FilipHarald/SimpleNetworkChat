@@ -60,11 +60,11 @@ public class ClientHandler extends Thread {
 			}
 			
 		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+			Log.write(Log.WARNING, String.format("Failed to start ClientHandler: %s", e.getMessage()));
 			try {
 				socket.close();
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				Log.write(Log.WARNING, "Failed to close ClientHandler socket");
 			}
 		}
 		
@@ -74,8 +74,7 @@ public class ClientHandler extends Thread {
 		try {
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.write(Log.WARNING, "Failed to close ClientHandler socket");
 		}
 	}
 	
@@ -130,8 +129,8 @@ public class ClientHandler extends Thread {
 			} catch (IOException ex) {
 				Log.write(Log.INFO, String.format("Client %s disconnected", clientName));
 				server.removeClientHandler(clientName);
-			} catch (Exception ex) {
-				ex.printStackTrace();
+			} catch (ClassNotFoundException ex) {
+				Log.write(Log.WARNING, "Server received object of unknown type");
 			}
 		}
 	}
