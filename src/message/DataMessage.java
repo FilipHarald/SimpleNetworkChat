@@ -2,14 +2,14 @@ package message;
 
 public class DataMessage extends Message {
 	
-	private Object data;
+	private String[] data;
 	
-	public DataMessage(String[] recipients, Object data) {
+	public DataMessage(String[] recipients, String[] data) {
 		super(null, recipients);
 		this.data = data;
 	}
 
-	public Object getData() {
+	public String[] getData() {
 		return data;
 	}
 

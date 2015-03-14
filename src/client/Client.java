@@ -156,7 +156,7 @@ public class Client {
                 // Get initial userlist
 				message = getMessage();
                 if (message instanceof DataMessage) {
-	        		fireClientsUpdated((String[])((DataMessage)message).getData());
+	        		fireClientsUpdated(((DataMessage)message).getData());
 	        	}
 
                 while (!Thread.interrupted()) {
@@ -172,7 +172,7 @@ public class Client {
         				if (data == null) {
         					inputStream.close();
         				} else {
-        					fireClientsUpdated((String[])((DataMessage)message).getData());
+        					fireClientsUpdated(((DataMessage)message).getData());
         				}
                     } else {
                         fireMessageReceived(message);
