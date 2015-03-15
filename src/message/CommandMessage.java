@@ -1,7 +1,10 @@
 package message;
 
 /**
- * @author nekosaur
+ * CommandMessage is used when clients send command instructions to
+ * the server. These currently include /message, /msg, /whois, /kick
+ * 
+ * @author Albert
  */
 public class CommandMessage extends Message {
 
@@ -25,10 +28,5 @@ public class CommandMessage extends Message {
     public String toString() {
     	return String.format("%s %s", command, arguments);
     }
-
-    /*
-    public Message copy(String[] newRecipients) {
-        return new CommandMessage(getSender(), newRecipients, getCommand(), getArguments());
-    }*/
 
 }

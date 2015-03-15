@@ -2,6 +2,13 @@ package message;
 
 import java.io.Serializable;
 
+/**
+ * Base class for handling messages sent between client and server. A message has a sender,
+ * and an array of recipients, a time it is received on the server, and a time when the server
+ * has delivered the message to the recipients.
+ * @author ?
+ *
+ */
 public class Message implements Serializable {
     private String sender;
     private String[] recipients;

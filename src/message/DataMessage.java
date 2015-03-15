@@ -1,5 +1,12 @@
 package message;
 
+/**
+ * DataMessage is currently only used to send updated clientlists to clients
+ * from server whenever someone connects or disconnects
+ * 
+ * @author Albert
+ *
+ */
 public class DataMessage extends Message {
 	
 	private String[] data;

@@ -5,7 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * @author nekosaur
+ * ChatMessage provides a base for all messages that are shown in the chat window. A ChatMessage has
+ * either a textMessage, an image, or both attached.
+ * 
+ * @author Albert
  */
 public class ChatMessage extends Message {
 	

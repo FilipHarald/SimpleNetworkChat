@@ -2,6 +2,13 @@ package message;
 
 import javax.swing.*;
 
+/**
+ * PrivateMessage is a ChatMessage with added functionality to handle private messages
+ * between clients.
+ * 
+ * @author Albert
+ *
+ */
 public class PrivateMessage extends ChatMessage {
 
 	private boolean senderCopy = false;
@@ -29,7 +36,7 @@ public class PrivateMessage extends ChatMessage {
 
     @Override
     public Message copy(String[] newRecipients) {
-        return new PrivateMessage(getSender(), newRecipients, getTextMessage(), getImage(), group);
+        return new PrivateMessage(getSender(), newRecipients, getTextMessage(), getImage(), getGroup());
     }
     
 }
