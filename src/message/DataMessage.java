@@ -9,6 +9,8 @@ package message;
  */
 public class DataMessage extends Message {
 	
+	private static final long serialVersionUID = 4029671349338696365L;
+	
 	private String[] data;
 	
 	public DataMessage(String[] recipients, String[] data) {

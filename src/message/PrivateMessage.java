@@ -11,6 +11,8 @@ import javax.swing.*;
  */
 public class PrivateMessage extends ChatMessage {
 
+	private static final long serialVersionUID = -180141440772705172L;
+	
 	private boolean senderCopy = false;
 	private int group;
 	

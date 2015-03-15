@@ -12,6 +12,7 @@ import java.util.Date;
  */
 public class ChatMessage extends Message {
 	
+	private static final long serialVersionUID = -9119557752422256616L;
 	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
 
     private String textMessage = "";

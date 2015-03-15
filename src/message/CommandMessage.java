@@ -8,7 +8,9 @@ package message;
  */
 public class CommandMessage extends Message {
 
-    private String command;
+	private static final long serialVersionUID = 5743122357918154904L;
+	
+	private String command;
     private String arguments;
 
     public CommandMessage(String sender, String command, String arguments) {

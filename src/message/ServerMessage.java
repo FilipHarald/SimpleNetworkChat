@@ -9,7 +9,9 @@ package message;
  */
 public class ServerMessage extends ChatMessage {
 
-    public ServerMessage(String[] recipients, String textMessage) {
+	private static final long serialVersionUID = 6105841349713205296L;
+
+	public ServerMessage(String[] recipients, String textMessage) {
         super("SERVER", recipients, textMessage, null);
     }
 
