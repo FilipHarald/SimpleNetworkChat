@@ -156,16 +156,17 @@ public class ClientGUI extends JPanel {
 				@Override
 				public boolean accept(File file) {
 					String name = file.getName().toLowerCase();
-					return name.endsWith(".png") &&
-							name.endsWith(".jpg") &&
-							name.endsWith(".gif") &&
-							name.endsWith(".jpg") &&
-							file.length()  < 1 * (1024 * 1024);
+					return file.isDirectory() || 
+							((name.endsWith(".png") ||
+							name.endsWith(".jpg") ||
+							name.endsWith(".gif") ||
+							name.endsWith(".jpg")) &&
+							file.length()  < 1 * (1024 * 1024));
 				}
 
 				@Override
 				public String getDescription() {
-					return "Images (MAX 3MB)";
+					return "Images (MAX 1MB)";
 				}
 			});
 		}
