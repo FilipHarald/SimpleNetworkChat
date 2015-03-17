@@ -3,7 +3,7 @@ package client.gui;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.filechooser.*;
-
+import java.io.File;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -149,11 +149,28 @@ public class ClientGUI extends JPanel {
 	
 	private class AddImage implements ActionListener {
 		private JFileChooser chooser = new JFileChooser();
-		private FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"'.jpg', '.png', '.gif'", "jpg", "png", "gif");
+
+		public AddImage() {
+			chooser.setAcceptAllFileFilterUsed(false);
+			chooser.addChoosableFileFilter(new FileFilter() {
+				@Override
+				public boolean accept(File file) {
+					String name = file.getName().toLowerCase();
+					return name.endsWith(".png") &&
+							name.endsWith(".jpg") &&
+							name.endsWith(".gif") &&
+							name.endsWith(".jpg") &&
+							file.length()  < 3 * (1024 * 1024);
+				}
+
+				@Override
+				public String getDescription() {
+					return "Images (MAX 3MB)";
+				}
+			});
+		}
 		
 		public void actionPerformed(ActionEvent e) {
-			chooser.setFileFilter(filter);
 			int returnValue = chooser.showOpenDialog(null);
 			
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
