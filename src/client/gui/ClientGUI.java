@@ -160,7 +160,7 @@ public class ClientGUI extends JPanel {
 							name.endsWith(".jpg") &&
 							name.endsWith(".gif") &&
 							name.endsWith(".jpg") &&
-							file.length()  < 3 * (1024 * 1024);
+							file.length()  < 1 * (1024 * 1024);
 				}
 
 				@Override
