@@ -8,7 +8,7 @@ import javax.swing.text.DefaultCaret;
 import server.*;
 
 /**
- * 
+ * This is the GUI-class for the server
  * @author Filip
  *
  */
@@ -25,11 +25,18 @@ public class ServerGUI extends JPanel {
 	private JList<String> listUsers = new JList<String>(listModel);
 	private JTextArea textAreaLog = new JTextArea();
 
+	/**
+	 * Contructor that takes a ServerController as parameter
+	 * @param controller the controller 
+	 */
 	public ServerGUI(ServerController controller) {
 		this.controller = controller;
 		createGUI();
 	}
 
+	/**
+	 * Method that creates the GUI
+	 */
 	public void createGUI() {
 
 		this.setLayout(new GridBagLayout());
@@ -84,10 +91,18 @@ public class ServerGUI extends JPanel {
 		this.add(scroll, c);
 	}
 
+	/**
+	 * Method that takes a String as parameter and appends that String to the JTextArea
+	 * @param string taxt to be appended
+	 */
 	public synchronized void appendText(String string) {
 		textAreaLog.append(string);
 	}
 	
+	/**
+	 * Method that updates the clientlist on the serverGUI. Takes a String[] as parameter
+	 * @param clientList String[] with clients
+	 */
 	public void updateClientList(String[] clientList) {
 		listModel.clear();
 		for (String client : clientList) {
@@ -95,6 +110,9 @@ public class ServerGUI extends JPanel {
 		}
 	}
 
+	/**
+	 * Method for changing state on start/stop button on GUI depending on if it is running or not
+	 */
 	private void toggleButton() {
 		if (controller.isRunning()) {
 			btnStartStop.setText("STOP");
@@ -103,10 +121,18 @@ public class ServerGUI extends JPanel {
 		}
 	}
 
+	/**
+	 * Method for clearing userlist on GUI
+	 */
 	public void clearList() {
 		listModel.clear();
 	}
 	
+	/**
+	 * Inner Class for listening on buttons in GUI
+	 * @author Jimmy
+	 *
+	 */
 	private class ClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnStartStop) {

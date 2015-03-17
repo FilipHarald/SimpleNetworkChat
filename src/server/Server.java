@@ -10,7 +10,7 @@ import message.*;
 import server.log.Log;
 
 /**
- * 
+ * The server class used by the clients to send messages with text and/or images to each other.
  * @author Filip & Jimmy
  *
  */
@@ -22,6 +22,11 @@ public class Server extends Thread {
 	private ServerListener serverController;
 	private boolean isStopping = false;
 
+	/**
+	 * Constructor who takes an int as parameter and throws IOException
+	 * @param port the port the server uses
+	 * @throws IOException
+	 */
 	public Server(int port) throws IOException {
 		// Initialize log
 		Log.init();
@@ -57,6 +62,7 @@ public class Server extends Thread {
 		
 	}
 
+	//The method closes the server
 	public void stopServer() {
 		try {
 			Log.write(Log.INFO, "Shutting down server...");
@@ -98,6 +104,7 @@ public class Server extends Thread {
 		Log.close();
 	}
 
+	//The method checks if a client exists
 	public boolean clientExists(String clientName) {
 		return clientMap.containsKey(clientName);
 	}
@@ -127,6 +134,10 @@ public class Server extends Thread {
         }
     }
 
+    /**
+     * Method for checking what kind of message and how many recipients there are. Takes a Message as parameter
+     * @param message the Message that is to be sent
+     */
 	public void addMessage(Message message) {
 
         // Check if command message
@@ -166,12 +177,21 @@ public class Server extends Thread {
         }
 	}
 
+	/**
+	 * Method that returns a String array with the clientnames
+	 * @return string array with clientnames
+	 */
 	public String[] getClients() {
 		String[] array = new String[clientMap.size()];
 		array = clientMap.keySet().toArray(array);
 		return array;
 	}
 	
+	/**
+	 * Method for adding clienthandler för new client, taking a String and a ClientHandler as parameters.
+	 * @param clientName String with clients name
+	 * @param clientHandler	new Clients ClientHandler
+	 */
 	public void addClientHandler(String clientName, ClientHandler clientHandler) {
 		// Add ClientHandler to our map of clients
 		clientMap.put(clientName, clientHandler);
@@ -186,6 +206,10 @@ public class Server extends Thread {
 		}
 	}
 
+	/**
+	 * Method for removing disconnected clients ClientHandler that takes a String as parameter
+	 * @param clientName String with ClientName
+	 */
 	public void removeClientHandler(String clientName) {
 		// Remove ClientHandler from the map of clients
 		clientMap.remove(clientName);
@@ -200,6 +224,9 @@ public class Server extends Thread {
 		sendNewClientList();
 	}
 	
+	/**
+	 * Method that sends the updated clientlist to serverGUI
+	 */
 	public void sendNewClientList(){
 		String[] clients = getClients();
 		
@@ -217,20 +244,32 @@ public class Server extends Thread {
 			serverController.onClientListUpdated(clients);
 		}
 	}
-	
+	 /**
+	  * This class sends the messages from the server to the clients
+	  */
 	private class MessageSender implements Runnable {
 		private LinkedList<Message> messages;
 
+		/**
+		 * Constructor that takes a Message as parameter
+		 * @param message Message that is to be sent
+		 */
 		public MessageSender(Message message) {
 			messages = new LinkedList<Message>();
 			messages.add(message);
 		}
-
+		
+		/**
+		 * Constructor that takes a LinkedList with Messages as parameter
+		 * @param message LinkedList with Messages that is to be sent
+		 */
 		public MessageSender(LinkedList<Message> messages) {
 			this.messages = messages;
 		}
 
-		@Override
+		/**
+		 * This method sends the messages.
+		 */
 		public void run() {
 			for (Message message : messages) {
 				String recipient = message.getRecipients()[0];

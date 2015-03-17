@@ -11,7 +11,8 @@ import server.log.Log;
 import server.log.LogListener;
 
 /**
- * 
+ * This class handles communication between server and serverGui. 
+ * This is the starting class for the server.
  * @author Andreas
  *
  */
@@ -20,6 +21,9 @@ public class ServerController {
 	private Server server;
 	private boolean running;
 	
+	/**
+	 * Constructor who initiates a ServerGui
+	 */
 	public ServerController(){
 		this.sgui = new ServerGUI(this);
 		
@@ -44,6 +48,10 @@ public class ServerController {
 		});
 	}
 	
+	/**
+	 * This method starts the server and takes an int as parameter
+	 * @param port the port the server uses
+	 */
 	public void startServer(int port) {
 		try {			
 			server = new Server(port);
@@ -55,6 +63,9 @@ public class ServerController {
 		}
 	}
 
+	/**
+	 * Method for stopping the server
+	 */
 	public void stopServer() {
 		running = false;
 		if (server != null) {
@@ -62,10 +73,18 @@ public class ServerController {
 		}
 	}
 
+	/**
+	 * Method for checking if server is running
+	 * @return	if server is running
+	 */
 	public boolean isRunning() {
 		return running;
 	}
 	
+	/**
+	 * Method for getting the servers IP-address.
+	 * @return servers IP-Address
+	 */
 	public String getIP(){
 		InetAddress localIp;
 		try {
@@ -76,6 +95,9 @@ public class ServerController {
 		}
 	}
 	
+	/**
+	 * Listening method for the Log
+	 */
 	public void startListeningLog() {
 		Log.addListener(new LogListener(){
 			public void onInit() {
@@ -96,6 +118,9 @@ public class ServerController {
 		});
 	}
 	
+	/**
+	 * Listening method for the server
+	 */
 	public void startListeningServer(){
 		
 		server.addListener(new ServerListener(){
